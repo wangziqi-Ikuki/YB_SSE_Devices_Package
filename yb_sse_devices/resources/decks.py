@@ -36,10 +36,14 @@ except Exception:  # pragma: no cover
         return decorator
 
 
+DECK_ICON = "conductivity-testing-workstation.webp"
+
+
 @resource(
     id="ConductivityStation_Deck",
     category=["deck"],
     description="电导率自动化测试工站三层料架 Deck",
+    icon=DECK_ICON,
 )
 class ConductivityStation_Deck(Deck):
     def __init__(
@@ -55,6 +59,10 @@ class ConductivityStation_Deck(Deck):
         super().__init__(
             name=name, size_x=size_x, size_y=size_y, size_z=size_z, category=category, **kwargs
         )
+        extra = dict(getattr(self, "unilabos_extra", None) or {})
+        extra.setdefault("unilabos_resource_class", "ConductivityStation_Deck")
+        extra.setdefault("icon", DECK_ICON)
+        self.unilabos_extra = extra
         self.warehouses: dict[str, Any] = {}
         self.warehouse_locations: dict[str, Any] = {}
         if setup:

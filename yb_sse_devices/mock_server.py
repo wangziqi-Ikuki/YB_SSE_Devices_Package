@@ -1,4 +1,7 @@
-"""电导工站 TCP 协议模拟服务端，可选本机交互页改库位与设备在线。"""
+"""电导工站 TCP 协议模拟服务端，可选本机交互页改库位与设备在线。
+
+请求仍按客户端 compact JSON + CRLF 读取；响应按真机格式：缩进 JSON + LF。
+"""
 
 from __future__ import annotations
 
@@ -32,6 +35,13 @@ from yb_sse_devices.protocol import (
 
 # 合作方高保真模型确认使用直径 1 cm 圆片：A = π × (0.5 cm)²。
 DISC_AREA_CM2 = math.pi * 0.5**2
+
+
+def encode_station_response(response: dict[str, Any]) -> bytes:
+    """按真机格式编码 TCP 响应：缩进 JSON、键排序，以 LF 结束。"""
+    return (
+        json.dumps(response, ensure_ascii=False, indent=4, sort_keys=True) + "\n"
+    ).encode("utf-8")
 
 
 class MockConductivityState:
@@ -493,8 +503,7 @@ class _Handler(socketserver.StreamRequestHandler):
             except Exception as exc:  # noqa: BLE001
                 request_id = request.get("request_id") if isinstance(request, dict) else None
                 response = {"request_id": request_id, "result": 7, "message": str(exc)}
-            payload = json.dumps(response, ensure_ascii=False, separators=(",", ":"))
-            self.wfile.write((payload + "\r\n").encode("utf-8"))
+            self.wfile.write(encode_station_response(response))
             self.wfile.flush()
 
 

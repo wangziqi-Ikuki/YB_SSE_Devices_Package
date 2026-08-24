@@ -48,17 +48,18 @@ class ConductivityStationProtocolError(RuntimeError):
     category=["workstation", "conductivity"],
     display_name="电导率自动化测试工站",
     description="通过 TCP JSON/CRLF 协议控制电导率自动化测试工站",
+    icon="conductivity-testing-workstation.webp",
     version="1.0.0",
 )
 class ConductivityStation:
-    """电导工站长连接客户端。"""
+    """电导工站长连接客户端。真机port8091 虚拟机port19091"""
 
     def __init__(
         self,
         device_id: str | None = None,
         config: dict[str, Any] | None = None,
         ip: str = "127.0.0.1",
-        port: int = 19091,
+        port: int = 8091,
         connect_timeout: float = 5.0,
         response_timeout: float = 10.0,
         max_message_bytes: int = 4194304,
@@ -192,11 +193,12 @@ class ConductivityStation:
                 tracker.add_resource(self.deck)
             except Exception:
                 pass
-        if self._initial_occupancy is not None:
-            self._apply_occupancy(self._initial_occupancy)
-        elif self.load_demo_occupancy:
-            self._apply_occupancy(demo_loaded_materials())
-        self._refresh_materials()
+        # 真机协议没有 set_materials；启动时只读 2.2，避免写演示占位卡死初始化。
+        if self.use_mock:
+            if self._initial_occupancy is not None:
+                self._apply_occupancy(self._initial_occupancy)
+            elif self.load_demo_occupancy:
+                self._apply_occupancy(demo_loaded_materials())
         self._push_deck()
         self._start_occupancy_poller()
 
@@ -212,15 +214,17 @@ class ConductivityStation:
         self._poll_thread.start()
 
     def _occupancy_poll_loop(self) -> None:
-        while not self._poll_stop.wait(self.occupancy_poll_interval):
-            if self.occupancy_poll_interval <= 0:
-                continue
+        while True:
             try:
                 self._query_cache.pop("material_status", None)
                 self._refresh_materials()
                 self._push_deck()
             except Exception:
-                continue
+                pass
+            if self.occupancy_poll_interval <= 0 or self._poll_stop.wait(
+                self.occupancy_poll_interval
+            ):
+                break
 
     def _ensure_deck(self) -> Any:
         deck = self.deck
@@ -316,17 +320,35 @@ class ConductivityStation:
         return self._sock
 
     def _read_frame(self, sock: socket.socket) -> bytes:
-        delimiter = self.frame_delimiter
+        """读出一个完整 JSON 对象。
+
+        协议约定 CRLF 分帧且 JSON 中间不含换行；真机实际返回带缩进的 JSON，
+        并以 LF 结束。按完整对象解析，两种格式都能读。
+        """
+        decoder = json.JSONDecoder()
         while True:
-            marker = self._recv_buffer.find(delimiter)
-            if marker >= 0:
-                frame = bytes(self._recv_buffer[:marker])
-                del self._recv_buffer[: marker + len(delimiter)]
-                return frame
             if len(self._recv_buffer) > self.max_message_bytes:
                 raise ConductivityStationProtocolError(
                     f"响应超过最大长度 {self.max_message_bytes} 字节"
                 )
+            try:
+                text = bytes(self._recv_buffer).decode(self.encoding)
+            except UnicodeDecodeError:
+                text = ""
+            if text:
+                leading = len(text) - len(text.lstrip())
+                payload = text[leading:]
+                if payload:
+                    try:
+                        _, end = decoder.raw_decode(payload)
+                    except json.JSONDecodeError:
+                        pass
+                    else:
+                        consumed = text[: leading + end].encode(self.encoding)
+                        del self._recv_buffer[: len(consumed)]
+                        while self._recv_buffer[:1] in (b"\r", b"\n"):
+                            del self._recv_buffer[:1]
+                        return consumed
             try:
                 chunk = sock.recv(65536)
             except (OSError, socket.timeout) as exc:
@@ -506,8 +528,6 @@ class ConductivityStation:
     def _refresh_materials(self) -> dict[str, list[int]]:
         data = self._cached_query("material_status", "material_status")
         if data is None:
-            self._materials = empty_materials()
-            self._sync_deck_occupancy(self._materials)
             return self._materials
         snapshot = empty_materials()
         for layer in snapshot:

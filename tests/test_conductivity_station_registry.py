@@ -172,6 +172,7 @@ def test_template_decorator_metadata_is_registered() -> None:
     assert device_meta is not None
     assert device_meta["device_id"] == "conductivity_station"
     assert device_meta["displayname"] == "电导率自动化测试工站"
+    assert device_meta["icon"] == "conductivity-testing-workstation.webp"
     assert get_action_meta(ConductivityStation.station_status)["always_free"] is True
     assert get_topic_config(ConductivityStation.status.fget) != {}
     assert is_not_action(ConductivityStation.close)

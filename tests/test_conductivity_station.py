@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import math
+import socket
 import socketserver
 import threading
 import time
@@ -19,6 +20,7 @@ from yb_sse_devices.conductivity import (
 from yb_sse_devices.mock_server import (
     MockConductivityServer,
     MockConductivityState,
+    encode_station_response,
     start_mock_in_process,
 )
 from yb_sse_devices.protocol import SLOT_LABELS, demo_loaded_materials, empty_materials
@@ -224,6 +226,40 @@ def test_use_mock_starts_in_process_server() -> None:
         client.close()
 
 
+def test_mock_tcp_matches_real_station_framing(
+    mock_state: MockConductivityState,
+) -> None:
+    encoded = encode_station_response(
+        {"request_id": 1, "result": 0, "data": {"bottle": [1]}}
+    )
+    assert encoded.startswith(b"{\n    \"data\"")
+    assert encoded.endswith(b"\n")
+    assert b"\r\n" not in encoded
+
+    server = MockConductivityServer(("127.0.0.1", 0), state=mock_state)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        sock = socket.create_connection(
+            ("127.0.0.1", server.server_address[1]), timeout=1.0
+        )
+        try:
+            sock.sendall(b'{"request_id":1,"action":"material_status"}\r\n')
+            raw = sock.recv(65536)
+        finally:
+            sock.close()
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
+    assert raw.startswith(b"{\n")
+    assert raw.endswith(b"}\n")
+    assert b"\r\n" not in raw
+    parsed = json.loads(raw)
+    assert parsed["result"] == 0
+    assert parsed["data"]["bottle"][:3] == [1, 1, 1]
+
+
 def test_interactive_ui_can_edit_slots() -> None:
     urllib_request = pytest.importorskip("urllib.request")
     runtime = start_mock_in_process(
@@ -318,6 +354,64 @@ def test_tcp_fragmentation_and_read_retry() -> None:
         assert server.plans == []  # type: ignore[attr-defined]
     finally:
         _close_scripted_station(client, server, thread)
+
+
+def test_reads_pretty_printed_lf_terminated_response() -> None:
+    def pretty(request: dict) -> bytes:
+        return (
+            json.dumps(
+                {
+                    "request_id": request["request_id"],
+                    "result": 0,
+                    "data": {
+                        "bottle": [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        "mold": [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        "funnel": [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    },
+                },
+                indent=4,
+            )
+            + "\n"
+        ).encode()
+
+    client, server, thread = _scripted_station([pretty])
+    try:
+        data = client.material_status()["data"]
+        assert data["bottle"][0] == 1
+        assert data["mold"][0] == 1
+        assert data["funnel"][0] == 1
+    finally:
+        _close_scripted_station(client, server, thread)
+
+
+def test_post_init_does_not_block_when_real_station_ignores_writes() -> None:
+    class Handler(socketserver.BaseRequestHandler):
+        def handle(self) -> None:
+            time.sleep(2)
+
+    server = socketserver.ThreadingTCPServer(("127.0.0.1", 0), Handler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    client = ConductivityStation(
+        ip="127.0.0.1",
+        port=server.server_address[1],
+        response_timeout=1.0,
+        occupancy_poll_interval=0,
+        occupancy={"bottle": [1] * 10, "mold": [0] * 10, "funnel": [0] * 10},
+    )
+
+    class _Node:
+        resource_tracker = None
+
+    try:
+        started = time.monotonic()
+        client.post_init(_Node())
+        assert time.monotonic() - started < 0.3
+    finally:
+        client.close()
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
 
 @pytest.mark.parametrize(
     "response,exception",
