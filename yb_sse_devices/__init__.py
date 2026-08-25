@@ -8,6 +8,8 @@ __all__ = [
     "ConductivityFunnel",
     "ConductivityMold",
     "ConductivitySinteringBottle",
+    "SynthesisStation",
+    "SynthesisStation_Deck",
 ]
 
 _EXPORTS = {
@@ -19,6 +21,8 @@ _EXPORTS = {
         ".resources.materials",
         "ConductivitySinteringBottle",
     ),
+    "SynthesisStation": (".synthesis_station", "SynthesisStation"),
+    "SynthesisStation_Deck": (".resources.synthesis_deck", "SynthesisStation_Deck"),
 }
 
 
