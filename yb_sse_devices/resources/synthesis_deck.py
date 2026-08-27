@@ -4,8 +4,6 @@ from __future__ import annotations
 
 from typing import Any
 
-from yb_sse_devices.synthesis_protocol import DECK_ICON
-
 try:
     from pylabrobot.resources import Deck
 except Exception:  # pragma: no cover
@@ -36,11 +34,15 @@ except Exception:  # pragma: no cover
         return decorator
 
 
+# 装饰器用字面量；本常量供 runtime unilabos_extra 复用。
+DECK_ICON = "synthesis_station.webp"
+
+
 @resource(
     id="SynthesisStation_Deck",
     category=["deck"],
     description="合成工站 Deck（先预留：背景图 + 状态，槽位暂空）",
-    icon=DECK_ICON,
+    icon="synthesis_station.webp",
 )
 class SynthesisStation_Deck(Deck):
     def __init__(

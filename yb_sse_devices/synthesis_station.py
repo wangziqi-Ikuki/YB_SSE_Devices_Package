@@ -46,7 +46,8 @@ class SynthesisStationProtocolError(RuntimeError):
     category=["workstation", "synthesis"],
     display_name="合成工站",
     description="通过 TCP JSON/CRLF 协议控制合成工站",
-    icon=DECK_ICON,
+    # 注册表按 AST 抽取 icon，跨模块常量会变成 module:NAME，须写字面量。
+    icon="synthesis_station.webp",
     version="1.0.0",
 )
 class SynthesisStation:
