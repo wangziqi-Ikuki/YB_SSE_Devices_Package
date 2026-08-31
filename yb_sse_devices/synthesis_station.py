@@ -14,7 +14,15 @@ import time
 from itertools import count
 from typing import Any
 
-from unilabos.registry.decorators import action, device, not_action, topic_config
+from unilabos.registry.decorators import (
+    ActionInputHandle,
+    ActionOutputHandle,
+    DataSource,
+    action,
+    device,
+    not_action,
+    topic_config,
+)
 
 from yb_sse_devices.synthesis_protocol import (
     DECK_ICON,
@@ -273,6 +281,84 @@ class SynthesisStation:
         if result != 0:
             raise SynthesisStationProtocolError(protocol_error_message(result))
         return response
+
+    def _command(
+        self,
+        action_name: str,
+        param: dict[str, Any] | None = None,
+        *,
+        invalidate: tuple[str, ...] = ("query_tasks", "query_posts"),
+    ) -> dict[str, Any]:
+        response = self._require_ok(self._request(action_name, param))
+        for key in invalidate:
+            self._query_cache.pop(key, None)
+        return response
+
+    @staticmethod
+    def _require_text(value: Any, name: str) -> str:
+        text = str(value or "").strip()
+        if not text:
+            raise ValueError(f"{name} 不能为空")
+        return text
+
+    def _resolve_task_id(self, task_id: str = "") -> str:
+        text = str(task_id or "").strip()
+        if text:
+            return text
+        try:
+            self._refresh_work()
+        except Exception:
+            pass
+        current = self._current_task_id()
+        if current:
+            return current
+        raise ValueError(
+            "task_id 不能为空：请连接上游 create_task 的 TASK ID，或填写该参数"
+        )
+
+    def _resolve_post_id(self, post_id: str = "") -> str:
+        text = str(post_id or "").strip()
+        if text:
+            return text
+        try:
+            self._refresh_work()
+        except Exception:
+            pass
+        current = self._current_post_id()
+        if current:
+            return current
+        raise ValueError(
+            "post_id 不能为空：请连接上游 POST ID，或填写该参数"
+        )
+
+    @staticmethod
+    def _with_task_id(response: dict[str, Any], task_id: str) -> dict[str, Any]:
+        payload = dict(response)
+        payload["task_id"] = task_id
+        return payload
+
+    @staticmethod
+    def _with_post_id(response: dict[str, Any], post_id: str) -> dict[str, Any]:
+        payload = dict(response)
+        payload["post_id"] = post_id
+        return payload
+
+    def _task_command(
+        self,
+        action_name: str,
+        task_id: str,
+        extra: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        resolved = self._resolve_task_id(task_id)
+        param: dict[str, Any] = {"task_id": resolved}
+        if extra:
+            param.update(extra)
+        return self._with_task_id(self._command(action_name, param), resolved)
+
+    def _task_query(self, action_name: str, task_id: str) -> dict[str, Any]:
+        resolved = self._resolve_task_id(task_id)
+        response = self._request(action_name, {"task_id": resolved}, retry_read=True)
+        return self._with_task_id(response, resolved)
 
     def _disconnect(self) -> None:
         sock, self._sock = self._sock, None
@@ -721,7 +807,18 @@ class SynthesisStation:
             raise ValueError("recipe_name 不能为空")
         return self._require_ok(self._request("upload_recipe", param))
 
-    @action(description="下发 TASK")
+    @action(
+        description="下发 TASK",
+        handles=[
+            ActionOutputHandle(
+                key="task_id",
+                data_type="string",
+                label="TASK ID",
+                data_key="task_id",
+                data_source=DataSource.EXECUTOR,
+            ),
+        ],
+    )
     def create_task(
         self,
         pallet_type: int = 1,
@@ -740,7 +837,7 @@ class SynthesisStation:
             task_slot_nums[槽位号]: 点添加，每项一个槽位号，如 1、2。
             task_recipe_names[槽位配方名称]: 与槽位号一一对应，须先上传该配方。
             has_bead_bottle[是否上加珠瓶]: 有加珠瓶时勾选。
-            bead_count[球磨珠数量]: 加珠瓶中的球磨珠数量。
+            bead_count[球磨珠数量]: 当前托盘上所有配方所需球磨珠的总数（不是单个配方的数量）。有加珠瓶时必填。
         """
         slots = resolve_task_slots_input(
             task_slot_nums, task_recipe_names, kwargs.pop("slots", None)
@@ -773,4 +870,513 @@ class SynthesisStation:
             )
         )
         self._query_cache.pop("query_tasks", None)
-        return response
+        task_id = ""
+        data = response.get("data")
+        if isinstance(data, dict):
+            task_id = str(data.get("task_id") or "").strip()
+        return self._with_task_id(response, task_id)
+
+    @action(
+        description="启动 TASK，变为已就绪",
+        handles=[
+            ActionInputHandle(
+                key="task_id",
+                data_type="string",
+                label="TASK ID",
+                data_key="task_id",
+                data_source=DataSource.HANDLE,
+            ),
+            ActionOutputHandle(
+                key="task_id",
+                data_type="string",
+                label="TASK ID",
+                data_key="task_id",
+                data_source=DataSource.EXECUTOR,
+            ),
+        ],
+    )
+    def start_task(self, task_id: str = "") -> dict[str, Any]:
+        """启动 TASK。
+
+        Args:
+            task_id[TASK ID]: 工站分配的编号。工作流从上游 create_task 连线即可，可空；空则用当前运行中的 TASK。
+        """
+        return self._task_command("start_task", task_id)
+
+    @action(
+        description="上坩埚：从方舱或料架2取坩埚",
+        handles=[
+            ActionInputHandle(
+                key="task_id",
+                data_type="string",
+                label="TASK ID",
+                data_key="task_id",
+                data_source=DataSource.HANDLE,
+            ),
+            ActionOutputHandle(
+                key="task_id",
+                data_type="string",
+                label="TASK ID",
+                data_key="task_id",
+                data_source=DataSource.EXECUTOR,
+            ),
+        ],
+    )
+    def upload_cubic(self, task_id: str = "", fetch_cubic_source: int = 1) -> dict[str, Any]:
+        """上坩埚。
+
+        Args:
+            task_id[TASK ID]: 工站分配的编号。工作流连线即可，可空。
+            fetch_cubic_source[上坩埚来源]: 0 方舱，1 料架2。
+        """
+        source = int(fetch_cubic_source)
+        if source not in {0, 1}:
+            raise ValueError("fetch_cubic_source 必须是 0（方舱）或 1（料架2）")
+        return self._task_command(
+            "upload_cubic", task_id, {"fetch_cubic_source": source}
+        )
+
+    @action(
+        always_free=True,
+        description="查询上坩埚状态",
+        handles=[
+            ActionInputHandle(
+                key="task_id",
+                data_type="string",
+                label="TASK ID",
+                data_key="task_id",
+                data_source=DataSource.HANDLE,
+            ),
+            ActionOutputHandle(
+                key="task_id",
+                data_type="string",
+                label="TASK ID",
+                data_key="task_id",
+                data_source=DataSource.EXECUTOR,
+            ),
+        ],
+    )
+    def query_upload_cubic_status(self, task_id: str = "") -> dict[str, Any]:
+        """查询上坩埚状态。
+
+        Args:
+            task_id[TASK ID]: 工站分配的编号。工作流连线即可，可空。
+        """
+        return self._task_query("query_upload_cubic_status", task_id)
+
+    @action(
+        description="关外舱门，继续方舱上料",
+        handles=[
+            ActionInputHandle(
+                key="task_id",
+                data_type="string",
+                label="TASK ID",
+                data_key="task_id",
+                data_source=DataSource.HANDLE,
+            ),
+            ActionOutputHandle(
+                key="task_id",
+                data_type="string",
+                label="TASK ID",
+                data_key="task_id",
+                data_source=DataSource.EXECUTOR,
+            ),
+        ],
+    )
+    def close_cabin_outer_door(self, task_id: str = "") -> dict[str, Any]:
+        """方舱人工上料完成后关外舱门。
+
+        Args:
+            task_id[TASK ID]: 工站分配的编号。工作流连线即可，可空。
+        """
+        return self._task_command("close_cabin_outer_door", task_id)
+
+    @action(
+        description="加样确认：写入掺杂剂实际重量",
+        handles=[
+            ActionInputHandle(
+                key="task_id",
+                data_type="string",
+                label="TASK ID",
+                data_key="task_id",
+                data_source=DataSource.HANDLE,
+            ),
+            ActionOutputHandle(
+                key="task_id",
+                data_type="string",
+                label="TASK ID",
+                data_key="task_id",
+                data_source=DataSource.EXECUTOR,
+            ),
+        ],
+    )
+    def confirm_recipe(
+        self,
+        task_id: str = "",
+        slot_num: int = 1,
+        material: str = "",
+        real_weight: float = 0.0,
+    ) -> dict[str, Any]:
+        """确认配方中掺杂剂的实际重量。
+
+        Args:
+            task_id[TASK ID]: 工站分配的编号。工作流连线即可，可空。
+            slot_num[槽位号]: 配方所在槽位。
+            material[物料名称]: 掺杂剂物料名称，例如 LiBr。
+            real_weight[实际重量 g]: 掺杂剂的实际重量。
+        """
+        return self._task_command(
+            "confirm_recipe",
+            task_id,
+            {
+                "slot_num": int(slot_num),
+                "material": self._require_text(material, "material"),
+                "real_weight": float(real_weight),
+            },
+        )
+
+    @action(
+        description="启动加样",
+        handles=[
+            ActionInputHandle(
+                key="task_id",
+                data_type="string",
+                label="TASK ID",
+                data_key="task_id",
+                data_source=DataSource.HANDLE,
+            ),
+            ActionOutputHandle(
+                key="task_id",
+                data_type="string",
+                label="TASK ID",
+                data_key="task_id",
+                data_source=DataSource.EXECUTOR,
+            ),
+        ],
+    )
+    def start_recipt(self, task_id: str = "") -> dict[str, Any]:
+        """启动加样；成功启动即返回，不等待加样结束。
+
+        Args:
+            task_id[TASK ID]: 工站分配的编号。工作流连线即可，可空。
+        """
+        return self._task_command("start_recipt", task_id)
+
+    @action(
+        always_free=True,
+        description="查询加样状态",
+        handles=[
+            ActionInputHandle(
+                key="task_id",
+                data_type="string",
+                label="TASK ID",
+                data_key="task_id",
+                data_source=DataSource.HANDLE,
+            ),
+            ActionOutputHandle(
+                key="task_id",
+                data_type="string",
+                label="TASK ID",
+                data_key="task_id",
+                data_source=DataSource.EXECUTOR,
+            ),
+        ],
+    )
+    def get_recipt_status(self, task_id: str = "") -> dict[str, Any]:
+        """查询各槽位加样状态。
+
+        Args:
+            task_id[TASK ID]: 工站分配的编号。工作流连线即可，可空。
+        """
+        return self._task_query("get_recipt_status", task_id)
+
+    @action(
+        description="启动声共振",
+        handles=[
+            ActionInputHandle(
+                key="task_id",
+                data_type="string",
+                label="TASK ID",
+                data_key="task_id",
+                data_source=DataSource.HANDLE,
+            ),
+            ActionOutputHandle(
+                key="task_id",
+                data_type="string",
+                label="TASK ID",
+                data_key="task_id",
+                data_source=DataSource.EXECUTOR,
+            ),
+        ],
+    )
+    def start_acoustic_resonance(self, task_id: str = "") -> dict[str, Any]:
+        """启动声共振；成功启动即返回，不等待结束。
+
+        Args:
+            task_id[TASK ID]: 工站分配的编号。工作流连线即可，可空。
+        """
+        return self._task_command("start_acoustic_resonance", task_id)
+
+    @action(
+        always_free=True,
+        description="查询声共振状态",
+        handles=[
+            ActionInputHandle(
+                key="task_id",
+                data_type="string",
+                label="TASK ID",
+                data_key="task_id",
+                data_source=DataSource.HANDLE,
+            ),
+            ActionOutputHandle(
+                key="task_id",
+                data_type="string",
+                label="TASK ID",
+                data_key="task_id",
+                data_source=DataSource.EXECUTOR,
+            ),
+        ],
+    )
+    def get_acoustic_resonance_status(self, task_id: str = "") -> dict[str, Any]:
+        """查询声共振上料、下料与运行状态。
+
+        Args:
+            task_id[TASK ID]: 工站分配的编号。工作流连线即可，可空。
+        """
+        return self._task_query("get_acoustic_resonance_status", task_id)
+
+    @action(
+        description="声共振下料",
+        handles=[
+            ActionInputHandle(
+                key="task_id",
+                data_type="string",
+                label="TASK ID",
+                data_key="task_id",
+                data_source=DataSource.HANDLE,
+            ),
+            ActionOutputHandle(
+                key="task_id",
+                data_type="string",
+                label="TASK ID",
+                data_key="task_id",
+                data_source=DataSource.EXECUTOR,
+            ),
+        ],
+    )
+    def fetch_acoustic_resonance(self, task_id: str = "") -> dict[str, Any]:
+        """声共振下料。
+
+        Args:
+            task_id[TASK ID]: 工站分配的编号。工作流连线即可，可空。
+        """
+        return self._task_command("fetch_acoustic_resonance", task_id)
+
+    @action(
+        description="结束声共振，进入扫码装瓶",
+        handles=[
+            ActionInputHandle(
+                key="task_id",
+                data_type="string",
+                label="TASK ID",
+                data_key="task_id",
+                data_source=DataSource.HANDLE,
+            ),
+            ActionOutputHandle(
+                key="task_id",
+                data_type="string",
+                label="TASK ID",
+                data_key="task_id",
+                data_source=DataSource.EXECUTOR,
+            ),
+        ],
+    )
+    def finish_acoustic_resonance(self, task_id: str = "") -> dict[str, Any]:
+        """通知系统声共振全部结束。
+
+        Args:
+            task_id[TASK ID]: 工站分配的编号。工作流连线即可，可空。
+        """
+        return self._task_command("finish_acoustic_resonance", task_id)
+
+    @action(
+        description="扫码装瓶",
+        handles=[
+            ActionInputHandle(
+                key="task_id",
+                data_type="string",
+                label="TASK ID",
+                data_key="task_id",
+                data_source=DataSource.HANDLE,
+            ),
+            ActionOutputHandle(
+                key="task_id",
+                data_type="string",
+                label="TASK ID",
+                data_key="task_id",
+                data_source=DataSource.EXECUTOR,
+            ),
+        ],
+    )
+    def scan_big_cubic_to_bottle(self, task_id: str = "", qrcode: str = "") -> dict[str, Any]:
+        """按大坩埚二维码扫码装瓶。
+
+        Args:
+            task_id[TASK ID]: 工站分配的编号。工作流连线即可，可空。
+            qrcode[大坩埚二维码]: 例如 CRU-L-001。
+        """
+        return self._task_command(
+            "scan_big_cubic_to_bottle",
+            task_id,
+            {"qrcode": self._require_text(qrcode, "qrcode")},
+        )
+
+    @action(
+        description="启动烧结",
+        handles=[
+            ActionInputHandle(
+                key="post_id",
+                data_type="string",
+                label="POST ID",
+                data_key="post_id",
+                data_source=DataSource.HANDLE,
+            ),
+            ActionOutputHandle(
+                key="post_id",
+                data_type="string",
+                label="POST ID",
+                data_key="post_id",
+                data_source=DataSource.EXECUTOR,
+            ),
+        ],
+    )
+    def start_sintering(
+        self,
+        post_id: str = "",
+        joule_heating_fetch_mode: str = "auto",
+    ) -> dict[str, Any]:
+        """启动烧结。
+
+        Args:
+            post_id[POST ID]: 工站分配的编号。工作流连线即可，可空；空则用当前运行中的 POST。
+            joule_heating_fetch_mode[焦耳热下坩埚模式]: auto 自动，manual 手动。
+        """
+        mode = str(joule_heating_fetch_mode).strip().lower()
+        if mode not in {"auto", "manual"}:
+            raise ValueError('joule_heating_fetch_mode 必须是 "auto" 或 "manual"')
+        resolved = self._resolve_post_id(post_id)
+        return self._with_post_id(
+            self._command(
+                "start_sintering",
+                {
+                    "post_id": resolved,
+                    "joule_heating_fetch_mode": mode,
+                },
+            ),
+            resolved,
+        )
+
+    @action(
+        always_free=True,
+        description="查询烧结状态",
+        handles=[
+            ActionInputHandle(
+                key="post_id",
+                data_type="string",
+                label="POST ID",
+                data_key="post_id",
+                data_source=DataSource.HANDLE,
+            ),
+            ActionOutputHandle(
+                key="post_id",
+                data_type="string",
+                label="POST ID",
+                data_key="post_id",
+                data_source=DataSource.EXECUTOR,
+            ),
+        ],
+    )
+    def get_sintering_status(self, post_id: str = "") -> dict[str, Any]:
+        """查询马弗炉与焦耳热烧结状态。
+
+        Args:
+            post_id[POST ID]: 工站分配的编号。工作流连线即可，可空。
+        """
+        resolved = self._resolve_post_id(post_id)
+        return self._with_post_id(
+            self._request(
+                "get_sintering_status",
+                {"post_id": resolved},
+                retry_read=True,
+            ),
+            resolved,
+        )
+
+    @action(
+        description="焦耳热下料",
+        handles=[
+            ActionInputHandle(
+                key="post_id",
+                data_type="string",
+                label="POST ID",
+                data_key="post_id",
+                data_source=DataSource.HANDLE,
+            ),
+            ActionOutputHandle(
+                key="post_id",
+                data_type="string",
+                label="POST ID",
+                data_key="post_id",
+                data_source=DataSource.EXECUTOR,
+            ),
+        ],
+    )
+    def fetch_joule_heating(self, post_id: str = "") -> dict[str, Any]:
+        """焦耳热下坩埚。
+
+        Args:
+            post_id[POST ID]: 工站分配的编号。工作流连线即可，可空。
+        """
+        resolved = self._resolve_post_id(post_id)
+        return self._with_post_id(
+            self._command("fetch_joule_heating", {"post_id": resolved}),
+            resolved,
+        )
+
+    @action(
+        description="马弗炉下料",
+        handles=[
+            ActionInputHandle(
+                key="post_id",
+                data_type="string",
+                label="POST ID",
+                data_key="post_id",
+                data_source=DataSource.HANDLE,
+            ),
+            ActionOutputHandle(
+                key="post_id",
+                data_type="string",
+                label="POST ID",
+                data_key="post_id",
+                data_source=DataSource.EXECUTOR,
+            ),
+        ],
+    )
+    def fetch_furnace(self, post_id: str = "", furnace_id: int = 1) -> dict[str, Any]:
+        """马弗炉下坩埚。
+
+        Args:
+            post_id[POST ID]: 工站分配的编号。工作流连线即可，可空。
+            furnace_id[马弗炉编号]: 1、2、3 或 4。
+        """
+        furnace = int(furnace_id)
+        if furnace not in {1, 2, 3, 4}:
+            raise ValueError("furnace_id 必须是 1 到 4")
+        resolved = self._resolve_post_id(post_id)
+        return self._with_post_id(
+            self._command(
+                "fetch_furnace",
+                {"post_id": resolved, "furnace_id": furnace},
+            ),
+            resolved,
+        )

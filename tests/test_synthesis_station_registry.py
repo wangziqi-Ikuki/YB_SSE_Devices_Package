@@ -75,6 +75,22 @@ def test_synthesis_station_actions_are_discoverable_by_registry() -> None:
         "test_connection",
         "upload_recipe",
         "create_task",
+        "start_task",
+        "upload_cubic",
+        "query_upload_cubic_status",
+        "close_cabin_outer_door",
+        "confirm_recipe",
+        "start_recipt",
+        "get_recipt_status",
+        "start_acoustic_resonance",
+        "get_acoustic_resonance_status",
+        "fetch_acoustic_resonance",
+        "finish_acoustic_resonance",
+        "scan_big_cubic_to_bottle",
+        "start_sintering",
+        "get_sintering_status",
+        "fetch_joule_heating",
+        "fetch_furnace",
     }
     assert {arg.arg for arg in init_method.args.args if arg.arg != "self"} == {
         "device_id",
@@ -148,6 +164,13 @@ def test_template_decorator_metadata_is_registered() -> None:
     assert device_meta["displayname"] == "合成工站"
     assert device_meta["icon"] == DECK_ICON
     assert get_action_meta(SynthesisStation.station_status)["always_free"] is True
+    assert get_action_meta(SynthesisStation.get_recipt_status)["always_free"] is True
+    create_handles = get_action_meta(SynthesisStation.create_task)["handles"]
+    assert create_handles["output"][0]["handler_key"] == "task_id"
+    assert create_handles["output"][0]["data_key"] == "task_id"
+    start_handles = get_action_meta(SynthesisStation.start_task)["handles"]
+    assert start_handles["input"][0]["handler_key"] == "task_id"
+    assert start_handles["output"][0]["handler_key"] == "task_id"
     assert is_not_action(SynthesisStation.close)
 
     resource_meta = get_resource_meta(SynthesisStation_Deck)

@@ -347,6 +347,114 @@ class MockSynthesisState:
                     return lot, cubic
         return None
 
+    def _find_task(self, task_id: str) -> dict[str, Any] | None:
+        wanted = str(task_id or "").strip()
+        if not wanted:
+            return None
+        for item in self.tasks:
+            if str(item.get("task_id") or "") == wanted:
+                return item
+        return None
+
+    def _find_post(self, post_id: str) -> dict[str, Any] | None:
+        wanted = str(post_id or "").strip()
+        if not wanted:
+            return None
+        for item in self.posts:
+            if str(item.get("post_id") or "") == wanted:
+                return item
+        return None
+
+    def _other_running_task(self, task_id: str) -> bool:
+        wanted = str(task_id or "").strip()
+        return any(
+            str(item.get("task_id") or "") != wanted
+            and is_running_task_state(int(item.get("task_state") or 0))
+            for item in self.tasks
+        )
+
+    def _slot_recipe(self, task: dict[str, Any], slot_num: int) -> dict[str, Any] | None:
+        for item in task.get("_slots") or []:
+            if int(item.get("slot_num") or 0) == slot_num:
+                recipe = item.get("recipe")
+                return recipe if isinstance(recipe, dict) else None
+        recipes = task.get("_recipes") or []
+        if 1 <= slot_num <= len(recipes) and isinstance(recipes[slot_num - 1], dict):
+            return recipes[slot_num - 1]
+        return None
+
+    def _ensure_task_runtime(self, task: dict[str, Any]) -> None:
+        task.setdefault("cabin_state", 0)
+        slots = task.get("_slots") or []
+        if "_slot_states" not in task:
+            task["_slot_states"] = {
+                int(item.get("slot_num") or index + 1): 0
+                for index, item in enumerate(slots)
+            }
+        task.setdefault(
+            "_acoustic",
+            {
+                "acoustic_resonance_upload_state": 0,
+                "acoustic_resonance_fetch_state": 0,
+                "acoustic_resonance_state": 0,
+            },
+        )
+
+    def _ensure_sintering(self, post: dict[str, Any]) -> dict[str, Any]:
+        existing = post.get("_sintering")
+        if isinstance(existing, dict) and "furnace" in existing:
+            return existing
+        furnaces: dict[int, dict[str, Any]] = {}
+        joules: list[dict[str, Any]] = []
+        for lot in post.get("LOT") or []:
+            for cubic in lot.get("small_cubics") or []:
+                cubic_id = small_cubic_id(cubic)
+                firing_type = int(cubic.get("firing_type") or 0)
+                send_state = int(cubic.get("send_state") or 0)
+                fetch_state = int(cubic.get("fetch_state") or 0)
+                upload_state = 2 if send_state == 2 else send_state
+                sintering_state = 2 if fetch_state == 2 else (1 if send_state == 2 else 0)
+                if firing_type == 4:
+                    joules.append(
+                        {
+                            "small_cubic": cubic_id,
+                            "upload_state": upload_state,
+                            "fetch_state": fetch_state,
+                            "sintering_state": sintering_state,
+                            "cooling_state": 2 if fetch_state == 2 else 0,
+                        }
+                    )
+                    continue
+                furnace_id = firing_type + 1
+                entry = furnaces.setdefault(
+                    furnace_id,
+                    {
+                        "furnace_id": furnace_id,
+                        "upload_state": upload_state,
+                        "fetch_state": 2,
+                        "sintering_state": sintering_state,
+                        "small_cubics": [],
+                    },
+                )
+                if cubic_id:
+                    entry["small_cubics"].append(cubic_id)
+                if fetch_state < 2:
+                    entry["fetch_state"] = 0
+                if sintering_state:
+                    entry["sintering_state"] = max(
+                        int(entry.get("sintering_state") or 0), sintering_state
+                    )
+                if upload_state:
+                    entry["upload_state"] = max(
+                        int(entry.get("upload_state") or 0), upload_state
+                    )
+        payload = {
+            "furnace": [furnaces[key] for key in sorted(furnaces)],
+            "joule_heating": joules,
+        }
+        post["_sintering"] = payload
+        return payload
+
     def _filter_ids(self, items: list[dict[str, Any]], id_key: str, from_id: str) -> list[dict[str, Any]]:
         start = str(from_id or "").strip()
         if not start:
@@ -404,12 +512,20 @@ class MockSynthesisState:
     def _ensure_lots(self, task: dict[str, Any], *, sampling: bool) -> None:
         lots = task.setdefault("LOT", [])
         recipes = task.get("_recipes") or []
+        slots = task.get("_slots") or []
         cubic_type = int(task.get("_cubic_type") or 1)
         while len(lots) < len(recipes):
-            recipe = recipes[len(lots)]
+            index = len(lots)
+            recipe = recipes[index]
+            slot_num = (
+                int(slots[index].get("slot_num") or index + 1)
+                if index < len(slots)
+                else index + 1
+            )
             lots.append(
                 {
                     "lotId": self._next_lot_id(),
+                    "slot_num": slot_num,
                     "lot_state": 1 if sampling else 0,
                     "recipe_name": recipe.get("recipe_name"),
                     "recipe_component": recipe_component_count(recipe),
@@ -651,6 +767,7 @@ class MockSynthesisState:
             if not isinstance(slots, list) or not slots:
                 return self._response(request_id, result=2)
             recipes: list[dict[str, Any]] = []
+            slot_records: list[dict[str, Any]] = []
             for item in slots:
                 if not isinstance(item, dict):
                     return self._response(request_id, result=2)
@@ -663,25 +780,427 @@ class MockSynthesisState:
                 recipe_name = str(item.get("recipe_name") or "").strip()
                 recipe = self.recipes.get(recipe_name)
                 if not recipe:
-                    return self._response(request_id, result=2)
+                    return self._response(request_id, result=6)
                 recipes.append(copy.deepcopy(recipe))
+                slot_records.append(
+                    {"slot_num": slot_num, "recipe": copy.deepcopy(recipe)}
+                )
             task_id = self._next_task_id()
             task = {
                 "task_id": task_id,
-                "task_state": 1,
+                "task_state": 0,
                 "fetch_cubic_source": 1,
                 "fetch_cubic_state": 0,
+                "cabin_state": 0,
                 "synthesis_state": 0,
                 "LOT": [],
                 "_recipes": recipes,
+                "_slots": slot_records,
+                "_slot_states": {item["slot_num"]: 0 for item in slot_records},
+                "_acoustic": {
+                    "acoustic_resonance_upload_state": 0,
+                    "acoustic_resonance_fetch_state": 0,
+                    "acoustic_resonance_state": 0,
+                },
                 "_cubic_type": cubic_type,
                 "_has_bead_bottle": bool(param.get("has_bead_bottle")),
                 "_bead_count": int(param.get("bead_count") or 0),
             }
             self.tasks.append(task)
-            self.task_started[task_id] = time.monotonic()
             return self._response(request_id, data={"task_id": task_id})
-        return self._response(request_id, result=8)
+        if action == "start_task":
+            return self._handle_start_task(request_id, param)
+        if action == "upload_cubic":
+            return self._handle_upload_cubic(request_id, param)
+        if action == "query_upload_cubic_status":
+            return self._handle_query_upload_cubic_status(request_id, param)
+        if action == "close_cabin_outer_door":
+            return self._handle_close_cabin_outer_door(request_id, param)
+        if action == "confirm_recipe":
+            return self._handle_confirm_recipe(request_id, param)
+        if action == "start_recipt":
+            return self._handle_start_recipt(request_id, param)
+        if action == "get_recipt_status":
+            return self._handle_get_recipt_status(request_id, param)
+        if action == "start_acoustic_resonance":
+            return self._handle_start_acoustic_resonance(request_id, param)
+        if action == "get_acoustic_resonance_status":
+            return self._handle_get_acoustic_resonance_status(request_id, param)
+        if action == "fetch_acoustic_resonance":
+            return self._handle_fetch_acoustic_resonance(request_id, param)
+        if action == "finish_acoustic_resonance":
+            return self._handle_finish_acoustic_resonance(request_id, param)
+        if action == "scan_big_cubic_to_bottle":
+            return self._handle_scan_big_cubic_to_bottle(request_id, param)
+        if action == "start_sintering":
+            return self._handle_start_sintering(request_id, param)
+        if action == "get_sintering_status":
+            return self._handle_get_sintering_status(request_id, param)
+        if action == "fetch_joule_heating":
+            return self._handle_fetch_joule_heating(request_id, param)
+        if action == "fetch_furnace":
+            return self._handle_fetch_furnace(request_id, param)
+        return self._response(request_id, result=2)
+
+    def _handle_start_task(
+        self, request_id: Any, param: dict[str, Any]
+    ) -> dict[str, Any]:
+        task_id = str(param.get("task_id") or "").strip()
+        if not task_id:
+            return self._response(request_id, result=2)
+        task = self._find_task(task_id)
+        if task is None:
+            return self._response(request_id, result=7)
+        if self._other_running_task(task_id):
+            return self._response(request_id, result=8)
+        if int(task.get("task_state") or 0) != 0:
+            return self._response(request_id, result=9)
+        task["task_state"] = 1
+        if self.auto_advance:
+            self.task_started[task_id] = time.monotonic()
+        return self._response(request_id)
+
+    def _handle_upload_cubic(
+        self, request_id: Any, param: dict[str, Any]
+    ) -> dict[str, Any]:
+        if self._plc_offline():
+            return self._response(request_id, result=1)
+        task_id = str(param.get("task_id") or "").strip()
+        try:
+            source = int(param.get("fetch_cubic_source"))
+        except (TypeError, ValueError):
+            return self._response(request_id, result=2)
+        if not task_id or source not in {0, 1}:
+            return self._response(request_id, result=2)
+        task = self._find_task(task_id)
+        if task is None:
+            return self._response(request_id, result=7)
+        if int(task.get("task_state") or 0) < 1:
+            return self._response(request_id, result=9)
+        self._ensure_task_runtime(task)
+        task["fetch_cubic_source"] = source
+        task["task_state"] = max(int(task.get("task_state") or 0), 2)
+        if source == 0:
+            task["fetch_cubic_state"] = 1
+            task["cabin_state"] = 2
+        else:
+            task["fetch_cubic_state"] = 2
+            task["cabin_state"] = 0
+        return self._response(request_id)
+
+    def _handle_query_upload_cubic_status(
+        self, request_id: Any, param: dict[str, Any]
+    ) -> dict[str, Any]:
+        task_id = str(param.get("task_id") or "").strip()
+        if not task_id:
+            return self._response(request_id, result=2)
+        task = self._find_task(task_id)
+        if task is None:
+            return self._response(request_id, result=7)
+        self._ensure_task_runtime(task)
+        return self._response(
+            request_id,
+            data={
+                "fetch_cubic_source": int(task.get("fetch_cubic_source") or 0),
+                "fetch_cubic_state": int(task.get("fetch_cubic_state") or 0),
+                "cabin_state": int(task.get("cabin_state") or 0),
+            },
+        )
+
+    def _handle_close_cabin_outer_door(
+        self, request_id: Any, param: dict[str, Any]
+    ) -> dict[str, Any]:
+        task_id = str(param.get("task_id") or "").strip()
+        if not task_id:
+            return self._response(request_id, result=2)
+        task = self._find_task(task_id)
+        if task is None:
+            return self._response(request_id, result=7)
+        if int(task.get("task_state") or 0) < 1:
+            return self._response(request_id, result=9)
+        self._ensure_task_runtime(task)
+        if int(task.get("fetch_cubic_source") or 0) == 0:
+            task["cabin_state"] = 9
+            task["fetch_cubic_state"] = 2
+        return self._response(request_id)
+
+    def _handle_confirm_recipe(
+        self, request_id: Any, param: dict[str, Any]
+    ) -> dict[str, Any]:
+        task_id = str(param.get("task_id") or "").strip()
+        material = str(param.get("material") or "").strip()
+        try:
+            slot_num = int(param.get("slot_num"))
+            real_weight = float(param.get("real_weight"))
+        except (TypeError, ValueError):
+            return self._response(request_id, result=2)
+        if not task_id or not material:
+            return self._response(request_id, result=2)
+        task = self._find_task(task_id)
+        if task is None:
+            return self._response(request_id, result=7)
+        if int(task.get("task_state") or 0) < 1:
+            return self._response(request_id, result=9)
+        recipe = self._slot_recipe(task, slot_num)
+        if recipe is None:
+            return self._response(request_id, result=10)
+        spec = recipe.get(material)
+        if not isinstance(spec, dict) or material in RECIPE_META_KEYS:
+            return self._response(request_id, result=10)
+        if not bool(spec.get("pre-add", spec.get("pre_add", False))):
+            return self._response(request_id, result=11)
+        spec["real_weight"] = real_weight
+        return self._response(request_id)
+
+    def _handle_start_recipt(
+        self, request_id: Any, param: dict[str, Any]
+    ) -> dict[str, Any]:
+        if self._plc_offline():
+            return self._response(request_id, result=1)
+        task_id = str(param.get("task_id") or "").strip()
+        if not task_id:
+            return self._response(request_id, result=2)
+        task = self._find_task(task_id)
+        if task is None:
+            return self._response(request_id, result=7)
+        if int(task.get("task_state") or 0) < 1:
+            return self._response(request_id, result=9)
+        self._ensure_task_runtime(task)
+        task["task_state"] = max(int(task.get("task_state") or 0), 3)
+        task["synthesis_state"] = 2
+        self._ensure_lots(task, sampling=True)
+        states = task.setdefault("_slot_states", {})
+        for item in task.get("_slots") or []:
+            states[int(item.get("slot_num") or 0)] = 2
+        if not states:
+            for index, _recipe in enumerate(task.get("_recipes") or [], start=1):
+                states[index] = 2
+        return self._response(request_id)
+
+    def _handle_get_recipt_status(
+        self, request_id: Any, param: dict[str, Any]
+    ) -> dict[str, Any]:
+        task_id = str(param.get("task_id") or "").strip()
+        if not task_id:
+            return self._response(request_id, result=2)
+        task = self._find_task(task_id)
+        if task is None:
+            return self._response(request_id, result=7)
+        self._ensure_task_runtime(task)
+        states = task.get("_slot_states") or {}
+        slots = [
+            {"slot_num": int(item.get("slot_num") or 0), "recipe_state": int(states.get(int(item.get("slot_num") or 0), 0))}
+            for item in task.get("_slots") or []
+        ]
+        if not slots:
+            slots = [
+                {"slot_num": slot_num, "recipe_state": int(state)}
+                for slot_num, state in sorted(states.items())
+                if slot_num
+            ]
+        return self._response(request_id, data={"slots": slots})
+
+    def _handle_start_acoustic_resonance(
+        self, request_id: Any, param: dict[str, Any]
+    ) -> dict[str, Any]:
+        if self._plc_offline():
+            return self._response(request_id, result=1)
+        task_id = str(param.get("task_id") or "").strip()
+        if not task_id:
+            return self._response(request_id, result=2)
+        task = self._find_task(task_id)
+        if task is None:
+            return self._response(request_id, result=7)
+        if int(task.get("task_state") or 0) < 1:
+            return self._response(request_id, result=9)
+        self._ensure_task_runtime(task)
+        task["synthesis_state"] = 3
+        task["_acoustic"] = {
+            "acoustic_resonance_upload_state": 2,
+            "acoustic_resonance_fetch_state": 0,
+            "acoustic_resonance_state": 2,
+        }
+        self.devices["acoustic_resonance"] = 2
+        return self._response(request_id)
+
+    def _handle_get_acoustic_resonance_status(
+        self, request_id: Any, param: dict[str, Any]
+    ) -> dict[str, Any]:
+        task_id = str(param.get("task_id") or "").strip()
+        if not task_id:
+            return self._response(request_id, result=2)
+        task = self._find_task(task_id)
+        if task is None:
+            return self._response(request_id, result=7)
+        self._ensure_task_runtime(task)
+        return self._response(request_id, data=dict(task["_acoustic"]))
+
+    def _handle_fetch_acoustic_resonance(
+        self, request_id: Any, param: dict[str, Any]
+    ) -> dict[str, Any]:
+        if self._plc_offline():
+            return self._response(request_id, result=1)
+        task_id = str(param.get("task_id") or "").strip()
+        if not task_id:
+            return self._response(request_id, result=2)
+        task = self._find_task(task_id)
+        if task is None:
+            return self._response(request_id, result=7)
+        if int(task.get("task_state") or 0) < 1:
+            return self._response(request_id, result=9)
+        self._ensure_task_runtime(task)
+        acoustic = task["_acoustic"]
+        if (
+            not self.auto_advance
+            and int(acoustic.get("acoustic_resonance_upload_state") or 0) != 2
+        ):
+            return self._response(request_id, result=9)
+        acoustic["acoustic_resonance_fetch_state"] = 2
+        acoustic["acoustic_resonance_state"] = 2
+        return self._response(request_id)
+
+    def _handle_finish_acoustic_resonance(
+        self, request_id: Any, param: dict[str, Any]
+    ) -> dict[str, Any]:
+        task_id = str(param.get("task_id") or "").strip()
+        if not task_id:
+            return self._response(request_id, result=2)
+        task = self._find_task(task_id)
+        if task is None:
+            return self._response(request_id, result=7)
+        if int(task.get("task_state") or 0) < 1:
+            return self._response(request_id, result=9)
+        self._ensure_task_runtime(task)
+        acoustic = task["_acoustic"]
+        if (
+            not self.auto_advance
+            and int(acoustic.get("acoustic_resonance_fetch_state") or 0) != 2
+        ):
+            return self._response(request_id, result=9)
+        task["synthesis_state"] = 3
+        task["task_state"] = max(int(task.get("task_state") or 0), 4)
+        return self._response(request_id)
+
+    def _handle_scan_big_cubic_to_bottle(
+        self, request_id: Any, param: dict[str, Any]
+    ) -> dict[str, Any]:
+        task_id = str(param.get("task_id") or "").strip()
+        qrcode = str(param.get("qrcode") or "").strip()
+        if not task_id or not qrcode:
+            return self._response(request_id, result=2)
+        task = self._find_task(task_id)
+        if task is None:
+            return self._response(request_id, result=7)
+        if int(task.get("task_state") or 0) < 1:
+            return self._response(request_id, result=9)
+        stamp = _now_text()
+        matched = False
+        for lot in task.get("LOT") or []:
+            if str(lot.get("cubic") or "") == qrcode:
+                lot["bottle_state"] = 1
+                lot["bottle_time"] = lot.get("bottle_time") or stamp
+                lot["lot_state"] = 4
+                matched = True
+        if not matched:
+            return self._response(request_id, result=12)
+        return self._response(request_id)
+
+    def _handle_start_sintering(
+        self, request_id: Any, param: dict[str, Any]
+    ) -> dict[str, Any]:
+        if self._plc_offline():
+            return self._response(request_id, result=1)
+        post_id = str(param.get("post_id") or "").strip()
+        mode = str(param.get("joule_heating_fetch_mode") or "auto").strip().lower()
+        if not post_id:
+            return self._response(request_id, result=2)
+        if mode not in {"auto", "manual"}:
+            return self._response(request_id, result=2)
+        post = self._find_post(post_id)
+        if post is None:
+            return self._response(request_id, result=7)
+        if int(post.get("post_state") or 0) >= 7:
+            return self._response(request_id, result=9)
+        post["_joule_heating_fetch_mode"] = mode
+        self._ensure_sintering(post)
+        post["post_state"] = max(int(post.get("post_state") or 0), 5)
+        return self._response(request_id)
+
+    def _handle_get_sintering_status(
+        self, request_id: Any, param: dict[str, Any]
+    ) -> dict[str, Any]:
+        post_id = str(param.get("post_id") or "").strip()
+        if not post_id:
+            return self._response(request_id, result=2)
+        post = self._find_post(post_id)
+        if post is None:
+            return self._response(request_id, result=7)
+        if int(post.get("post_state") or 0) < 1:
+            return self._response(request_id, result=9)
+        return self._response(request_id, data=copy.deepcopy(self._ensure_sintering(post)))
+
+    def _handle_fetch_joule_heating(
+        self, request_id: Any, param: dict[str, Any]
+    ) -> dict[str, Any]:
+        if self._plc_offline():
+            return self._response(request_id, result=1)
+        post_id = str(param.get("post_id") or "").strip()
+        if not post_id:
+            return self._response(request_id, result=2)
+        post = self._find_post(post_id)
+        if post is None:
+            return self._response(request_id, result=7)
+        if int(post.get("post_state") or 0) < 1:
+            return self._response(request_id, result=9)
+        sintering = self._ensure_sintering(post)
+        pending = next(
+            (
+                item
+                for item in sintering.get("joule_heating") or []
+                if int(item.get("fetch_state") or 0) < 2
+            ),
+            None,
+        )
+        if pending is None:
+            return self._response(request_id, result=13)
+        pending["fetch_state"] = 2
+        pending["sintering_state"] = 2
+        pending["cooling_state"] = 2
+        return self._response(request_id)
+
+    def _handle_fetch_furnace(
+        self, request_id: Any, param: dict[str, Any]
+    ) -> dict[str, Any]:
+        if self._plc_offline():
+            return self._response(request_id, result=1)
+        post_id = str(param.get("post_id") or "").strip()
+        try:
+            furnace_id = int(param.get("furnace_id"))
+        except (TypeError, ValueError):
+            return self._response(request_id, result=2)
+        if not post_id or furnace_id not in {1, 2, 3, 4}:
+            return self._response(request_id, result=2)
+        post = self._find_post(post_id)
+        if post is None:
+            return self._response(request_id, result=7)
+        if int(post.get("post_state") or 0) < 1:
+            return self._response(request_id, result=9)
+        sintering = self._ensure_sintering(post)
+        furnace = next(
+            (
+                item
+                for item in sintering.get("furnace") or []
+                if int(item.get("furnace_id") or 0) == furnace_id
+            ),
+            None,
+        )
+        if furnace is None or int(furnace.get("fetch_state") or 0) >= 2:
+            return self._response(request_id, result=13)
+        if not furnace.get("small_cubics"):
+            return self._response(request_id, result=13)
+        furnace["fetch_state"] = 2
+        furnace["sintering_state"] = 2
+        return self._response(request_id)
 
     @staticmethod
     def _response(
@@ -723,7 +1242,7 @@ class _Handler(socketserver.StreamRequestHandler):
                 response = state.handle(request)
             except Exception as exc:  # noqa: BLE001
                 request_id = request.get("request_id") if isinstance(request, dict) else None
-                response = {"request_id": request_id, "result": 7, "message": str(exc)}
+                response = {"request_id": request_id, "result": 2, "message": str(exc)}
             self.wfile.write(encode_station_response(response))
             self.wfile.flush()
 

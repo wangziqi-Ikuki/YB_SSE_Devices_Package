@@ -1,8 +1,8 @@
 # YB SSE Labpackage
 
-电导率自动化测试工站的独立 Uni-Lab-OS 外部设备包。驱动通过
-`@device` 和 `@action` 注册，不修改 Uni-Lab-OS 内置 `unilabos/devices`，
-也不包含任何现场部署用的设备图 JSON。
+电导率自动化测试工站与合成工站的独立 Uni-Lab-OS 外部设备包。驱动通过
+`@device` 和 `@action` 注册，不修改 Uni-Lab-OS 内置 `unilabos/devices`。
+现场设备图 JSON 由部署环境单独维护（电导与合成各一份）。
 
 本仓库遵循 [LabDeviceTemplate](https://github.com/Xuwznln/LabDeviceTemplate)
 的外部设备包规范：设备通过 `device_id` 和 `config` 初始化，业务方法使用
@@ -14,16 +14,28 @@
 ```text
 YB_SSE_Labpackage/
 └── yb_sse_devices/
-    ├── __init__.py                # 主动导入 ConductivityStation 与 Deck
-    ├── protocol.py                # 13 步骤名、库位与设备字段
+    ├── __init__.py                # 懒加载导出工站与 Deck
+    ├── protocol.py                # 电导：13 步骤名、库位与设备字段
     ├── conductivity.py            # 电导工站驱动
-    ├── mock_server.py             # TCP Mock 与本地交互页
-    ├── resources/                 # 三层 2×5 料架与占位耗材
-    ├── synthesis_station.py       # 预留：合成工站
+    ├── mock_server.py             # 电导 TCP Mock 与本地交互页
+    ├── synthesis_protocol.py      # 合成：设备字段、任务状态、错误码
+    ├── synthesis_station.py       # 合成工站驱动
+    ├── synthesis_mock_server.py   # 合成 TCP Mock 与本地交互页
+    ├── resources/                 # 电导料架 + 合成空 Deck
     └── characterization/          # 预留：其他表征设备
 ```
 
-预留目录目前不注册设备，也不会产生占位动作。现场设备图 JSON 仍由部署环境单独维护。
+合成工站使用说明见 [合成工站使用说明.md](合成工站使用说明.md)，协议见 [合成工站下单软件接口.md](合成工站下单软件接口.md)。
+
+## 合成工站摘要
+
+查询：`query_tasks`、`query_posts`、`station_status`、`query_lot`、`query_bottle_code`、`test_connection`。
+
+下单：`upload_recipe`、`create_task`。
+
+Deck：独立 `SynthesisStation_Deck`，背景 `synthesis_station.webp`，本阶段无槽位。设备图为上一级目录的 `synthesis_station.json`。
+
+虚拟机：`python -m yb_sse_devices.synthesis_mock_server`，默认 TCP `127.0.0.1:19101`，交互页 `http://127.0.0.1:19102/`。真机默认端口占位 `8092`，上线前向合作方确认，不要开 `use_mock`。
 
 ## 已注册动作
 
