@@ -294,17 +294,16 @@ def test_upload_recipe_and_create_task_accept_legacy_kwargs(
         formula="Li6PS5Cl",
         synthesis_mass=3.86,
         n_ball_bead=80,
-        materials=DEMO_MATERIALS,
-        unilabos_device_id="SYNTHESIS_STATION",
+        powder_names=[item["name"] for item in DEMO_MATERIALS],
+        powder_weights=[item["weight"] for item in DEMO_MATERIALS],
+        powder_tolerances=[item["tolerance"] for item in DEMO_MATERIALS],
+        powder_pre_adds=[item["pre_add"] for item in DEMO_MATERIALS],
     )
     created = station.create_task(
         pallet_type=1,
         cubic_type=1,
-        slots=[
-            {"slot_num": 1, "recipe_name": "LEGACY-R1"},
-            {"slot_num": 2, "recipe_name": "LEGACY-R1"},
-        ],
-        unilabos_device_id="SYNTHESIS_STATION",
+        task_slot_nums=[1, 2],
+        task_recipe_names=["LEGACY-R1", "LEGACY-R1"],
     )
     assert created["result"] == 0
 

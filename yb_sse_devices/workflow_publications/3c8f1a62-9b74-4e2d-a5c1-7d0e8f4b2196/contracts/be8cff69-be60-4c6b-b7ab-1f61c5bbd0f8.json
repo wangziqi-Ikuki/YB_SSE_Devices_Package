@@ -1,0 +1,318 @@
+{
+  "contract": {
+    "boundary_mapping": {
+      "source_mappings": {
+        "0f8659fc-c663-5cda-aceb-09d9396180ba": {
+          "kind": "node_output",
+          "source_handle_uuid": "938b33f0-6450-5fb7-b29b-4dba3d49e8e5",
+          "workflow_node_uuid": "9d2e6c11-4a83-4f70-b1c5-0e8a37d5f4a2"
+        },
+        "26a5c776-3c09-55d7-9f91-67d6a68567a5": {
+          "kind": "node_output",
+          "source_handle_uuid": "1a1a63b6-57c3-5e59-9a63-88299b348e4d",
+          "workflow_node_uuid": "9d2e6c11-4a83-4f70-b1c5-0e8a37d5f4a2"
+        }
+      },
+      "structural_mappings": {
+        "completion_sources": [],
+        "entry_targets": []
+      },
+      "target_mappings": {}
+    },
+    "contract_digest": "sha256:f97eb793a6016957c7e5b4b66509a31fccd7faf26f35a71e1c88a44dce8d48e0",
+    "create_time": "2026-09-16T04:31:51.797495Z",
+    "description": "备料完成后调用 start_batch，工站连续执行 1–13 步并返回工站响应。",
+    "edge_count": 0,
+    "executor_binding_mapping": {
+      "9d2e6c11-4a83-4f70-b1c5-0e8a37d5f4a2": "executor_1"
+    },
+    "executor_requirements": [
+      {
+        "display_name": "执行设备 1",
+        "key": "executor_1",
+        "required": true,
+        "resource_template_uuid": "abeae6d1-6a6c-5fe1-b67e-4eb0c8b586be"
+      }
+    ],
+    "graph_snapshot": {
+      "edges": [],
+      "handle_templates": [
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "batch_id",
+          "data_source": "executor",
+          "display_name": "batch_id",
+          "handle_key": "batch_id",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 1,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "1a1a63b6-57c3-5e59-9a63-88299b348e4d",
+          "workflow_node_template_uuid": "b0a55236-be56-5d74-8c34-07de19df78c6"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "display_name": "ready",
+          "handle_key": "ready",
+          "io_type": "source",
+          "meta_data": {},
+          "required": false,
+          "type": "default",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "37f59474-6af5-588c-bcf3-4f5c6aaacb85",
+          "workflow_node_template_uuid": "b0a55236-be56-5d74-8c34-07de19df78c6"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "result",
+          "data_source": "executor",
+          "display_name": "result",
+          "handle_key": "result",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 0,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "938b33f0-6450-5fb7-b29b-4dba3d49e8e5",
+          "workflow_node_template_uuid": "b0a55236-be56-5d74-8c34-07de19df78c6"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "display_name": "ready",
+          "handle_key": "ready",
+          "io_type": "target",
+          "meta_data": {},
+          "required": false,
+          "type": "default",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "ac6e1248-ab54-5163-9188-4c18b7038069",
+          "workflow_node_template_uuid": "b0a55236-be56-5d74-8c34-07de19df78c6"
+        }
+      ],
+      "node_templates": [
+        {
+          "class": "yb_sse_devices.conductivity:ConductivityStation",
+          "create_time": "1970-01-01T00:00:00Z",
+          "description": "启动整批自动实验，工站连续执行 1–13 步，无需再串联分步",
+          "display_name": "start_batch",
+          "feedback": {},
+          "goal": {},
+          "goal_default": {},
+          "meta_data": {
+            "unilab": {
+              "action_contract_schema": {
+                "description": "启动整批自动实验，工站连续执行 1–13 步，无需再串联分步",
+                "properties": {
+                  "feedback": {},
+                  "goal": {
+                    "_unilabos_placeholder_info": {},
+                    "additionalProperties": false,
+                    "properties": {},
+                    "required": [],
+                    "type": "object"
+                  },
+                  "result": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "batch_id": {
+                        "type": "string"
+                      },
+                      "result": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "result",
+                      "batch_id"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "goal"
+                ],
+                "title": "start_batch参数",
+                "type": "object",
+                "x-unilabos-action-contract": {
+                  "input_order": [],
+                  "output_order": [
+                    "result",
+                    "batch_id"
+                  ],
+                  "resource_template_symbols": {
+                    "goal": {},
+                    "result": {}
+                  },
+                  "version": 2
+                }
+              },
+              "contract_kind": "typed",
+              "resource_template": {
+                "display_name": "conductivity_station",
+                "name": "community.yb_sse_devices.conductivity_station",
+                "uuid": "abeae6d1-6a6c-5fe1-b67e-4eb0c8b586be"
+              }
+            }
+          },
+          "name": "start_batch",
+          "node_type": "ILab",
+          "resource_template_uuid": "abeae6d1-6a6c-5fe1-b67e-4eb0c8b586be",
+          "result": {},
+          "schema": "{\"_unilabos_placeholder_info\":{},\"additionalProperties\":false,\"properties\":{},\"required\":[],\"type\":\"object\"}",
+          "type": "UniLabJsonCommand",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "b0a55236-be56-5d74-8c34-07de19df78c6"
+        }
+      ],
+      "nodes": [
+        {
+          "action_name": "start_batch",
+          "action_type": "UniLabJsonCommand",
+          "create_time": "2026-09-16T04:30:59.040641Z",
+          "description": "启动整批自动实验，工站连续执行 1–13 步，无需再串联分步",
+          "disabled": false,
+          "execution_policy": {},
+          "material_uuid": null,
+          "meta_data": {
+            "unilab": {
+              "authoring_result_name": "started",
+              "authoring_source_order": 0,
+              "executor_binding": {
+                "device_id": "conductivity_station_01",
+                "mode": "fixed"
+              },
+              "input_bindings": {}
+            }
+          },
+          "minimized": false,
+          "name": "start_batch",
+          "param": {},
+          "pose": {},
+          "status": "idle",
+          "type": "ILab",
+          "update_time": "2026-09-16T04:30:59.040641Z",
+          "uuid": "9d2e6c11-4a83-4f70-b1c5-0e8a37d5f4a2",
+          "workflow_node_template_uuid": "b0a55236-be56-5d74-8c34-07de19df78c6",
+          "workflow_uuid": "3c8f1a62-9b74-4e2d-a5c1-7d0e8f4b2196"
+        }
+      ],
+      "workflow": {
+        "create_time": "2026-09-16T04:30:58.918948Z",
+        "description": "备料完成后调用 start_batch，工站连续执行 1–13 步并返回工站响应。",
+        "meta_data": {
+          "unilab": {
+            "authoring_function_name": "start_conductivity_batch",
+            "authoring_result_record_name": "StartConductivityBatchResult",
+            "input_contract": {
+              "parameters": [],
+              "version": 1
+            },
+            "output_bindings": {
+              "batch_id": {
+                "kind": "node_output",
+                "source_handle_uuid": "1a1a63b6-57c3-5e59-9a63-88299b348e4d",
+                "workflow_node_uuid": "9d2e6c11-4a83-4f70-b1c5-0e8a37d5f4a2"
+              },
+              "result": {
+                "kind": "node_output",
+                "source_handle_uuid": "938b33f0-6450-5fb7-b29b-4dba3d49e8e5",
+                "workflow_node_uuid": "9d2e6c11-4a83-4f70-b1c5-0e8a37d5f4a2"
+              }
+            },
+            "output_contract": {
+              "outputs": [
+                {
+                  "implicit": false,
+                  "name": "result",
+                  "schema": {
+                    "type": "integer"
+                  }
+                },
+                {
+                  "implicit": false,
+                  "name": "batch_id",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "version": 1
+            },
+            "source_bootstrap": {
+              "kind": "editable_package_manifest",
+              "package_id": "yb_sse_devices",
+              "relative_path": "workflows/start_batch.py",
+              "source_uri": "package://yb_sse_devices/workflows/start_batch.py"
+            }
+          }
+        },
+        "name": "电导工站启动整批",
+        "revision": 2,
+        "tags": [],
+        "update_time": "2026-09-16T04:30:59.038606Z",
+        "uuid": "3c8f1a62-9b74-4e2d-a5c1-7d0e8f4b2196",
+        "workflow_type": "normal"
+      }
+    },
+    "input_contract": {
+      "parameters": [],
+      "version": 1
+    },
+    "meta_data": {},
+    "name": "电导工站启动整批",
+    "node_count": 1,
+    "node_template_uuid": "52a9d480-9f50-4d8b-b049-df5bc9213c28",
+    "output_contract": {
+      "outputs": [
+        {
+          "implicit": false,
+          "name": "result",
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "implicit": false,
+          "name": "batch_id",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "version": 1
+    },
+    "source_hash": "sha256:f4d9de4df5b926e57069e45095f2960b38bbdd4ff25396b41b852d78e400d888",
+    "tags": [],
+    "update_time": "2026-09-16T04:31:51.797495Z",
+    "uuid": "be8cff69-be60-4c6b-b7ab-1f61c5bbd0f8",
+    "version": 1,
+    "workflow_revision": 2,
+    "workflow_uuid": "3c8f1a62-9b74-4e2d-a5c1-7d0e8f4b2196"
+  },
+  "source_draft_hash": "sha256:8953cc7477603dc3aac14f949d8535f5ee7ef62e4e458259c8ed926ef07ca2bd"
+}

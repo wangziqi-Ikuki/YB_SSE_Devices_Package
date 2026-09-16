@@ -1,0 +1,29 @@
+{
+  "metadata": {
+    "purpose": "simulation",
+    "owner": "yb-sse-lab",
+    "version": "0.1.0",
+    "notes": "电导工站虚拟联调：连接本机 Mock TCP 127.0.0.1:19091。"
+  },
+  "nodes": [
+    {
+      "id": "conductivity_station_01",
+      "name": "电导率自动化测试工站",
+      "type": "device",
+      "class": "community.yb_sse_devices.conductivity_station",
+      "parent": null,
+      "position": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "config": {
+        "ip": "127.0.0.1",
+        "port": 19091,
+        "use_mock": false
+      },
+      "data": {}
+    }
+  ],
+  "links": []
+}

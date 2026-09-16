@@ -13,7 +13,7 @@ import threading
 import time
 from datetime import datetime
 from itertools import count
-from typing import Any
+from typing import Any, TypedDict
 
 from unilabos.registry.decorators import action, device, not_action, topic_config
 
@@ -33,6 +33,13 @@ from yb_sse_devices.protocol import (
 )
 
 QUERY_CACHE_TTL_S = 0.3
+
+
+class StartBatchResult(TypedDict):
+    """动作结果合同只接受同文件内声明的扁平 TypedDict。"""
+
+    result: int
+    batch_id: str
 
 
 class ConductivityStationTransportError(RuntimeError):
@@ -732,10 +739,15 @@ class ConductivityStation:
         self._query_cache.pop("batch_status", None)
 
     @action(description="启动整批自动实验，工站连续执行 1–13 步，无需再串联分步")
-    def start_batch(self) -> dict[str, Any]:
+    def start_batch(self) -> StartBatchResult:
         response = self._require_ok(self._request("start_batch"))
         self._invalidate_batch_cache()
-        return response
+        data = response.get("data")
+        batch_id = data.get("batch_id") if isinstance(data, dict) else ""
+        return {
+            "result": int(response.get("result") or 0),
+            "batch_id": str(batch_id or ""),
+        }
 
     @action(description="当前样品完成后停止整批任务")
     def stop_current_batch(self) -> dict[str, Any]:

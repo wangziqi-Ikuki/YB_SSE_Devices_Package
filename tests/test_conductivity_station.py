@@ -65,7 +65,7 @@ def test_status_material_start_and_result(station: ConductivityStation) -> None:
 
     started = station.start_batch()
     assert started["result"] == 0
-    batch_id = started["data"]["batch_id"]
+    batch_id = started["batch_id"]
     assert station.batch_running is True
 
     deadline = time.monotonic() + 2
@@ -117,7 +117,7 @@ def test_manual_validation_and_stop_after_current_sample(
     with pytest.raises(ValueError, match="1 到 13"):
         station.manual_run(14)
 
-    batch_id = station.start_batch()["data"]["batch_id"]
+    batch_id = station.start_batch()["batch_id"]
     assert station.manual_run(6)["result"] == 0
     assert station.stop_current_batch()["result"] == 0
 
@@ -139,7 +139,7 @@ def test_unknown_batch_empty_id_and_query(
 ) -> None:
     assert station.batch_result("missing")["result"] == 9
     assert station.batch_result("")["result"] == 9
-    batch_id = station.start_batch()["data"]["batch_id"]
+    batch_id = station.start_batch()["batch_id"]
     current = station.batch_result("")
     assert current["result"] == 0
     assert current["data"]["batch"]["batch_id"] == batch_id

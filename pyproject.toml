@@ -3,19 +3,23 @@ requires = ["setuptools>=68.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "YB-SSE-Labpackage"
+name = "yb-sse-devices"
 version = "0.1.0"
 description = "Uni-Lab-OS external device package for the YB solid-state electrolyte laboratory"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
-dependencies = []
+dependencies = ["unilabos"]
 
 [project.optional-dependencies]
 dev = [
-    "unilabos",
     "pytest",
 ]
 
 [tool.setuptools.packages.find]
 include = ["yb_sse_devices*"]
+
+[tool.unilabos.startup]
+graph = "deployment/graphs/dry-run.json"
+config = "deployment/local_config.py"
+ensure_dependencies = true

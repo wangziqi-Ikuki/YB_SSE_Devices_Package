@@ -1,0 +1,6 @@
+package:
+  name: yb_sse_devices
+
+workflows:
+  - workflow_uuid: 3c8f1a62-9b74-4e2d-a5c1-7d0e8f4b2196
+    source: yb_sse_devices/workflows/start_batch.py

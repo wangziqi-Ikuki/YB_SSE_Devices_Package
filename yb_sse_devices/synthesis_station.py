@@ -14,15 +14,7 @@ import time
 from itertools import count
 from typing import Any
 
-from unilabos.registry.decorators import (
-    ActionInputHandle,
-    ActionOutputHandle,
-    DataSource,
-    action,
-    device,
-    not_action,
-    topic_config,
-)
+from unilabos.registry.decorators import action, device, not_action, topic_config
 
 from yb_sse_devices.synthesis_protocol import (
     DECK_ICON,
@@ -776,7 +768,6 @@ class SynthesisStation:
         powder_weights: list[float] | None = None,
         powder_tolerances: list[float] | None = None,
         powder_pre_adds: list[bool] | None = None,
-        **kwargs: Any,
     ) -> dict[str, Any]:
         """上传配方；名称需唯一。
 
@@ -800,7 +791,6 @@ class SynthesisStation:
                 powder_weights,
                 powder_tolerances,
                 powder_pre_adds,
-                kwargs.pop("materials", None),
             ),
         )
         if not param["recipe_name"]:
@@ -809,15 +799,6 @@ class SynthesisStation:
 
     @action(
         description="下发 TASK",
-        handles=[
-            ActionOutputHandle(
-                key="task_id",
-                data_type="string",
-                label="TASK ID",
-                data_key="task_id",
-                data_source=DataSource.EXECUTOR,
-            ),
-        ],
     )
     def create_task(
         self,
@@ -827,7 +808,6 @@ class SynthesisStation:
         task_recipe_names: list[str] | None = None,
         has_bead_bottle: bool = True,
         bead_count: int = 100,
-        **kwargs: Any,
     ) -> dict[str, Any]:
         """下发 TASK。
 
@@ -839,9 +819,7 @@ class SynthesisStation:
             has_bead_bottle[是否上加珠瓶]: 有加珠瓶时勾选。
             bead_count[球磨珠数量]: 当前托盘上所有配方所需球磨珠的总数（不是单个配方的数量）。有加珠瓶时必填。
         """
-        slots = resolve_task_slots_input(
-            task_slot_nums, task_recipe_names, kwargs.pop("slots", None)
-        )
+        slots = resolve_task_slots_input(task_slot_nums, task_recipe_names)
         max_slots = pallet_slot_count(pallet_type)
         cubic = int(cubic_type)
         if cubic not in {1, 2, 3, 4, 5}:
@@ -878,22 +856,6 @@ class SynthesisStation:
 
     @action(
         description="启动 TASK，变为已就绪",
-        handles=[
-            ActionInputHandle(
-                key="task_id",
-                data_type="string",
-                label="TASK ID",
-                data_key="task_id",
-                data_source=DataSource.HANDLE,
-            ),
-            ActionOutputHandle(
-                key="task_id",
-                data_type="string",
-                label="TASK ID",
-                data_key="task_id",
-                data_source=DataSource.EXECUTOR,
-            ),
-        ],
     )
     def start_task(self, task_id: str = "") -> dict[str, Any]:
         """启动 TASK。
@@ -905,22 +867,6 @@ class SynthesisStation:
 
     @action(
         description="上坩埚：从方舱或料架2取坩埚",
-        handles=[
-            ActionInputHandle(
-                key="task_id",
-                data_type="string",
-                label="TASK ID",
-                data_key="task_id",
-                data_source=DataSource.HANDLE,
-            ),
-            ActionOutputHandle(
-                key="task_id",
-                data_type="string",
-                label="TASK ID",
-                data_key="task_id",
-                data_source=DataSource.EXECUTOR,
-            ),
-        ],
     )
     def upload_cubic(self, task_id: str = "", fetch_cubic_source: int = 1) -> dict[str, Any]:
         """上坩埚。
@@ -939,22 +885,6 @@ class SynthesisStation:
     @action(
         always_free=True,
         description="查询上坩埚状态",
-        handles=[
-            ActionInputHandle(
-                key="task_id",
-                data_type="string",
-                label="TASK ID",
-                data_key="task_id",
-                data_source=DataSource.HANDLE,
-            ),
-            ActionOutputHandle(
-                key="task_id",
-                data_type="string",
-                label="TASK ID",
-                data_key="task_id",
-                data_source=DataSource.EXECUTOR,
-            ),
-        ],
     )
     def query_upload_cubic_status(self, task_id: str = "") -> dict[str, Any]:
         """查询上坩埚状态。
@@ -966,22 +896,6 @@ class SynthesisStation:
 
     @action(
         description="关外舱门，继续方舱上料",
-        handles=[
-            ActionInputHandle(
-                key="task_id",
-                data_type="string",
-                label="TASK ID",
-                data_key="task_id",
-                data_source=DataSource.HANDLE,
-            ),
-            ActionOutputHandle(
-                key="task_id",
-                data_type="string",
-                label="TASK ID",
-                data_key="task_id",
-                data_source=DataSource.EXECUTOR,
-            ),
-        ],
     )
     def close_cabin_outer_door(self, task_id: str = "") -> dict[str, Any]:
         """方舱人工上料完成后关外舱门。
@@ -993,22 +907,6 @@ class SynthesisStation:
 
     @action(
         description="加样确认：写入掺杂剂实际重量",
-        handles=[
-            ActionInputHandle(
-                key="task_id",
-                data_type="string",
-                label="TASK ID",
-                data_key="task_id",
-                data_source=DataSource.HANDLE,
-            ),
-            ActionOutputHandle(
-                key="task_id",
-                data_type="string",
-                label="TASK ID",
-                data_key="task_id",
-                data_source=DataSource.EXECUTOR,
-            ),
-        ],
     )
     def confirm_recipe(
         self,
@@ -1037,22 +935,6 @@ class SynthesisStation:
 
     @action(
         description="启动加样",
-        handles=[
-            ActionInputHandle(
-                key="task_id",
-                data_type="string",
-                label="TASK ID",
-                data_key="task_id",
-                data_source=DataSource.HANDLE,
-            ),
-            ActionOutputHandle(
-                key="task_id",
-                data_type="string",
-                label="TASK ID",
-                data_key="task_id",
-                data_source=DataSource.EXECUTOR,
-            ),
-        ],
     )
     def start_recipt(self, task_id: str = "") -> dict[str, Any]:
         """启动加样；成功启动即返回，不等待加样结束。
@@ -1065,22 +947,6 @@ class SynthesisStation:
     @action(
         always_free=True,
         description="查询加样状态",
-        handles=[
-            ActionInputHandle(
-                key="task_id",
-                data_type="string",
-                label="TASK ID",
-                data_key="task_id",
-                data_source=DataSource.HANDLE,
-            ),
-            ActionOutputHandle(
-                key="task_id",
-                data_type="string",
-                label="TASK ID",
-                data_key="task_id",
-                data_source=DataSource.EXECUTOR,
-            ),
-        ],
     )
     def get_recipt_status(self, task_id: str = "") -> dict[str, Any]:
         """查询各槽位加样状态。
@@ -1092,22 +958,6 @@ class SynthesisStation:
 
     @action(
         description="启动声共振",
-        handles=[
-            ActionInputHandle(
-                key="task_id",
-                data_type="string",
-                label="TASK ID",
-                data_key="task_id",
-                data_source=DataSource.HANDLE,
-            ),
-            ActionOutputHandle(
-                key="task_id",
-                data_type="string",
-                label="TASK ID",
-                data_key="task_id",
-                data_source=DataSource.EXECUTOR,
-            ),
-        ],
     )
     def start_acoustic_resonance(self, task_id: str = "") -> dict[str, Any]:
         """启动声共振；成功启动即返回，不等待结束。
@@ -1120,22 +970,6 @@ class SynthesisStation:
     @action(
         always_free=True,
         description="查询声共振状态",
-        handles=[
-            ActionInputHandle(
-                key="task_id",
-                data_type="string",
-                label="TASK ID",
-                data_key="task_id",
-                data_source=DataSource.HANDLE,
-            ),
-            ActionOutputHandle(
-                key="task_id",
-                data_type="string",
-                label="TASK ID",
-                data_key="task_id",
-                data_source=DataSource.EXECUTOR,
-            ),
-        ],
     )
     def get_acoustic_resonance_status(self, task_id: str = "") -> dict[str, Any]:
         """查询声共振上料、下料与运行状态。
@@ -1147,22 +981,6 @@ class SynthesisStation:
 
     @action(
         description="声共振下料",
-        handles=[
-            ActionInputHandle(
-                key="task_id",
-                data_type="string",
-                label="TASK ID",
-                data_key="task_id",
-                data_source=DataSource.HANDLE,
-            ),
-            ActionOutputHandle(
-                key="task_id",
-                data_type="string",
-                label="TASK ID",
-                data_key="task_id",
-                data_source=DataSource.EXECUTOR,
-            ),
-        ],
     )
     def fetch_acoustic_resonance(self, task_id: str = "") -> dict[str, Any]:
         """声共振下料。
@@ -1174,22 +992,6 @@ class SynthesisStation:
 
     @action(
         description="结束声共振，进入扫码装瓶",
-        handles=[
-            ActionInputHandle(
-                key="task_id",
-                data_type="string",
-                label="TASK ID",
-                data_key="task_id",
-                data_source=DataSource.HANDLE,
-            ),
-            ActionOutputHandle(
-                key="task_id",
-                data_type="string",
-                label="TASK ID",
-                data_key="task_id",
-                data_source=DataSource.EXECUTOR,
-            ),
-        ],
     )
     def finish_acoustic_resonance(self, task_id: str = "") -> dict[str, Any]:
         """通知系统声共振全部结束。
@@ -1201,22 +1003,6 @@ class SynthesisStation:
 
     @action(
         description="扫码装瓶",
-        handles=[
-            ActionInputHandle(
-                key="task_id",
-                data_type="string",
-                label="TASK ID",
-                data_key="task_id",
-                data_source=DataSource.HANDLE,
-            ),
-            ActionOutputHandle(
-                key="task_id",
-                data_type="string",
-                label="TASK ID",
-                data_key="task_id",
-                data_source=DataSource.EXECUTOR,
-            ),
-        ],
     )
     def scan_big_cubic_to_bottle(self, task_id: str = "", qrcode: str = "") -> dict[str, Any]:
         """按大坩埚二维码扫码装瓶。
@@ -1233,22 +1019,6 @@ class SynthesisStation:
 
     @action(
         description="启动烧结",
-        handles=[
-            ActionInputHandle(
-                key="post_id",
-                data_type="string",
-                label="POST ID",
-                data_key="post_id",
-                data_source=DataSource.HANDLE,
-            ),
-            ActionOutputHandle(
-                key="post_id",
-                data_type="string",
-                label="POST ID",
-                data_key="post_id",
-                data_source=DataSource.EXECUTOR,
-            ),
-        ],
     )
     def start_sintering(
         self,
@@ -1279,22 +1049,6 @@ class SynthesisStation:
     @action(
         always_free=True,
         description="查询烧结状态",
-        handles=[
-            ActionInputHandle(
-                key="post_id",
-                data_type="string",
-                label="POST ID",
-                data_key="post_id",
-                data_source=DataSource.HANDLE,
-            ),
-            ActionOutputHandle(
-                key="post_id",
-                data_type="string",
-                label="POST ID",
-                data_key="post_id",
-                data_source=DataSource.EXECUTOR,
-            ),
-        ],
     )
     def get_sintering_status(self, post_id: str = "") -> dict[str, Any]:
         """查询马弗炉与焦耳热烧结状态。
@@ -1314,22 +1068,6 @@ class SynthesisStation:
 
     @action(
         description="焦耳热下料",
-        handles=[
-            ActionInputHandle(
-                key="post_id",
-                data_type="string",
-                label="POST ID",
-                data_key="post_id",
-                data_source=DataSource.HANDLE,
-            ),
-            ActionOutputHandle(
-                key="post_id",
-                data_type="string",
-                label="POST ID",
-                data_key="post_id",
-                data_source=DataSource.EXECUTOR,
-            ),
-        ],
     )
     def fetch_joule_heating(self, post_id: str = "") -> dict[str, Any]:
         """焦耳热下坩埚。
@@ -1345,22 +1083,6 @@ class SynthesisStation:
 
     @action(
         description="马弗炉下料",
-        handles=[
-            ActionInputHandle(
-                key="post_id",
-                data_type="string",
-                label="POST ID",
-                data_key="post_id",
-                data_source=DataSource.HANDLE,
-            ),
-            ActionOutputHandle(
-                key="post_id",
-                data_type="string",
-                label="POST ID",
-                data_key="post_id",
-                data_source=DataSource.EXECUTOR,
-            ),
-        ],
     )
     def fetch_furnace(self, post_id: str = "", furnace_id: int = 1) -> dict[str, Any]:
         """马弗炉下坩埚。
