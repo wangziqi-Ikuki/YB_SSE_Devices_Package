@@ -60,6 +60,21 @@ unilab --check_mode \
 仿真核心不启动 TCP/JSON Mock；它与真实 PLC 共用同一 `ModbusTransport` 接口，便于之后切换
 到现场 PLC。
 
+## Modbus TCP 仿真器
+
+如果要验证真实 `ModbusTcpTransport`、TCP 帧、寄存器地址和轮询流程，启动设备包提供的
+PLC Modbus 仿真端：
+
+```bash
+PYTHONPATH=/Users/dp/Desktop/0918YB/Uni-Lab-OS \
+mamba run -n unilab python -m yb_sse_devices.modbus_sim_server \
+  --host 127.0.0.1 --port 5020
+```
+
+然后使用 `deployment/graphs/integration.json`，它会以 `simulation: false` 连接
+`127.0.0.1:5020`。这个仿真器仍然复用设备包内的 `SynthesisPlcModel`，只是增加了真实
+Modbus TCP 服务层；生产图不会自动启动它。
+
 ## 合成工站摘要
 
 查询：`query_tasks`、`query_posts`、`station_status`、`query_lot`、`query_bottle_code`、`test_connection`。

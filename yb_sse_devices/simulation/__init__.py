@@ -17,6 +17,7 @@ from .plc_model import (
     SynthesisPlcSimulation,
 )
 from .modbus_transport import SynthesisSimulationTransport
+from .modbus_server import ModbusTcpSimulator
 
 __all__ = [
     "BoundCrucible",
@@ -29,4 +30,5 @@ __all__ = [
     "SynthesisPlcModel",
     "SynthesisPlcSimulation",
     "SynthesisSimulationTransport",
+    "ModbusTcpSimulator",
 ]
