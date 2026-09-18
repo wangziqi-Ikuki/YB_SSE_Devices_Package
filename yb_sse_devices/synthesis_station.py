@@ -12,9 +12,16 @@ import socket
 import threading
 import time
 from itertools import count
-from typing import Any
+from typing import Any, TypedDict
 
-from unilabos.registry.decorators import action, device, not_action, topic_config
+from unilabos.registry.decorators import (
+    ActionInputHandle,
+    ActionOutputHandle,
+    action,
+    device,
+    not_action,
+    topic_config,
+)
 
 from yb_sse_devices.synthesis_protocol import (
     DECK_ICON,
@@ -31,6 +38,12 @@ from yb_sse_devices.synthesis_protocol import (
 )
 
 QUERY_CACHE_TTL_S = 0.3
+
+
+class TaskReferenceResult(TypedDict):
+    """旧 TCP 适配器向工作流暴露的稳定 TASK 引用。"""
+
+    task_id: str
 
 
 class SynthesisStationTransportError(RuntimeError):
@@ -799,6 +812,36 @@ class SynthesisStation:
 
     @action(
         description="下发 TASK",
+        handles=[
+            ActionInputHandle(
+                key="pallet_type", data_type="integer", label="托盘类型",
+                data_key="pallet_type",
+            ),
+            ActionInputHandle(
+                key="cubic_type", data_type="integer", label="坩埚类型",
+                data_key="cubic_type",
+            ),
+            ActionInputHandle(
+                key="task_slot_nums", data_type="['array', 'null']", label="槽位号",
+                data_key="task_slot_nums",
+            ),
+            ActionInputHandle(
+                key="task_recipe_names", data_type="['array', 'null']", label="槽位配方名称",
+                data_key="task_recipe_names",
+            ),
+            ActionInputHandle(
+                key="has_bead_bottle", data_type="boolean", label="是否上加珠瓶",
+                data_key="has_bead_bottle",
+            ),
+            ActionInputHandle(
+                key="bead_count", data_type="integer", label="球磨珠数量",
+                data_key="bead_count",
+            ),
+            ActionOutputHandle(
+                key="task_id", data_type="string", label="TASK ID",
+                data_key="task_id",
+            ),
+        ],
     )
     def create_task(
         self,
@@ -808,7 +851,7 @@ class SynthesisStation:
         task_recipe_names: list[str] | None = None,
         has_bead_bottle: bool = True,
         bead_count: int = 100,
-    ) -> dict[str, Any]:
+    ) -> TaskReferenceResult:
         """下发 TASK。
 
         Args:
@@ -856,8 +899,18 @@ class SynthesisStation:
 
     @action(
         description="启动 TASK，变为已就绪",
+        handles=[
+            ActionInputHandle(
+                key="task_id", data_type="string", label="TASK ID",
+                data_key="task_id",
+            ),
+            ActionOutputHandle(
+                key="task_id", data_type="string", label="TASK ID",
+                data_key="task_id",
+            ),
+        ],
     )
-    def start_task(self, task_id: str = "") -> dict[str, Any]:
+    def start_task(self, task_id: str = "") -> TaskReferenceResult:
         """启动 TASK。
 
         Args:

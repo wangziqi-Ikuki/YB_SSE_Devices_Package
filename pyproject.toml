@@ -7,22 +7,32 @@ name = "yb-sse-devices"
 version = "0.1.0"
 description = "Uni-Lab-OS external device package for the YB solid-state electrolyte laboratory"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 license = {text = "MIT"}
 dependencies = ["unilabos"]
 
 [project.optional-dependencies]
 dev = [
-    "pytest",
+    "build>=1.2",
+    "pytest>=8",
 ]
 
 [tool.setuptools.packages.find]
 include = ["yb_sse_devices*"]
 
+[tool.setuptools.package-data]
+yb_sse_devices = [
+    "**/*.json",
+    "**/*.md",
+    "**/*.yaml",
+    "**/*.yml",
+    "**/*.webp",
+]
+
 [tool.setuptools.data-files]
 protocol = ["protocol/yb_synthesis_modbus.yaml"]
 
 [tool.unilabos.startup]
-graph = "deployment/graphs/synthesis-modbus-dry-run.json"
+graph = "deployment/graphs/simulation.json"
 config = "deployment/local_config.py"
 ensure_dependencies = true

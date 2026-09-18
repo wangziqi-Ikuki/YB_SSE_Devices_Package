@@ -15,6 +15,14 @@ from yb_sse_devices.synthesis_modbus import (
     ModbusTransport,
     SynthesisModbusClient,
     encode_sampling_command,
+    encode_acoustic_resonance_command,
+    encode_add_bead_command,
+    encode_down_material_command,
+    encode_fetch_acoustic_resonance_command,
+    encode_fetch_cubic_command,
+    encode_fetch_firing_command,
+    encode_send_firing_command,
+    encode_up_material_command,
 )
 
 
@@ -140,6 +148,76 @@ class SynthesisDirectController:
             name = names[index] if index < len(names) else f"material_{index + 1}"
             results[name] = value
         return {"weights": weights, "results": results, "qr_code": result.qr_code}
+
+    def _send_operation(self, payload: Sequence[int], command: str) -> dict[str, Any]:
+        """Send one of the business command payloads and return a stable result.
+
+        The PLC does not return an application response to a write.  Callers
+        therefore receive the accepted command and the status snapshot that
+        was visible immediately after the write; completion is observed by
+        polling :meth:`status` (or by advancing the in-process simulator).
+        """
+
+        self.client.write_command(payload)
+        return {
+            "accepted": True,
+            "command": command,
+            "status": self.status(),
+        }
+
+    def down_material(
+        self, from_positions: Sequence[int], to_positions: Sequence[int]
+    ) -> dict[str, Any]:
+        return self._send_operation(
+            encode_down_material_command(from_positions, to_positions), "down_material"
+        )
+
+    def up_material(
+        self, from_positions: Sequence[int], to_positions: Sequence[int]
+    ) -> dict[str, Any]:
+        return self._send_operation(
+            encode_up_material_command(from_positions, to_positions), "up_material"
+        )
+
+    def send_firing(self, **kwargs: Any) -> dict[str, Any]:
+        return self._send_operation(
+            encode_send_firing_command(**kwargs), "send_firing"
+        )
+
+    def fetch_firing(self, **kwargs: Any) -> dict[str, Any]:
+        return self._send_operation(
+            encode_fetch_firing_command(**kwargs), "fetch_firing"
+        )
+
+    def fetch_cubic(self, **kwargs: Any) -> dict[str, Any]:
+        return self._send_operation(
+            encode_fetch_cubic_command(**kwargs), "fetch_cubic"
+        )
+
+    def add_bead(self, *, source: int) -> dict[str, Any]:
+        return self._send_operation(encode_add_bead_command(source=source), "add_bead")
+
+    def acoustic_resonance(self, **kwargs: Any) -> dict[str, Any]:
+        return self._send_operation(
+            encode_acoustic_resonance_command(**kwargs), "acoustic_resonance"
+        )
+
+    def fetch_acoustic_resonance(self) -> dict[str, Any]:
+        return self._send_operation(
+            encode_fetch_acoustic_resonance_command(), "fetch_acoustic_resonance"
+        )
+
+    def close_cabin_door(self) -> dict[str, Any]:
+        self.client.write_close_cabin_door()
+        return {"accepted": True, "command": "close_cabin_door", "status": self.status()}
+
+    def pause(self) -> dict[str, Any]:
+        self.client.write_pause(True)
+        return {"accepted": True, "command": "pause", "status": self.status()}
+
+    def resume(self) -> dict[str, Any]:
+        self.client.write_pause(False)
+        return {"accepted": True, "command": "resume", "status": self.status()}
 
     def run_sampling(
         self,

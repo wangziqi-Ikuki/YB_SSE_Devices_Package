@@ -2,7 +2,7 @@
 
 电导率自动化测试工站与合成工站的独立 Uni-Lab-OS 外部设备包。驱动通过
 `@device` 和 `@action` 注册，不修改 Uni-Lab-OS 内置 `unilabos/devices`。
-现场设备图 JSON 由部署环境单独维护（电导与合成各一份）。
+部署图按 `simulation.json`、`integration.json`、`production.json` 分开维护；不通过手工改 IP 切换环境。
 
 本仓库遵循 [LabDeviceTemplate](https://github.com/Xuwznln/LabDeviceTemplate)
 的外部设备包规范：设备通过 `device_id` 和 `config` 初始化，业务方法使用
@@ -25,7 +25,9 @@ YB_SSE_Labpackage/
     ├── synthesis_direct.py        # 直连控制器
     ├── synthesis_modbus_station.py # Uni-Lab 直连设备入口
     ├── simulation/                # 扫码绑定与称粉 PLC 行为模型
-    ├── resources/                 # 电导料架 + 合成空 Deck
+    ├── resources/                 # 电导料架 + 合成粉料/坩埚/磨球瓶/托盘资源树
+    ├── experiment_operations/     # 可复用的合成称粉实验操作
+    ├── workflows/                 # 电导与合成完整工作流
     └── characterization/          # 预留：其他表征设备
 ```
 
@@ -39,16 +41,19 @@ Qt 上位机的 8091 TCP 服务。协议层严格按 IO 表和现有 Qt 客户�
 包括 `40001` 命令、`40100–40116` 状态、`40120–40189` 称粉结果以及二维码的低字节在前编码；
 完整草案在 [protocol/yb_synthesis_modbus.yaml](protocol/yb_synthesis_modbus.yaml)。
 
-先做仿真时无需启动 Qt 或外部 Modbus 服务：
+先做仿真时无需启动 Qt 或外部 Modbus 服务。产品默认启动图是设备包内的
+`deployment/graphs/simulation.json`，它包含直连设备、资源台面、仓库、条码和
+确定性 PLC 仿真：
 
 ```bash
 unilab --check_mode \
   --devices ./yb_sse_devices \
   --external_devices_only \
-  -g deployment/graphs/synthesis-modbus-dry-run.json
+  -g deployment/graphs/simulation.json
 ```
 
-仿真会在设备包内完成 `CMD_SAMPLE=3` → 机械臂内部扫码绑定 → 称粉 → 结果读取。
+仿真会在设备包内完成 `CMD_SAMPLE=3` → 机械臂内部扫码绑定 → 称粉 → 结果读取，
+并用 `ResourceSlot` 把坩埚传入已登记的实验操作和完整工作流。
 `advance_simulation` 可推进确定性时钟，`inject_simulation_fault` 可注入扫码、二维码和称粉故障。
 仿真核心不启动 TCP/JSON Mock；它与真实 PLC 共用同一 `ModbusTransport` 接口，便于之后切换
 到现场 PLC。
@@ -59,7 +64,8 @@ unilab --check_mode \
 
 下单：`upload_recipe`、`create_task`。
 
-Deck：独立 `SynthesisStation_Deck`，背景 `synthesis_station.webp`，本阶段无槽位。设备图为上一级目录的 `synthesis_station.json`。
+资源：`YBSynthesisDeck` 下挂粉料架、坩埚架、磨球瓶架和托盘架；实例条码、父子关系、库位和
+`occupied_by` 写在启动图中。旧的 `SynthesisStation_Deck` 保留给 Qt/TCP 兼容路径。
 
 旧版 Qt/TCP 兼容路径仍可用：`python -m yb_sse_devices.synthesis_mock_server`，默认 TCP
 `127.0.0.1:19101`。新开发和仿真请使用上面的 Modbus 直连入口，不需要启动这个 Mock。

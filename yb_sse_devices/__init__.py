@@ -12,6 +12,12 @@ __all__ = [
     "YBSynthesisModbusStation",
     "SynthesisDirectController",
     "SynthesisStation_Deck",
+    "SynthesisPowder",
+    "SynthesisCrucible",
+    "SynthesisBeadBottle",
+    "SynthesisTray",
+    "YBSynthesisDeck",
+    "synthesis_bead_rack",
 ]
 
 _EXPORTS = {
@@ -30,6 +36,12 @@ _EXPORTS = {
     ),
     "SynthesisStation_Deck": (".resources.synthesis_deck", "SynthesisStation_Deck"),
     "SynthesisDirectController": (".synthesis_direct", "SynthesisDirectController"),
+    "SynthesisPowder": (".resources.synthesis_resources", "SynthesisPowder"),
+    "SynthesisCrucible": (".resources.synthesis_resources", "SynthesisCrucible"),
+    "SynthesisBeadBottle": (".resources.synthesis_resources", "SynthesisBeadBottle"),
+    "SynthesisTray": (".resources.synthesis_resources", "SynthesisTray"),
+    "YBSynthesisDeck": (".resources.synthesis_resources", "YBSynthesisDeck"),
+    "synthesis_bead_rack": (".resources.synthesis_resources", "synthesis_bead_rack"),
 }
 
 

@@ -253,13 +253,14 @@ class ConductivityStation:
     def _push_deck(self) -> None:
         ros_node = self._ros_node
         deck = self.deck
-        if ros_node is None or deck is None:
+        update_resource = getattr(ros_node, "update_resource", None)
+        if ros_node is None or deck is None or not callable(update_resource):
             return
         try:
             from unilabos.ros.nodes.base_device_node import ROS2DeviceNode
 
             ROS2DeviceNode.run_async_func(
-                ros_node.update_resource, True, resources=[deck]
+                update_resource, True, resources=[deck]
             )
         except Exception:
             return
@@ -349,7 +350,14 @@ class ConductivityStation:
                     try:
                         _, end = decoder.raw_decode(payload)
                     except json.JSONDecodeError:
-                        pass
+                        # CRLF is the protocol frame boundary. Once it has
+                        # arrived, malformed JSON is a protocol violation;
+                        # do not wait for the peer to close the socket and
+                        # turn it into an unrelated transport error.
+                        if self.frame_delimiter in self._recv_buffer:
+                            raise ConductivityStationProtocolError(
+                                "响应不是有效 JSON"
+                            ) from None
                     else:
                         consumed = text[: leading + end].encode(self.encoding)
                         del self._recv_buffer[: len(consumed)]

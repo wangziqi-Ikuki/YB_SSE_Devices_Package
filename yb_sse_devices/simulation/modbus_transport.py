@@ -15,6 +15,7 @@ from yb_sse_devices.simulation.plc_model import SamplingPhase, SynthesisPlcModel
 from yb_sse_devices.synthesis_modbus import (
     ModbusConnectionError,
     SynthesisCommand,
+    SynthesisRegisterMap,
     decode_float32,
 )
 
@@ -54,6 +55,21 @@ class SynthesisSimulationTransport:
         self._task_sequence = 0
         self._registers: dict[int, int] = {}
         self._pending_sampling: tuple[str, int, dict[str, float]] | None = None
+        # Non-sampling PLC operations use the same status block as the field
+        # controller.  The dry-run marks them RUNNING on write and COMPLETED
+        # after a short deterministic interval; this exercises the handshake
+        # without pretending to model robot motion or furnace physics.
+        self._status_registers: dict[int, int] = {}
+        self._pending_operations: list[tuple[int, float]] = []
+        self._status_map = {
+            int(SynthesisCommand.DOWN_MATERIAL): 0,
+            int(SynthesisCommand.UP_MATERIAL): 1,
+            int(SynthesisCommand.SEND_FIRING): 3,
+            int(SynthesisCommand.FETCH_FIRING): 4,
+            int(SynthesisCommand.FETCH_CUBIC): 8,
+            int(SynthesisCommand.ACOUSTIC_RESONANCE): 7,
+            int(SynthesisCommand.FETCH_ACOUSTIC_RESONANCE): 15,
+        }
 
     def connect(self) -> None:
         self.connected = True
@@ -74,8 +90,18 @@ class SynthesisSimulationTransport:
             raise ValueError("count must be a positive integer")
         # The model is authoritative for the status/result ranges.  For other
         # registers retain values written by a test or by a control action.
-        values = self.model.holding_registers(start=int(address), count=count)
         start = int(address)
+        values = self.model.holding_registers(start=start, count=count)
+        # Overlay the simulated handshake bits on any read that intersects
+        # the 40100..40116 status block (not only a full-block read).
+        for index in range(count):
+            register = start + index
+            if 40100 <= register <= 40116:
+                values[index] = self._status_registers.get(register, values[index])
+                if register == 40102:
+                    # The sampling bit is owned by the state model, including
+                    # its scan/bind interlock and fault state.
+                    values[index] = self.model.sampling_status
         for index in range(count):
             if start + index not in {
                 self.model.SAMPLE_STATUS_REGISTER,
@@ -97,8 +123,25 @@ class SynthesisSimulationTransport:
         self.last_command = payload if address == 40001 else self.last_command
         for offset, value in enumerate(payload):
             self._registers[address + offset] = value
-        if address == 40001 and payload[0] == int(SynthesisCommand.SAMPLE):
-            self._apply_sampling_command(payload)
+        if address == 40001:
+            if payload[0] == int(SynthesisCommand.SAMPLE):
+                self._apply_sampling_command(payload)
+            elif payload[0] in self._status_map:
+                # Command 7 is shared by fetch-cubic and add-bead in the Qt
+                # client.  The add-bead encoder carries pallet_type=0.
+                if (
+                    payload[0] == int(SynthesisCommand.FETCH_CUBIC)
+                    and len(payload) >= 11
+                    and payload[3] == 0
+                ):
+                    self._start_operation(payload[0], status_index=5)
+                elif payload[0] == int(SynthesisCommand.SEND_FIRING):
+                    self._start_firing_operation(payload)
+                else:
+                    self._start_operation(payload[0])
+        elif address == 40098 and len(payload) >= 2 and payload[0] == 100:
+            # 40098/40099 handshake: 1 pause, 2 resume.
+            self._status_registers[40116] = 1 if payload[1] == 1 else 0
 
     def write_holding_register(
         self, address: int, value: int, *, unit_id: int = 1
@@ -108,7 +151,40 @@ class SynthesisSimulationTransport:
     def advance(self, seconds: float) -> None:
         """Advance deterministic PLC time and expose any resulting state."""
 
-        self.model.advance(seconds)
+        value = float(seconds)
+        self.model.advance(value)
+        remaining: list[tuple[int, float]] = []
+        for status_register, due_in in self._pending_operations:
+            due = due_in - value
+            if due <= 0:
+                self._status_registers[status_register] = 2
+            else:
+                remaining.append((status_register, due))
+        self._pending_operations = remaining
+
+    def _start_operation(self, command: int, *, status_index: int | None = None) -> None:
+        index = self._status_map.get(int(command)) if status_index is None else status_index
+        if index is None:
+            return
+        register = SynthesisRegisterMap().status_register(index)
+        self._status_registers[register] = 1
+        self._pending_operations.append((register, 0.1))
+
+    def _start_firing_operation(self, payload: tuple[int, ...]) -> None:
+        """Reflect furnace/Joule heating handshake in the status block."""
+        command_register = SynthesisRegisterMap().status_register(3)
+        self._status_registers[command_register] = 1
+        self._pending_operations.append((command_register, 0.1))
+        position = 0
+        for index in range(4):
+            marker = 1 + index * 15
+            if len(payload) > marker and payload[marker] == 1:
+                position = index + 1
+                break
+        status_index = 14 if position == 0 else 9 + position
+        register = SynthesisRegisterMap().status_register(status_index)
+        self._status_registers[register] = 1
+        self._pending_operations.append((register, 0.1))
 
     def bind_crucible(self, crucible_id: str | None = None) -> None:
         """Complete a manual scanner response in a non-auto-scan simulation."""
