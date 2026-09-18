@@ -1,0 +1,26 @@
+{
+  "metadata": {
+    "purpose": "simulation",
+    "owner": "yb-sse-lab",
+    "version": "0.1.0",
+    "notes": "设备包内 Modbus 直连闭环：内部扫码绑定后执行称粉，不依赖 Qt 上位机或 TCP Mock。"
+  },
+  "nodes": [
+    {
+      "id": "yb_synthesis_modbus_station_01",
+      "name": "YB合成工站（Modbus直连仿真）",
+      "type": "device",
+      "class": "community.yb_sse_devices.synthesis_modbus_station",
+      "parent": null,
+      "position": {"x": 0.0, "y": 0.0, "z": 0.0},
+      "config": {
+        "simulation": true,
+        "simulation_crucible_id": "CRU-SIM-001",
+        "simulation_dosing_duration": 1.0,
+        "material_names": ["Li2S", "LiBr", "LiCl", "P2S5"]
+      },
+      "data": {}
+    }
+  ],
+  "links": []
+}

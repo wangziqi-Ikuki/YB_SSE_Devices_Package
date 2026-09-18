@@ -1,0 +1,356 @@
+# YB 固态电解质合成工站 Modbus TCP 协议草案
+#
+# This file is a checked-in protocol contract for the package-local simulator and
+# the production Modbus adapter. It intentionally records unresolved items instead
+# of guessing at PLC behaviour. Address notation follows the IO workbook's 4xxxx
+# holding-register labels; QModbus uses (address - 40001) as the zero-based offset.
+
+schema_version: 0.1.0
+status: draft
+station: yb_solid_electrolyte_synthesis
+
+source:
+  io_workbook:
+    path: /Users/dp/Downloads/ybsolidexperiment/固态电解质合成项目IO表.xls
+    sha256: 960faacaedd1744e254007fed045f5813ac0305ede419cecb388173a187c272e
+    sheets:
+      - IP
+      - 机器人
+      - 上位PC控制
+      - 马弗炉
+    key_cells:
+      plc: "IP!A2:C2 (192.168.1.10)"
+      command_and_parameters: "上位PC控制!A6:AF104"
+      task_status: "上位PC控制!A105:E121"
+      sample_results: "上位PC控制!A125:E194"
+      robot_scan: "机器人!M38:S38; 机器人!M57:S57; 机器人!T65:U65"
+  qt_client:
+    path: /Users/dp/Downloads/ybsolidexperiment/plcmodbusclient.cpp
+    sha256: 2e3a6164086ae29466e2a71a735b836f5ae6ba08f8c6e83b6203dbce7d87bb00
+    lines:
+      constants: "9-21"
+      command_builders: "25-343"
+      connection_and_control: "397-573"
+      status_poll_and_dispatch: "575-870"
+      sample_results: "875-952"
+  authority:
+    register_addresses_and_names: io_workbook
+    actual_wire_payload_and_client_side_encoding: qt_client
+    plc_state_machine_and_interlocks: unknown_until_plc_program_or_trace_is_available
+
+transport:
+  protocol: modbus_tcp
+  endpoint:
+    configured_ip: 192.168.1.10
+    configured_port: 502
+    simulation_override: 127.0.0.1:5020
+  unit_id: 1
+  register_type: holding_registers
+  base_register: 40001
+  poll:
+    address: 40100
+    count: 17
+    interval_ms: 1000
+  timeout_ms: 1000
+  retries: 0
+  inferred_function_codes:
+    read_holding_registers: 3
+    write_multiple_registers: 16
+
+address_conventions:
+  holding_register: "4xxxx labels from the workbook"
+  qmodbus_offset: "holding_register - 40001"
+  word_width_bits: 16
+  signedness_default: uint16
+  float32_word_order: low_word_then_high_word
+  qr_byte_order: low_byte_then_high_byte_per_register
+
+commands:
+  # D0 / 40001 command values from 上位PC控制!A6/E6.
+  1:
+    name: down_material
+    description: unload/remove material heads from the dosing rack
+    write_range: {start: 40001, count: 21}
+    payload:
+      "40001": 1
+      pairs:
+        start: 40002
+        count: 10
+        stride: 2
+        fields: [from_position, to_position]
+  2:
+    name: up_material
+    description: replenish material heads onto the dosing rack
+    write_range: {start: 40001, count: 24}
+    payload:
+      "40001": 2
+      pairs:
+        start: 40002
+        count: 10
+        stride: 2
+        fields: [from_position, to_position]
+      reserved:
+        "40024": 0
+  3:
+    name: sample_add_powder_and_beads
+    description: robot crucible scan, powder dosing, and bead dosing sequence
+    write_range: {start: 40001, count: 81}
+    payload:
+      "40001": 3
+      "40002": "slot number; 99 means take crucible from outside"
+      "40003": "slot number"
+      materials:
+        start: 40004
+        count_written_by_qt: 10
+        count_listed_by_io: 15
+        stride: 5
+        fields:
+          - rack_position
+          - mass_float_low_word
+          - mass_float_high_word
+          - tolerance_float_low_word
+          - tolerance_float_high_word
+      "40080": "crucible type (IO: 1..5)"
+      "40081": bead_count
+    precondition:
+      - internal_robot_scan_and_crucible_binding must succeed before dosing is allowed
+      - actual PLC gate is not exposed as a separate PC command in the source
+  4:
+    name: send_firing
+    description: send furnace or Joule-heating recipe
+    write_range: {start: 40001, count: 81}
+    payload:
+      "40001": 4
+      furnace_blocks:
+        count: 4
+        start: 40002
+        stride: 15
+        fields:
+          - enabled
+          - temp_1
+          - temp_2
+          - temp_3
+          - temp_4
+          - temp_5
+          - temp_6
+          - time_1
+          - time_2
+          - time_3
+          - time_4
+          - time_5
+          - time_6
+          - reserved_1
+          - reserved_2
+        furnace_1_range: [40002, 40016]
+        furnace_2_range: [40017, 40031]
+        furnace_3_range: [40032, 40046]
+        furnace_4_range: [40047, 40061]
+      joule_block:
+        range: [40062, 40081]
+        fields:
+          - position
+          - mode
+          - carrier_type_plus_1
+          - constant_temperature
+          - constant_hold_time_s
+          - slope_temperature_1
+          - slope_temperature_2
+          - slope_temperature_3
+          - slope_temperature_4
+          - slope_temperature_5
+          - slope_speed_1
+          - slope_speed_2
+          - slope_speed_3
+          - slope_speed_4
+          - slope_speed_5
+          - slope_hold_time_1_s
+          - slope_hold_time_2_s
+          - slope_hold_time_3_s
+          - slope_hold_time_4_s
+          - slope_hold_time_5_s
+        mode_values:
+          1: constant_temperature
+          2: multi_segment_slope
+  5:
+    name: fetch_firing
+    description: fetch from a Muffle furnace or Joule carrier
+    write_range: {start: 40001, count: 11}
+    payload:
+      "40001": 5
+      furnace:
+        "40002": source_position
+        "40003": destination_position
+        "40004_40009": 0
+      joule:
+        "40010": carrier_type_plus_1
+        "40011": joule_position
+  7:
+    name: fetch_crucible_or_add_beads
+    description: fetch a crucible/tray; add-bead path reuses this command in Qt
+    write_range: {start: 40001, count: 11}
+    payload:
+      "40001": 7
+      "40002": source_position
+      "40003": destination_position
+      "40004": pallet_type
+      slots:
+        start: 40005
+        count: 6
+        fields: [slot_1, slot_2, slot_3, slot_4, slot_5, slot_6]
+      "40011": "bead-bottle source when present, otherwise 0"
+      pallet_type_values:
+        1: four_slot_pallet
+        2: five_slot_pallet
+        3: six_slot_pallet
+  8:
+    name: acoustic_resonance
+    description: start acoustic-resonance process
+    write_range: {start: 40001, count: 21}
+    payload:
+      "40001": 8
+      "40002": fetch_position
+      "40003": 2
+      parameter_groups:
+        start: 40004
+        count: 6
+        stride: 3
+        fields: [acceleration, frequency_hz, time_s]
+  9:
+    name: fetch_acoustic_resonance
+    description: unload/fetch after acoustic-resonance process
+    write_range: {start: 40001, count: 3}
+    payload:
+      "40001": 9
+      "40002": 1
+      "40003": 1
+
+control_registers:
+  "40090":
+    name: up_material_flow_complete
+    write_value: 1
+    source: plcmodbusclient.cpp:497-518
+  "40091":
+    name: firing_manual_loading_complete
+    write_value: 1
+    source: plcmodbusclient.cpp:520-541
+  "40096":
+    name: close_cabin_outer_door_request
+    write_value: 1
+    source: plcmodbusclient.cpp:543-564
+  "40098_40099":
+    name: pause_or_resume
+    write_values: {"40098": 100, "40099": {1: pause, 2: resume}}
+    source: plcmodbusclient.cpp:397-426
+
+status_registers:
+  # Poll read is one HoldingRegisters request [40100, 40116].
+  "40100":
+    name: down_material_task
+    enum: {0: idle, 1: running, 2: complete, 3: failed}
+  "40101":
+    name: up_material_task
+    enum: {0: idle, 1: running, 2: complete, 3: failed}
+  "40102":
+    name: sample_add_powder_beads_task
+    enum: {0: idle, 1: running, 2: complete, 3: failed}
+  "40103":
+    name: firing_task
+    enum: {0: idle, 1: running, 2: complete, 3: failed}
+  "40104":
+    name: furnace_unload_task
+    enum: {0: idle, 1: running, 2: complete, 3: failed}
+  "40105":
+    name: add_beads_task
+    enum: {0: idle, 1: running, 2: complete, 3: failed}
+  "40106":
+    name: upper_pallet_task
+    enum: {0: idle, 1: running, 2: complete, 3: failed}
+    qt_client_mapping: "getCurrentStatus() uses 40106 for TASK_TYPE_ADD_BEAD and TASK_TYPE_FETCH_CUBIC"
+  "40107":
+    name: acoustic_resonance_load_task
+    enum: {0: idle, 1: running, 2: complete, 3: failed}
+  "40108":
+    name: cabin_feed_state
+    enum:
+      1: outer_door_open
+      2: closing_outer_door
+      3: vacuum_purge
+      4: opening_inner_door
+      5: moving_pallet
+      6: taking_bead_bottle
+      7: closing_inner_door
+  "40109":
+    name: acoustic_resonance_state
+    enum: {0: idle, 1: running, 2: complete}
+  "40110":
+    name: furnace_1_state
+    enum: {0: idle, 1: running, 2: complete}
+  "40111":
+    name: furnace_2_state
+    enum: {0: idle, 1: running, 2: complete}
+  "40112":
+    name: furnace_3_state
+    enum: {0: idle, 1: running, 2: complete}
+  "40113":
+    name: furnace_4_state
+    enum: {0: idle, 1: running, 2: complete}
+  "40114":
+    name: joule_heating_state
+    enum: {0: idle, 1: running, 2: complete}
+  "40115":
+    name: acoustic_resonance_unload_task
+    enum: {0: idle, 1: running, 2: complete, 3: failed}
+  "40116":
+    name: pause_state
+    enum: {0: idle, 1: running, 2: paused}
+
+sample_results:
+  read_range: {start: 40120, count: 70, end: 40189}
+  weights:
+    start: 40120
+    max_count: 15
+    stride: 2
+    encoding: ieee754_binary32
+    word_order: low_word_then_high_word
+  dosing_results:
+    start: 40150
+    max_count: 15
+    encoding: uint16
+    values: {1: ok, 2: ng}
+  crucible_qr:
+    start: 40170
+    count: 20
+    max_bytes: 40
+    encoding: ascii
+    byte_order: low_byte_then_high_byte_per_register
+    client_cleanup: QString::trimmed
+
+robot_scan_handshake:
+  # R addresses are PLC/robot internal relay names from the 机器人 sheet,
+  # not 4xxxx PC Modbus addresses. Mapping to PC-visible registers is unknown.
+  plc_to_robot:
+    scan_action_permission: R554.3
+    scan_complete: R555.6
+  robot_to_plc:
+    scan_action_complete: R512.3
+    scan_request: R513.6
+  program_table:
+    scan_action: 36
+
+unresolved:
+  - item: plc_program_state_machine
+    detail: IO table exposes statuses and robot bits but not complete transition guards, timeouts, reset semantics, or safety interlocks.
+  - item: independent_scan_command
+    detail: No PC-side Modbus command dedicated to crucible scan appears in the Qt client; scan likely runs inside command 3.
+  - item: scan_failure_reporting
+    detail: No dedicated PC-visible scan error register was found; failure may surface as task 40102=3, timeout, or an invalid/empty QR result.
+  - item: material_count
+    detail: IO lists 15 material/weight/result slots; Qt client writes only 10 groups because MAX_UPDOWNMATERIAL_COUNT=10 (MAX_SAMPLING_MATERIAL_COUNT=15 is unused).
+  - item: d_address_mapping
+    detail: Workbook D/R labels, 4xxxx HoldingRegister offsets, Unit ID and function codes should be confirmed against a PLC trace.
+  - item: qr_format
+    detail: QR payload is treated as ASCII bytes; format, length, checksum and validity rules are not specified in the workbook/client.
+  - item: client_status_discrepancy
+    detail: IO labels 40105 as add-beads task and 40106 as upper-pallet task, while Qt getCurrentStatus() uses register 40106 for both TASK_TYPE_ADD_BEAD and TASK_TYPE_FETCH_CUBIC; 40105 is not selected by that client path.
+  - item: failure_codes
+    detail: Furnace/Joule/acoustic state registers document 0/1/2 only in the workbook; error code source and reset path are not documented.

@@ -9,6 +9,8 @@ __all__ = [
     "ConductivityMold",
     "ConductivitySinteringBottle",
     "SynthesisStation",
+    "YBSynthesisModbusStation",
+    "SynthesisDirectController",
     "SynthesisStation_Deck",
 ]
 
@@ -22,7 +24,12 @@ _EXPORTS = {
         "ConductivitySinteringBottle",
     ),
     "SynthesisStation": (".synthesis_station", "SynthesisStation"),
+    "YBSynthesisModbusStation": (
+        ".synthesis_modbus_station",
+        "YBSynthesisModbusStation",
+    ),
     "SynthesisStation_Deck": (".resources.synthesis_deck", "SynthesisStation_Deck"),
+    "SynthesisDirectController": (".synthesis_direct", "SynthesisDirectController"),
 }
 
 

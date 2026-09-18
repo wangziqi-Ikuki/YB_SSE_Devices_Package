@@ -21,11 +21,37 @@ YB_SSE_Labpackage/
     ├── synthesis_protocol.py      # 合成：设备字段、任务状态、错误码
     ├── synthesis_station.py       # 合成工站驱动
     ├── synthesis_mock_server.py   # 合成 TCP Mock 与本地交互页
+    ├── synthesis_modbus.py        # Modbus TCP 驱动、寄存器与编码
+    ├── synthesis_direct.py        # 直连控制器
+    ├── synthesis_modbus_station.py # Uni-Lab 直连设备入口
+    ├── simulation/                # 扫码绑定与称粉 PLC 行为模型
     ├── resources/                 # 电导料架 + 合成空 Deck
     └── characterization/          # 预留：其他表征设备
 ```
 
 合成工站使用说明见 [合成工站使用说明.md](合成工站使用说明.md)，协议见 [合成工站下单软件接口.md](合成工站下单软件接口.md)。
+
+## Modbus 直连开发路径
+
+`YBSynthesisModbusStation` 是新的直连设备入口。生产配置使用
+`ModbusTcpTransport` 连接 PLC（默认 `192.168.1.10:502`、Unit ID 1），不再依赖
+Qt 上位机的 8091 TCP 服务。协议层严格按 IO 表和现有 Qt 客户端的寄存器布局编码，
+包括 `40001` 命令、`40100–40116` 状态、`40120–40189` 称粉结果以及二维码的低字节在前编码；
+完整草案在 [protocol/yb_synthesis_modbus.yaml](protocol/yb_synthesis_modbus.yaml)。
+
+先做仿真时无需启动 Qt 或外部 Modbus 服务：
+
+```bash
+unilab --check_mode \
+  --devices ./yb_sse_devices \
+  --external_devices_only \
+  -g deployment/graphs/synthesis-modbus-dry-run.json
+```
+
+仿真会在设备包内完成 `CMD_SAMPLE=3` → 机械臂内部扫码绑定 → 称粉 → 结果读取。
+`advance_simulation` 可推进确定性时钟，`inject_simulation_fault` 可注入扫码、二维码和称粉故障。
+仿真核心不启动 TCP/JSON Mock；它与真实 PLC 共用同一 `ModbusTransport` 接口，便于之后切换
+到现场 PLC。
 
 ## 合成工站摘要
 
@@ -35,7 +61,8 @@ YB_SSE_Labpackage/
 
 Deck：独立 `SynthesisStation_Deck`，背景 `synthesis_station.webp`，本阶段无槽位。设备图为上一级目录的 `synthesis_station.json`。
 
-虚拟机：`python -m yb_sse_devices.synthesis_mock_server`，默认 TCP `127.0.0.1:19101`，交互页 `http://127.0.0.1:19102/`。真机默认端口占位 `8092`，上线前向合作方确认，不要开 `use_mock`。
+旧版 Qt/TCP 兼容路径仍可用：`python -m yb_sse_devices.synthesis_mock_server`，默认 TCP
+`127.0.0.1:19101`。新开发和仿真请使用上面的 Modbus 直连入口，不需要启动这个 Mock。
 
 ## 已注册动作
 
@@ -72,7 +99,7 @@ python -m pytest tests -q
 
 ## 启动
 
-动作一律由 UniLab edge 发送。真实工站与虚拟工站都是 TCP 服务端。
+动作一律由 Uni-Lab OS edge 发送。Modbus 直连入口由设备包作为客户端连接 PLC；仿真模式使用进程内 PLC 模型。
 
 ```bash
 unilab \
@@ -81,9 +108,9 @@ unilab \
   -g <设备图.json>
 ```
 
-真机：设备图 `ip`/`port` 填合作方工站（界面常见 `8091`），不要开 `use_mock`。
+真机（Modbus 直连）：设备图 `ip`/`port` 填 PLC（现场默认为 `192.168.1.10:502`），并设置 `simulation: false`。
 
-虚拟：先另开终端启动 Mock，设备图填同一地址：
+旧版 Qt/TCP 兼容模式：先另开终端启动 Mock，设备图填同一地址：
 
 ```bash
 python -m yb_sse_devices.mock_server --host 127.0.0.1 --port 19091
