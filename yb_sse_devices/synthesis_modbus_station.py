@@ -8,6 +8,7 @@ this module only exposes stable actions to Uni-Lab OS.
 from __future__ import annotations
 
 from collections.abc import Mapping
+from itertools import count
 from typing import Annotated, Any, TypedDict
 
 from unilabos.registry.annotations import AllowedResourceTemplates
@@ -18,6 +19,11 @@ from yb_sse_devices.resources.synthesis_resources import SynthesisCrucible
 from yb_sse_devices.simulation import SynthesisPlcModel, SynthesisSimulationTransport
 from yb_sse_devices.synthesis_direct import SynthesisDirectController
 from yb_sse_devices.synthesis_modbus import ModbusTcpTransport
+from yb_sse_devices.synthesis_protocol import (
+    flatten_recipe_param,
+    resolve_recipe_materials_input,
+    resolve_task_slots_input,
+)
 
 
 class StationStatusResult(TypedDict):
@@ -137,6 +143,11 @@ class YBSynthesisModbusStation:
         simulation_failure_plan: Mapping[str, str] | None = None,
         simulation_handshake_history_limit: int = 100,
         material_names: list[str] | None = None,
+        business_simulation: Any = None,
+        business_state: Any = None,
+        business_simulation_auto_advance: bool = True,
+        business_simulation_step_interval: float = 0.1,
+        business_simulation_load_demo: bool = False,
         **_: Any,
     ) -> None:
         resolved = dict(config or {})
@@ -151,6 +162,82 @@ class YBSynthesisModbusStation:
         )
         names = resolved.get("material_names", material_names or ())
         self.material_names = tuple(str(name).strip() for name in names)
+        # The Modbus PLC simulator models registers and device motion.  The
+        # old Qt bridge also exposed recipe/TASK/POST/LOT bookkeeping which is
+        # a separate business contract.  Keep that contract injectable so the
+        # direct package can exercise the complete workflow without inventing
+        # registers that are absent from the IO table.
+        configured_business = resolved.get("business_simulation", business_simulation)
+        configured_state = resolved.get("business_state", business_state)
+        self.business_state: Any = configured_state
+        if self.business_state is None and configured_business is not False:
+            if configured_business is not None and (
+                callable(getattr(configured_business, "handle", None))
+                or callable(getattr(configured_business, "execute", None))
+            ):
+                self.business_state = configured_business
+            elif self.simulation or bool(configured_business):
+                try:
+                    from yb_sse_devices.simulation.business import BusinessSimulation
+                except ModuleNotFoundError:
+                    # Keep this branch compatible with older package checkouts
+                    # where the richer deterministic simulator is not present.
+                    from yb_sse_devices.synthesis_mock_server import MockSynthesisState
+
+                    self.business_state = MockSynthesisState(
+                        auto_advance=bool(
+                            resolved.get(
+                                "business_simulation_auto_advance",
+                                business_simulation_auto_advance,
+                            )
+                        ),
+                        step_interval=float(
+                            resolved.get(
+                                "business_simulation_step_interval",
+                                business_simulation_step_interval,
+                            )
+                        ),
+                        load_demo=bool(
+                            resolved.get(
+                                "business_simulation_load_demo",
+                                business_simulation_load_demo,
+                            )
+                        ),
+                    )
+                else:
+                    # BusinessSimulation uses a deterministic clock.  The
+                    # legacy step/auto settings remain compatibility knobs;
+                    # callers advance it explicitly through this station.
+                    self.business_state = BusinessSimulation(
+                        acoustic_duration=float(
+                            resolved.get("business_acoustic_duration", 1.0)
+                        ),
+                        sampling_duration=float(
+                            resolved.get("business_sampling_duration", 0.5)
+                        ),
+                        firing_duration=float(
+                            resolved.get("business_firing_duration", 2.0)
+                        ),
+                        auto_advance=bool(
+                            resolved.get(
+                                "business_simulation_auto_advance",
+                                business_simulation_auto_advance,
+                            )
+                        ),
+                        step_interval=float(
+                            resolved.get(
+                                "business_simulation_step_interval",
+                                business_simulation_step_interval,
+                            )
+                        ),
+                        load_demo=bool(
+                            resolved.get(
+                                "business_simulation_load_demo",
+                                business_simulation_load_demo,
+                            )
+                        ),
+                    )
+        self._business_request_ids = count(1)
         self.model: SynthesisPlcModel | None = None
         if self.simulation:
             self.model = SynthesisPlcModel(
@@ -306,6 +393,112 @@ class YBSynthesisModbusStation:
         if not self.connected:
             self.connect()
 
+    def _business_call(
+        self, action_name: str, param: Mapping[str, Any] | None = None
+    ) -> dict[str, Any]:
+        """Run a business action against the optional package-local simulator.
+
+        Recipe/task/post/LOT state is not part of the currently agreed PLC IO
+        table.  In simulation mode it is provided by ``MockSynthesisState``;
+        in real Modbus mode an explicit unsupported response is returned
+        instead of silently writing a made-up register.
+        """
+
+        payload = dict(param or {})
+        state = self.business_state
+        if state is None:
+            return {
+                "request_id": next(self._business_request_ids),
+                "result": 14,
+                "accepted": False,
+                "success": False,
+                "not_supported": True,
+                "command": action_name,
+                "message": (
+                    f"真实 Modbus PLC 未提供业务动作 {action_name}；"
+                    "请使用已注入的业务模拟器或补充正式 IO 协议"
+                ),
+            }
+        handler = getattr(state, "handle", None)
+        executor = getattr(state, "execute", None)
+        if callable(handler):
+            response = handler(
+                {
+                    "request_id": next(self._business_request_ids),
+                    "action": action_name,
+                    "param": payload,
+                }
+            )
+        elif callable(executor):
+            # BusinessSimulation's query actions intentionally have no filter
+            # arguments; preserve their canonical return shape here and apply
+            # the optional filters below.
+            execute_payload = payload
+            if action_name in {"query_tasks", "query_posts", "station_status"}:
+                execute_payload = {}
+            response = executor(action_name, **execute_payload)
+        else:
+            method = getattr(state, action_name, None)
+            if not callable(method):
+                response = None
+            else:
+                try:
+                    response = method(**payload)
+                except TypeError:
+                    if action_name in {"query_tasks", "query_posts", "station_status"}:
+                        response = method()
+                    else:
+                        raise
+        if not isinstance(response, dict):
+            return {
+                "result": 2,
+                "accepted": False,
+                "success": False,
+                "command": action_name,
+                "message": "业务模拟器返回格式无效",
+            }
+        result = response.get("result", 2)
+        try:
+            ok = int(result) == 0
+        except (TypeError, ValueError):
+            ok = False
+        response.setdefault("accepted", ok)
+        response.setdefault("success", ok)
+        response.setdefault("not_supported", False)
+        response.setdefault("command", action_name)
+        data = response.get("data")
+        if isinstance(data, dict) and action_name == "create_task" and data.get("task_id"):
+            response.setdefault("task_id", str(data["task_id"]))
+        if action_name in {
+            "query_tasks", "start_task", "upload_cubic", "confirm_recipe",
+            "start_recipt", "get_recipt_status", "start_acoustic_resonance",
+            "get_acoustic_resonance_status", "fetch_acoustic_resonance",
+            "finish_acoustic_resonance", "scan_big_cubic_to_bottle",
+        } and payload.get("task_id"):
+            response.setdefault("task_id", str(payload["task_id"]))
+        if action_name in {
+            "start_sintering", "get_sintering_status", "fetch_joule_heating",
+            "fetch_furnace",
+        } and payload.get("post_id"):
+            response.setdefault("post_id", str(payload["post_id"]))
+        return response
+
+    @staticmethod
+    def _business_task_param(task_id: str = "", extra: Mapping[str, Any] | None = None) -> dict[str, Any]:
+        payload = dict(extra or {})
+        text = str(task_id or "").strip()
+        if text:
+            payload["task_id"] = text
+        return payload
+
+    @staticmethod
+    def _business_post_param(post_id: str = "", extra: Mapping[str, Any] | None = None) -> dict[str, Any]:
+        payload = dict(extra or {})
+        text = str(post_id or "").strip()
+        if text:
+            payload["post_id"] = text
+        return payload
+
     @staticmethod
     def _status_code(snapshot: dict[str, Any], command: str) -> int:
         key_by_command = {
@@ -448,6 +641,9 @@ class YBSynthesisModbusStation:
     def reconnect(self) -> ConnectionResult:
         try:
             self.controller.reconnect()
+            reconnect_business = getattr(self.business_state, "reconnect", None)
+            if callable(reconnect_business):
+                reconnect_business()
         except Exception as exc:
             return {
                 "connected": False,
@@ -465,6 +661,191 @@ class YBSynthesisModbusStation:
             "status": self.status,
             "error": "",
         }
+
+    @action(always_free=True, description="查询 TASK 任务队列")
+    def query_tasks(self, from_id: str = "", only_running: bool = False) -> dict[str, Any]:
+        return self._business_call(
+            "query_tasks", {"fromId": str(from_id or "").strip(), "onlyRunning": bool(only_running)}
+        )
+
+    @action(always_free=True, description="查询 POST 后处理任务队列")
+    def query_posts(self, from_id: str = "", only_running: bool = False) -> dict[str, Any]:
+        return self._business_call(
+            "query_posts", {"fromId": str(from_id or "").strip(), "onlyRunning": bool(only_running)}
+        )
+
+    @action(always_free=True, description="按 LOT 编号查询配方、加样与分烧数据")
+    def query_lot(self, lot_id: str) -> dict[str, Any]:
+        return self._business_call("query_lot", {"lotId": str(lot_id or "").strip()})
+
+    @action(always_free=True, description="按装瓶二维码查询对应 LOT 与小坩埚")
+    def query_bottle_code(self, bottle_code: str) -> dict[str, Any]:
+        return self._business_call(
+            "query_bottle_code", {"bottle_code": str(bottle_code or "").strip()}
+        )
+
+    @action(description="创建 POST 后处理任务")
+    def create_post(self, task_id: str = "", post_id: str = "") -> dict[str, Any]:
+        return self._business_call(
+            "create_post", {"task_id": str(task_id or "").strip(), "post_id": str(post_id or "").strip()}
+        )
+
+    @action(description="启动 POST 后处理任务")
+    def start_post(self, post_id: str = "") -> dict[str, Any]:
+        return self._business_call("start_post", {"post_id": str(post_id or "").strip()})
+
+    @action(description="扫描 LOT 到批次")
+    def scan_lot_to_batch(
+        self, post_id: str = "", lot_id: str = "", qrcode: str = ""
+    ) -> dict[str, Any]:
+        return self._business_call(
+            "scan_lot_to_batch",
+            {"post_id": str(post_id or "").strip(), "lot_id": str(lot_id or "").strip(),
+             "qrcode": str(qrcode or "").strip()},
+        )
+
+    @action(description="确认 LOT 批次")
+    def confirm_lot_batch(self, post_id: str = "", lot_id: str = "") -> dict[str, Any]:
+        return self._business_call(
+            "confirm_lot_batch",
+            {"post_id": str(post_id or "").strip(), "lot_id": str(lot_id or "").strip()},
+        )
+
+    @action(description="扫描 LOT 到小坩埚")
+    def scan_lot_to_small_cubic(
+        self,
+        post_id: str = "",
+        lot_id: str = "",
+        small_cubic_id: str = "",
+        firing_type: int = 0,
+    ) -> dict[str, Any]:
+        return self._business_call(
+            "scan_lot_to_small_cubic",
+            {"post_id": str(post_id or "").strip(), "lot_id": str(lot_id or "").strip(),
+             "small_cubic_id": str(small_cubic_id or "").strip(), "firing_type": int(firing_type)},
+        )
+
+    @action(description="完成 LOT 到小坩埚分配")
+    def complete_lot_to_small_cubic(
+        self, post_id: str = "", lot_id: str = "", small_cubic_id: str = ""
+    ) -> dict[str, Any]:
+        return self._business_call(
+            "complete_lot_to_small_cubic",
+            {"post_id": str(post_id or "").strip(), "lot_id": str(lot_id or "").strip(),
+             "small_cubic_id": str(small_cubic_id or "").strip()},
+        )
+
+    @action(description="确认焦耳热下料计划")
+    def confirm_joule_heating_schedule(
+        self, post_id: str = "", joule_heating_fetch_mode: str = "auto"
+    ) -> dict[str, Any]:
+        mode = str(joule_heating_fetch_mode or "auto").strip().lower()
+        if mode not in {"auto", "manual"}:
+            raise ValueError('joule_heating_fetch_mode 必须是 "auto" 或 "manual"')
+        return self._business_call(
+            "confirm_joule_heating_schedule",
+            {"post_id": str(post_id or "").strip(), "joule_heating_fetch_mode": mode},
+        )
+
+    @action(description="扫描瓶码并入库")
+    def scan_bottle_to_stock(
+        self, post_id: str = "", lot_id: str = "", bottle_code: str = ""
+    ) -> dict[str, Any]:
+        return self._business_call(
+            "scan_bottle_to_stock",
+            {"post_id": str(post_id or "").strip(), "lot_id": str(lot_id or "").strip(),
+             "bottle_code": str(bottle_code or "").strip()},
+        )
+
+    @action(description="上传配方；名称需唯一")
+    def upload_recipe(
+        self,
+        recipe_name: str,
+        formula: str,
+        synthesis_mass: float,
+        n_ball_bead: int,
+        powder_names: list[str] | None = None,
+        powder_weights: list[float] | None = None,
+        powder_tolerances: list[float] | None = None,
+        powder_pre_adds: list[bool] | None = None,
+    ) -> dict[str, Any]:
+        materials = resolve_recipe_materials_input(
+            powder_names, powder_weights, powder_tolerances, powder_pre_adds
+        )
+        param = flatten_recipe_param(
+            recipe_name, formula, synthesis_mass, n_ball_bead, materials
+        )
+        if not param["recipe_name"]:
+            raise ValueError("recipe_name 不能为空")
+        return self._business_call("upload_recipe", param)
+
+    @action(description="创建合成 TASK")
+    def create_task(
+        self,
+        pallet_type: int = 1,
+        cubic_type: int = 1,
+        task_slot_nums: list[int] | None = None,
+        task_recipe_names: list[str] | None = None,
+        has_bead_bottle: bool = True,
+        bead_count: int = 100,
+    ) -> dict[str, Any]:
+        slots = resolve_task_slots_input(task_slot_nums, task_recipe_names)
+        return self._business_call(
+            "create_task",
+            {
+                "pallet_type": int(pallet_type),
+                "cubic_type": int(cubic_type),
+                "has_bead_bottle": bool(has_bead_bottle),
+                "bead_count": int(bead_count),
+                "slots": slots,
+            },
+        )
+
+    @action(description="启动 TASK")
+    def start_task(self, task_id: str = "") -> dict[str, Any]:
+        return self._business_call("start_task", self._business_task_param(task_id))
+
+    @action(description="上坩埚")
+    def upload_cubic(self, task_id: str = "", fetch_cubic_source: int = 1) -> dict[str, Any]:
+        source = int(fetch_cubic_source)
+        if source not in {0, 1}:
+            raise ValueError("fetch_cubic_source 必须是 0 或 1")
+        return self._business_call(
+            "upload_cubic", self._business_task_param(task_id, {"fetch_cubic_source": source})
+        )
+
+    @action(always_free=True, description="查询上坩埚状态")
+    def query_upload_cubic_status(self, task_id: str = "") -> dict[str, Any]:
+        return self._business_call(
+            "query_upload_cubic_status", self._business_task_param(task_id)
+        )
+
+    @action(description="加样确认：写入预加料实际重量")
+    def confirm_recipe(
+        self,
+        task_id: str = "",
+        slot_num: int = 1,
+        material: str = "",
+        real_weight: float = 0.0,
+    ) -> dict[str, Any]:
+        material_name = str(material or "").strip()
+        if not material_name:
+            raise ValueError("material 不能为空")
+        return self._business_call(
+            "confirm_recipe",
+            self._business_task_param(
+                task_id,
+                {"slot_num": int(slot_num), "material": material_name, "real_weight": float(real_weight)},
+            ),
+        )
+
+    @action(description="启动加样")
+    def start_recipt(self, task_id: str = "") -> dict[str, Any]:
+        return self._business_call("start_recipt", self._business_task_param(task_id))
+
+    @action(always_free=True, description="查询加样状态")
+    def get_recipt_status(self, task_id: str = "") -> dict[str, Any]:
+        return self._business_call("get_recipt_status", self._business_task_param(task_id))
 
     @action(description="启动一次扫码绑定、称粉和加珠任务")
     def start_sampling(
@@ -706,11 +1087,18 @@ class YBSynthesisModbusStation:
     @action(description="下发声共振工艺")
     def start_acoustic_resonance(
         self,
+        task_id: str = "",
         fetch_position: int = 1,
         accelerations: list[int] | None = None,
         frequencies: list[int] | None = None,
         times: list[int] | None = None,
     ) -> CommandResult:
+        # A non-empty TASK ID selects the business simulator contract.  With
+        # no ID this remains the raw Modbus command for direct PLC users.
+        if str(task_id or "").strip():
+            return self._business_call(
+                "start_acoustic_resonance", self._business_task_param(task_id)
+            )  # type: ignore[return-value]
         self._ensure_connected()
         return self._command_result(self.controller.acoustic_resonance(
             fetch_position=fetch_position,
@@ -720,12 +1108,20 @@ class YBSynthesisModbusStation:
         ))
 
     @action(always_free=True, description="取出声共振载具")
-    def fetch_acoustic_resonance(self) -> CommandResult:
+    def fetch_acoustic_resonance(self, task_id: str = "") -> CommandResult:
+        if str(task_id or "").strip():
+            return self._business_call(
+                "fetch_acoustic_resonance", self._business_task_param(task_id)
+            )  # type: ignore[return-value]
         self._ensure_connected()
         return self._command_result(self.controller.fetch_acoustic_resonance())
 
     @action(always_free=True, description="查询声共振上料、下料和运行状态")
-    def get_acoustic_resonance_status(self) -> CommandResult:
+    def get_acoustic_resonance_status(self, task_id: str = "") -> CommandResult:
+        if str(task_id or "").strip():
+            return self._business_call(
+                "get_acoustic_resonance_status", self._business_task_param(task_id)
+            )  # type: ignore[return-value]
         self._ensure_connected()
         snapshot = self.controller.status()
         return self._command_result({
@@ -735,12 +1131,16 @@ class YBSynthesisModbusStation:
         })
 
     @action(description="结束声共振工艺并进入后续装瓶")
-    def finish_acoustic_resonance(self) -> CommandResult:
+    def finish_acoustic_resonance(self, task_id: str = "") -> CommandResult:
         """The IO table has no separate finish register.
 
         Command 9 performs physical unloading; this action records the
         supervisory boundary without inventing a PLC register write.
         """
+        if str(task_id or "").strip():
+            return self._business_call(
+                "finish_acoustic_resonance", self._business_task_param(task_id)
+            )  # type: ignore[return-value]
         self._ensure_connected()
         return self._command_result({
             "accepted": True,
@@ -748,21 +1148,74 @@ class YBSynthesisModbusStation:
             "status": self.controller.status(),
         })
 
+    @action(description="扫码装瓶")
+    def scan_big_cubic_to_bottle(self, task_id: str = "", qrcode: str = "") -> dict[str, Any]:
+        code = str(qrcode or "").strip()
+        if not code:
+            raise ValueError("qrcode 不能为空")
+        return self._business_call(
+            "scan_big_cubic_to_bottle",
+            self._business_task_param(task_id, {"qrcode": code}),
+        )
+
+    @action(description="启动烧结")
+    def start_sintering(
+        self, post_id: str = "", joule_heating_fetch_mode: str = "auto"
+    ) -> dict[str, Any]:
+        mode = str(joule_heating_fetch_mode or "auto").strip().lower()
+        if mode not in {"auto", "manual"}:
+            raise ValueError('joule_heating_fetch_mode 必须是 "auto" 或 "manual"')
+        return self._business_call(
+            "start_sintering", self._business_post_param(post_id, {"joule_heating_fetch_mode": mode})
+        )
+
+    @action(always_free=True, description="查询烧结状态")
+    def get_sintering_status(self, post_id: str = "") -> dict[str, Any]:
+        return self._business_call(
+            "get_sintering_status", self._business_post_param(post_id)
+        )
+
+    @action(description="焦耳热下料")
+    def fetch_joule_heating(self, post_id: str = "") -> dict[str, Any]:
+        return self._business_call(
+            "fetch_joule_heating", self._business_post_param(post_id)
+        )
+
+    @action(description="马弗炉下料")
+    def fetch_furnace(self, post_id: str = "", furnace_id: int = 1) -> dict[str, Any]:
+        furnace = int(furnace_id)
+        if furnace not in {1, 2, 3, 4}:
+            raise ValueError("furnace_id 必须是 1 到 4")
+        return self._business_call(
+            "fetch_furnace", self._business_post_param(post_id, {"furnace_id": furnace})
+        )
+
     @action(description="关闭舱门")
     def close_cabin_outer_door(self, task_id: str = "") -> CommandResult:
-        del task_id
+        if str(task_id or "").strip():
+            return self._business_call(
+                "close_cabin_outer_door", self._business_task_param(task_id)
+            )  # type: ignore[return-value]
         self._ensure_connected()
         return self._command_result(self.controller.close_cabin_door())
 
     @action(always_free=True, description="暂停 PLC 当前工艺")
     def pause(self) -> CommandResult:
         self._ensure_connected()
-        return self._command_result(self.controller.pause())
+        result = self._command_result(self.controller.pause())
+        pause_business = getattr(self.business_state, "pause", None)
+        if callable(pause_business):
+            pause_business()
+        return result
 
     @action(always_free=True, description="恢复 PLC 当前工艺")
     def resume(self) -> CommandResult:
         self._ensure_connected()
-        return self._command_result(self.controller.resume())
+        result = self._command_result(self.controller.resume())
+        resume_business = getattr(self.business_state, "resume", None)
+        if callable(resume_business):
+            resume_business()
+        return result
 
     @action(always_free=True, description="推进设备包内 PLC 仿真时钟")
     def advance_simulation(self, seconds: float = 0.1) -> StationStatusResult:
@@ -770,6 +1223,9 @@ class YBSynthesisModbusStation:
             raise RuntimeError("真实 PLC 模式不支持 advance_simulation")
         self._ensure_connected()
         self.controller.advance(seconds)
+        advance_business = getattr(self.business_state, "advance", None)
+        if callable(advance_business):
+            advance_business(seconds)
         return self.station_status()
 
     @action(always_free=True, description="注入仿真故障用于联调")
@@ -797,6 +1253,9 @@ class YBSynthesisModbusStation:
         if not self.model:
             raise RuntimeError("真实 PLC 模式不支持仿真 reset")
         self.controller.reset()
+        reset_business = getattr(self.business_state, "reset", None)
+        if callable(reset_business):
+            reset_business()
         return self.station_status()
 
 
