@@ -48,6 +48,33 @@ class SynthesisDirectController:
     def close(self) -> None:
         self.transport.close()
 
+    def reconnect(self) -> None:
+        """Close and reopen the transport without changing device config."""
+
+        self.close()
+        self.connect()
+
+    def check_connection(self) -> bool:
+        """Perform a status read so a stale TCP socket is not reported healthy."""
+
+        try:
+            self.status()
+        except Exception:
+            return False
+        return True
+
+    def reset(self) -> None:
+        reset = getattr(self.transport, "reset", None)
+        if not callable(reset):
+            raise RuntimeError("当前 Modbus PLC 不支持设备包 reset")
+        reset()
+
+    def clear_fault(self, name: str | None = None) -> None:
+        clear_fault = getattr(self.transport, "clear_fault", None)
+        if not callable(clear_fault):
+            raise RuntimeError("当前 Modbus PLC 不支持设备包 clear_fault")
+        clear_fault(name)
+
     @property
     def connected(self) -> bool:
         return bool(getattr(self.transport, "connected", False))
@@ -71,6 +98,7 @@ class SynthesisDirectController:
         bead_count: int = 0,
         from_outside: bool = False,
         material_names: Sequence[str] | None = None,
+        expected_crucible_id: str | None = None,
     ) -> dict[str, Any]:
         """Write the Qt-compatible CMD_SAMPLE payload.
 
@@ -104,12 +132,22 @@ class SynthesisDirectController:
         # the real PLC ignores this attribute.
         if names and hasattr(self.transport, "material_names"):
             setattr(self.transport, "material_names", names)
+        if hasattr(self.transport, "expected_crucible_id"):
+            setattr(
+                self.transport,
+                "expected_crucible_id",
+                str(expected_crucible_id or "").strip(),
+            )
         self.client.write_command(payload)
         self._last_material_count = len(rack_positions)
         self._last_task_id = str(task_id).strip()
-        simulated_id = str(getattr(self.transport, "last_task_id", "")).strip()
-        if simulated_id:
-            self._last_task_id = simulated_id
+        # Keep the caller's business identity stable.  A simulator may expose
+        # its own execution sequence separately, but it must not overwrite the
+        # OS task id used for tracing and retry correlation.
+        if not self._last_task_id:
+            simulated_id = str(getattr(self.transport, "last_task_id", "")).strip()
+            if simulated_id:
+                self._last_task_id = simulated_id
         return {
             "accepted": True,
             "command": "sample_add_powder_and_beads",

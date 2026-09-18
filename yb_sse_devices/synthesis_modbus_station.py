@@ -7,10 +7,14 @@ this module only exposes stable actions to Uni-Lab OS.
 
 from __future__ import annotations
 
-from typing import Any, TypedDict
+from collections.abc import Mapping
+from typing import Annotated, Any, TypedDict
 
+from unilabos.registry.annotations import AllowedResourceTemplates
 from unilabos.registry.decorators import action, device, not_action, topic_config
+from unilabos.registry.placeholder_type import ResourceSlot
 
+from yb_sse_devices.resources.synthesis_resources import SynthesisCrucible
 from yb_sse_devices.simulation import SynthesisPlcModel, SynthesisSimulationTransport
 from yb_sse_devices.synthesis_direct import SynthesisDirectController
 from yb_sse_devices.synthesis_modbus import ModbusTcpTransport
@@ -39,6 +43,8 @@ class ConnectionResult(TypedDict):
 
 class CommandResult(TypedDict):
     accepted: bool
+    success: bool
+    message: str
     command: str
     status_code: int
     status_name: str
@@ -46,6 +52,8 @@ class CommandResult(TypedDict):
 
 class SamplingStartedResult(TypedDict):
     accepted: bool
+    success: bool
+    message: str
     command: str
     task_id: str
     slot_num: int
@@ -56,6 +64,8 @@ class SamplingStartedResult(TypedDict):
 
 class SamplingCompletedResult(TypedDict):
     accepted: bool
+    success: bool
+    message: str
     command: str
     task_id: str
     slot_num: int
@@ -65,6 +75,29 @@ class SamplingCompletedResult(TypedDict):
     weights: list[float]
     result_codes: list[int]
     qr_code: str
+
+
+class MaterialSamplingResult(TypedDict):
+    """称粉动作的物料感知结果。
+
+    ``crucible`` 是同名 ResourceSlot 透传，方便 OS 在动作完成后继续维护
+    物料链；条码和称量结果来自 PLC 回读，不能由工作流参数代替。
+    """
+
+    accepted: bool
+    success: bool
+    command: str
+    task_id: str
+    slot_num: int
+    material_count: int
+    status_code: int
+    status_name: str
+    weights: list[float]
+    result_codes: list[int]
+    qr_code: str
+    crucible: ResourceSlot
+    source_site: str
+    message: str
 
 
 class SamplingResultContract(TypedDict):
@@ -100,6 +133,9 @@ class YBSynthesisModbusStation:
         simulation: bool = True,
         simulation_crucible_id: str = "CRU-SIM-001",
         simulation_dosing_duration: float = 1.0,
+        simulation_handshake_delay: float = 0.1,
+        simulation_failure_plan: Mapping[str, str] | None = None,
+        simulation_handshake_history_limit: int = 100,
         material_names: list[str] | None = None,
         **_: Any,
     ) -> None:
@@ -127,6 +163,18 @@ class YBSynthesisModbusStation:
                 self.model,
                 crucible_id=self.simulation_crucible_id,
                 material_names=self.material_names,
+                handshake_delay=float(
+                    resolved.get("simulation_handshake_delay", simulation_handshake_delay)
+                ),
+                failure_plan=resolved.get(
+                    "simulation_failure_plan", simulation_failure_plan or {}
+                ),
+                handshake_history_limit=int(
+                    resolved.get(
+                        "simulation_handshake_history_limit",
+                        simulation_handshake_history_limit,
+                    )
+                ),
             )
         else:
             transport = ModbusTcpTransport(
@@ -149,7 +197,7 @@ class YBSynthesisModbusStation:
     @property
     @topic_config(period=2.0)
     def status(self) -> str:
-        """PLC 状态：IDLE / BUSY / FAULT / OFFLINE。"""
+        """PLC 状态：IDLE / BUSY / PAUSED / FAULT / OFFLINE。"""
         if not self.connected:
             return "OFFLINE"
         try:
@@ -158,14 +206,21 @@ class YBSynthesisModbusStation:
             return "OFFLINE"
         if self.model and self.model.fault is not None:
             return "FAULT"
+        codes: set[int] = set()
         active: set[int] = set()
         for key, value in snapshot.items():
             if key == "pause":
                 continue
             if isinstance(value, tuple):
-                active.update(int(item) for item in value)
+                values = {int(item) for item in value}
             else:
-                active.add(int(value))
+                values = {int(value)}
+            codes.update(values)
+            active.update(values)
+        if 3 in codes:
+            return "FAULT"
+        if int(snapshot.get("pause", 0)) == 1:
+            return "PAUSED"
         return "BUSY" if 1 in active else "IDLE"
 
     @property
@@ -283,6 +338,37 @@ class YBSynthesisModbusStation:
             int(code), "UNKNOWN"
         )
 
+    @staticmethod
+    def _resource_identity(resource: ResourceSlot) -> str:
+        """Extract the field barcode from a runtime ResourceSlot when present."""
+
+        if isinstance(resource, str):
+            return resource.strip()
+        if isinstance(resource, Mapping):
+            for key in ("barcode", "qr_code", "crucible_id", "resource_id", "uuid", "id"):
+                value = resource.get(key)
+                if value:
+                    return str(value).strip()
+        for key in ("barcode", "qr_code", "crucible_id", "resource_id", "uuid", "id"):
+            value = getattr(resource, key, None)
+            if value:
+                return str(value).strip()
+        return ""
+
+    @staticmethod
+    def _slot_from_site(source_site: str) -> int | None:
+        """Map the package's ``rack-<zero based index>`` site labels to slots."""
+
+        label = str(source_site).strip()
+        if not label:
+            return None
+        suffix = label.rsplit("-", 1)[-1]
+        try:
+            index = int(suffix)
+        except ValueError:
+            return None
+        return index + 1 if index >= 0 else None
+
     def _command_result(self, response: dict[str, Any]) -> CommandResult:
         command = str(response.get("command", ""))
         snapshot = response.get("status")
@@ -290,6 +376,8 @@ class YBSynthesisModbusStation:
         code = self._status_code(status, command)
         return {
             "accepted": bool(response.get("accepted", False)),
+            "success": bool(response.get("accepted", False)) and code != 3,
+            "message": "" if code != 3 else "PLC 报告故障状态",
             "command": command,
             "status_code": code,
             "status_name": self._status_name(code),
@@ -314,6 +402,52 @@ class YBSynthesisModbusStation:
         try:
             self._ensure_connected()
             status = self.controller.status()
+        except Exception as exc:
+            return {
+                "connected": False,
+                "simulation": self.simulation,
+                "ip": self.ip,
+                "port": self.port,
+                "status": "UNKNOWN",
+                "error": str(exc),
+            }
+        return {
+            "connected": True,
+            "simulation": self.simulation,
+            "ip": self.ip,
+            "port": self.port,
+            "status": self.status,
+            "error": "",
+        }
+
+    @action(always_free=True, description="读取 PLC 状态并确认连接仍然可用")
+    def check_connection(self) -> ConnectionResult:
+        try:
+            self._ensure_connected()
+            if not self.controller.check_connection():
+                raise RuntimeError("PLC 状态读取失败")
+        except Exception as exc:
+            return {
+                "connected": False,
+                "simulation": self.simulation,
+                "ip": self.ip,
+                "port": self.port,
+                "status": "UNKNOWN",
+                "error": str(exc),
+            }
+        return {
+            "connected": True,
+            "simulation": self.simulation,
+            "ip": self.ip,
+            "port": self.port,
+            "status": self.status,
+            "error": "",
+        }
+
+    @action(always_free=True, description="断开后重新连接 YB 合成 PLC")
+    def reconnect(self) -> ConnectionResult:
+        try:
+            self.controller.reconnect()
         except Exception as exc:
             return {
                 "connected": False,
@@ -361,8 +495,11 @@ class YBSynthesisModbusStation:
             material_names=material_names,
         )
         code = self._status_code(response.get("status", {}), "sample_add_powder_and_beads")
+        accepted = bool(response.get("accepted", False)) and code != 3
         return {
-            "accepted": bool(response.get("accepted", False)),
+            "accepted": accepted,
+            "success": accepted,
+            "message": "" if accepted else "PLC 拒绝称粉任务",
             "command": str(response.get("command", "sample_add_powder_and_beads")),
             "task_id": str(response.get("task_id", task_id)),
             "slot_num": int(response.get("slot_num", slot_num)),
@@ -385,6 +522,7 @@ class YBSynthesisModbusStation:
         material_names: list[str] | None = None,
         timeout: float = 30.0,
         step: float = 0.1,
+        expected_crucible_id: str | None = None,
     ) -> SamplingCompletedResult:
         self._ensure_connected()
         resolved_rack_positions = rack_positions if rack_positions is not None else [1]
@@ -400,6 +538,7 @@ class YBSynthesisModbusStation:
             bead_count=bead_count,
             from_outside=from_outside,
             material_names=material_names,
+            expected_crucible_id=expected_crucible_id,
             timeout=timeout,
             step=step,
         )
@@ -407,8 +546,11 @@ class YBSynthesisModbusStation:
         weights = result.get("weights", {})
         result_codes = result.get("results", {})
         code = self._status_code(response.get("status", {}), "sample_add_powder_and_beads")
+        accepted = bool(response.get("accepted", False)) and code != 3
         return {
-            "accepted": bool(response.get("accepted", False)),
+            "accepted": accepted,
+            "success": accepted,
+            "message": "" if accepted else "PLC 称粉任务失败",
             "command": str(response.get("command", "sample_add_powder_and_beads")),
             "task_id": str(response.get("task_id", task_id)),
             "slot_num": int(response.get("slot_num", slot_num)),
@@ -418,6 +560,56 @@ class YBSynthesisModbusStation:
             "weights": [float(value) for value in (weights.values() if isinstance(weights, dict) else weights)],
             "result_codes": [int(value) for value in (result_codes.values() if isinstance(result_codes, dict) else result_codes)],
             "qr_code": str(result.get("qr_code", "")),
+        }
+
+    @action(description="使用指定坩埚 ResourceSlot 执行扫码绑定和称粉")
+    def sample_with_materials(
+        self,
+        crucible: Annotated[ResourceSlot, AllowedResourceTemplates(SynthesisCrucible)],
+        source_site: str,
+        task_id: str = "",
+        slot_num: int = 1,
+        rack_positions: list[int] | None = None,
+        masses: list[float] | None = None,
+        tolerances: list[float] | None = None,
+        cubic_type: int = 1,
+        bead_count: int = 0,
+        from_outside: bool = False,
+        material_names: list[str] | None = None,
+        timeout: float = 30.0,
+        step: float = 0.1,
+    ) -> MaterialSamplingResult:
+        mapped_slot = self._slot_from_site(source_site)
+        if mapped_slot is not None and int(slot_num) != mapped_slot:
+            raise ValueError(
+                f"source_site {source_site!r} 对应 PLC 槽位 {mapped_slot}，"
+                f"但收到 slot_num={slot_num}"
+            )
+        expected_id = self._resource_identity(crucible)
+        result = self.sample(
+            task_id=task_id,
+            slot_num=slot_num,
+            rack_positions=rack_positions,
+            masses=masses,
+            tolerances=tolerances,
+            cubic_type=cubic_type,
+            bead_count=bead_count,
+            from_outside=from_outside,
+            material_names=material_names,
+            timeout=timeout,
+            step=step,
+            expected_crucible_id=expected_id,
+        )
+        return {
+            **result,
+            "success": result["accepted"] and result["status_name"] != "FAULT",
+            "crucible": crucible,
+            "source_site": str(source_site),
+            "message": (
+                f"坩埚扫码称粉完成：{result['qr_code']}"
+                if result["accepted"]
+                else "坩埚扫码称粉未接受"
+            ),
         }
 
     @action(always_free=True, description="读取最近一次称粉结果")
@@ -592,6 +784,20 @@ class YBSynthesisModbusStation:
             raise RuntimeError("真实 PLC 模式不支持仿真故障注入")
         fault = self.model.inject_fault(name, code=code, message=message, once=once)
         return {"name": fault.name, "code": fault.code, "message": fault.message}
+
+    @action(always_free=True, description="清除设备包仿真故障并恢复空闲状态")
+    def clear_fault(self, name: str = "") -> StationStatusResult:
+        if not self.model:
+            raise RuntimeError("真实 PLC 模式不支持仿真故障清除")
+        self.controller.clear_fault(name or None)
+        return self.station_status()
+
+    @action(always_free=True, description="重置设备包仿真 PLC 状态")
+    def reset(self) -> StationStatusResult:
+        if not self.model:
+            raise RuntimeError("真实 PLC 模式不支持仿真 reset")
+        self.controller.reset()
+        return self.station_status()
 
 
 __all__ = ["YBSynthesisModbusStation"]

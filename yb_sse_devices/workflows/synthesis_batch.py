@@ -30,6 +30,13 @@ class SynthesisBatchResult(TypedDict):
     task_id: str
     slot_num: int
     accepted: bool
+    success: bool
+    status_name: str
+    qr_code: str
+    weights: list[float]
+    result_codes: list[int]
+    source_site: str
+    message: str
 
 
 @workflow(
@@ -65,6 +72,7 @@ def synthesis_batch(
     # unilab:node_uuid=f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c
     sampled = synthesis_sampling(
         resource=source_resource,
+        source_site=source_site,
         task_id=task_id,
         slot_num=slot_num,
         rack_positions=rack_positions,
@@ -80,4 +88,11 @@ def synthesis_batch(
         "task_id": sampled.task_id,
         "slot_num": slot_num,
         "accepted": sampled.accepted,
+        "success": sampled.success,
+        "status_name": sampled.status_name,
+        "qr_code": sampled.qr_code,
+        "weights": sampled.weights,
+        "result_codes": sampled.result_codes,
+        "source_site": sampled.source_site,
+        "message": sampled.message,
     }

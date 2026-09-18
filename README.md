@@ -53,8 +53,10 @@ unilab --check_mode \
 ```
 
 仿真会在设备包内完成 `CMD_SAMPLE=3` → 机械臂内部扫码绑定 → 称粉 → 结果读取，
-并用 `ResourceSlot` 把坩埚传入已登记的实验操作和完整工作流。
-`advance_simulation` 可推进确定性时钟，`inject_simulation_fault` 可注入扫码、二维码和称粉故障。
+并用 `ResourceSlot` 把坩埚传入已登记的实验操作和称粉批次工作流。实验操作会校验
+`source_site` 与 PLC 槽位一致，并透传扫码二维码、称量值和结果码。
+`advance_simulation` 可推进确定性时钟，`inject_simulation_fault` 可注入扫码、二维码和称粉故障；
+`pause` 会冻结仿真时钟，`clear_fault`/`reset` 可恢复仿真，动作握手历史、延迟和故障计划可由启动图配置。
 仿真核心不启动 TCP/JSON Mock；它与真实 PLC 共用同一 `ModbusTransport` 接口，便于之后切换
 到现场 PLC。
 
@@ -72,7 +74,7 @@ unilab --check_mode \
 
 ## 已注册动作
 
-查询：`station_status`、`material_status`、`batch_status`、`batch_result`、
+查询：`station_status`、`check_connection`、`material_status`、`batch_status`、`batch_result`、
 `query_batch`、`test_connection`
 
 控制：`start_batch` 启动整批自动实验（工站连续跑完 1–13 步，不必再串联分步）；
@@ -82,7 +84,7 @@ unilab --check_mode \
 
 ## 状态 property
 
-工站健康：`status`（IDLE / BUSY / FAULT / OFFLINE）、`station_health`、`connected`，以及七路 0/1
+工站健康：`status`（IDLE / BUSY / PAUSED / FAULT / OFFLINE）、`station_health`、`connected`，以及七路 0/1
 （`robot_arm`、`scanner`、`lid_open_close_mechanism`、
 `powder_adding_mechanism`、`tablet_pressing_mechanism`、
 `electrochemical_workstation`、`stack_rack`）。
@@ -106,6 +108,7 @@ python -m pytest tests -q
 ## 启动
 
 动作一律由 Uni-Lab OS edge 发送。Modbus 直连入口由设备包作为客户端连接 PLC；仿真模式使用进程内 PLC 模型。
+现场断线后可调用 `check_connection` 检查状态读取，调用 `reconnect` 重新建立连接。
 
 ```bash
 unilab \

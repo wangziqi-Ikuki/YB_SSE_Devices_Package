@@ -9,9 +9,13 @@ starting a second TCP/JSON server or hiding the internal scan interlock.
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 
-from yb_sse_devices.simulation.plc_model import SamplingPhase, SynthesisPlcModel
+from yb_sse_devices.simulation.plc_model import (
+    SamplingPhase,
+    SimulationError,
+    SynthesisPlcModel,
+)
 from yb_sse_devices.synthesis_modbus import (
     ModbusConnectionError,
     SynthesisCommand,
@@ -38,6 +42,9 @@ class SynthesisSimulationTransport:
         crucible_id: str = "CRU-SIM-001",
         material_names: Sequence[str] | None = None,
         base_address: int = 40001,
+        handshake_delay: float = 0.1,
+        failure_plan: Mapping[str, str] | None = None,
+        handshake_history_limit: int = 100,
     ) -> None:
         self.model = model or SynthesisPlcModel(auto_scan_id=crucible_id)
         self.task_id_prefix = str(task_id_prefix).strip() or "SIM-TASK"
@@ -48,10 +55,23 @@ class SynthesisSimulationTransport:
         if any(not name for name in self.material_names):
             raise ValueError("material_names 不能包含空名称")
         self.base_address = int(base_address)
+        if float(handshake_delay) < 0:
+            raise ValueError("handshake_delay must be non-negative")
+        if int(handshake_history_limit) < 1:
+            raise ValueError("handshake_history_limit must be positive")
+        self.handshake_delay = float(handshake_delay)
+        self.failure_plan = {
+            str(command): str(message)
+            for command, message in (failure_plan or {}).items()
+        }
+        self.handshake_history_limit = int(handshake_history_limit)
+        self.handshake_history: list[dict[str, object]] = []
         self.connected = False
         self.writes: list[tuple[int, tuple[int, ...]]] = []
         self.last_command: tuple[int, ...] = ()
         self.last_task_id = ""
+        self.execution_task_id = ""
+        self.expected_crucible_id = ""
         self._task_sequence = 0
         self._registers: dict[int, int] = {}
         self._pending_sampling: tuple[str, int, dict[str, float]] | None = None
@@ -71,11 +91,39 @@ class SynthesisSimulationTransport:
             int(SynthesisCommand.FETCH_ACOUSTIC_RESONANCE): 15,
         }
 
+    @property
+    def paused(self) -> bool:
+        return bool(self._status_registers.get(40116, 0) == 1)
+
     def connect(self) -> None:
         self.connected = True
 
     def close(self) -> None:
         self.connected = False
+
+    def reset(self) -> None:
+        """Reset the simulated PLC and all pending command state."""
+
+        self.model.reset()
+        self._status_registers.clear()
+        self._pending_operations.clear()
+        self._pending_sampling = None
+        self.last_task_id = ""
+        self.execution_task_id = ""
+        self.expected_crucible_id = ""
+        self.handshake_history.clear()
+
+    def clear_fault(self, name: str | None = None) -> None:
+        self.model.clear_fault(name)
+        for register, value in list(self._status_registers.items()):
+            if value == 3:
+                self._status_registers[register] = 0
+
+    def _record_handshake(self, command: str, phase: str, **payload: object) -> None:
+        self.handshake_history.append(
+            {"command": command, "phase": phase, "task_id": self.last_task_id, **payload}
+        )
+        del self.handshake_history[:-self.handshake_history_limit]
 
     def _require_connected(self) -> None:
         if not self.connected:
@@ -152,29 +200,72 @@ class SynthesisSimulationTransport:
         """Advance deterministic PLC time and expose any resulting state."""
 
         value = float(seconds)
+        if value < 0:
+            raise ValueError("seconds must be non-negative")
+        if self.paused:
+            return
+        previous_phase = self.model.phase
         self.model.advance(value)
+        if previous_phase is not SamplingPhase.COMPLETED and self.model.phase is SamplingPhase.COMPLETED:
+            self._record_handshake("sample_add_powder_and_beads", "completed")
+        elif previous_phase is not SamplingPhase.FAULT and self.model.phase is SamplingPhase.FAULT:
+            fault = self.model.fault
+            self._record_handshake(
+                "sample_add_powder_and_beads",
+                "failed",
+                message=fault.message if fault else "仿真工艺失败",
+            )
         remaining: list[tuple[int, float]] = []
         for status_register, due_in in self._pending_operations:
             due = due_in - value
             if due <= 0:
                 self._status_registers[status_register] = 2
+                self._record_handshake(
+                    f"status_{status_register}", "completed", status_register=status_register
+                )
             else:
                 remaining.append((status_register, due))
         self._pending_operations = remaining
 
     def _start_operation(self, command: int, *, status_index: int | None = None) -> None:
+        if self._pending_operations or self.model.phase in {
+            SamplingPhase.SCANNING,
+            SamplingPhase.BOUND,
+            SamplingPhase.DOSING,
+        }:
+            raise SimulationError("上一条 PLC 动作尚未完成，设备动作互斥")
         index = self._status_map.get(int(command)) if status_index is None else status_index
         if index is None:
             return
+        command_name = SynthesisCommand(int(command)).name.lower()
+        self._record_handshake(command_name, "parameters_written")
+        self._record_handshake(command_name, "accepted")
         register = SynthesisRegisterMap().status_register(index)
+        failure = self.failure_plan.get(command_name)
+        if failure:
+            self._status_registers[register] = 3
+            self._record_handshake(command_name, "failed", message=failure)
+            return
         self._status_registers[register] = 1
-        self._pending_operations.append((register, 0.1))
+        self._record_handshake(command_name, "running")
+        self._pending_operations.append((register, self.handshake_delay))
 
     def _start_firing_operation(self, payload: tuple[int, ...]) -> None:
         """Reflect furnace/Joule heating handshake in the status block."""
+        command_name = SynthesisCommand.SEND_FIRING.name.lower()
+        if self._pending_operations:
+            raise SimulationError("上一条 PLC 动作尚未完成，设备动作互斥")
+        self._record_handshake(command_name, "parameters_written")
+        self._record_handshake(command_name, "accepted")
         command_register = SynthesisRegisterMap().status_register(3)
+        failure = self.failure_plan.get(command_name)
+        if failure:
+            self._status_registers[command_register] = 3
+            self._record_handshake(command_name, "failed", message=failure)
+            return
         self._status_registers[command_register] = 1
-        self._pending_operations.append((command_register, 0.1))
+        self._record_handshake(command_name, "running")
+        self._pending_operations.append((command_register, self.handshake_delay))
         position = 0
         for index in range(4):
             marker = 1 + index * 15
@@ -184,7 +275,7 @@ class SynthesisSimulationTransport:
         status_index = 14 if position == 0 else 9 + position
         register = SynthesisRegisterMap().status_register(status_index)
         self._status_registers[register] = 1
-        self._pending_operations.append((register, 0.1))
+        self._pending_operations.append((register, self.handshake_delay))
 
     def bind_crucible(self, crucible_id: str | None = None) -> None:
         """Complete a manual scanner response in a non-auto-scan simulation."""
@@ -195,6 +286,8 @@ class SynthesisSimulationTransport:
     def _apply_sampling_command(self, payload: tuple[int, ...]) -> None:
         if len(payload) < 81:
             raise ValueError("CMD_SAMPLE payload must contain 81 registers")
+        if self._pending_operations:
+            raise SimulationError("上一条 PLC 动作尚未完成，设备动作互斥")
         slot = int(payload[2])
         if slot <= 0:
             raise ValueError("CMD_SAMPLE slot must be positive")
@@ -215,13 +308,32 @@ class SynthesisSimulationTransport:
             raise ValueError("CMD_SAMPLE 至少需要一组正重量物料")
         self._task_sequence += 1
         task_id = f"{self.task_id_prefix}-{self._task_sequence:04d}"
+        self.execution_task_id = task_id
         self.last_task_id = task_id
+        expected_id = self.expected_crucible_id or self.crucible_id
+        self._record_handshake("sample_add_powder_and_beads", "parameters_written")
+        self._record_handshake("sample_add_powder_and_beads", "accepted")
+        failure = self.failure_plan.get("sample_add_powder_and_beads")
+        if failure:
+            self.model.inject_fault(
+                "scanner",
+                code="SIM_HANDSHAKE_FAILURE",
+                message=failure,
+                once=True,
+            )
         self.model.begin_crucible_binding(
             task_id,
             slot,
-            expected_crucible_id=self.crucible_id,
+            expected_crucible_id=expected_id,
             cubic_type=cubic_type,
         )
+        if self.model.phase is SamplingPhase.FAULT:
+            fault = self.model.fault
+            self._record_handshake(
+                "sample_add_powder_and_beads",
+                "failed",
+                message=fault.message if fault else "仿真握手失败",
+            )
         # auto_scan_id is an explicit simulation choice.  If disabled, the
         # caller must invoke bind_crucible() before dosing can begin.
         if self.model.auto_scan_id:

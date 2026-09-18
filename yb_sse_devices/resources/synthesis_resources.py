@@ -59,6 +59,47 @@ except Exception:  # pragma: no cover - 仅供文档构建环境
         return decorator
 
 
+# Site labels are part of the package contract. The deployment graph may add
+# occupancy and barcode state, but it must not invent a different inventory
+# shape at runtime. The suffix is zero based: ``-0`` maps to PLC slot 1.
+SYNTHESIS_POWDER_RACK_AVAILABLE_SITES = [
+    {"label": "synthesis_powder_rack_01-0", "position": {"x": 80.0, "y": 80.0, "z": 0.0}, "size": {"width": 70.0, "height": 70.0, "depth": 50.0}, "content_type": ["synthesis_powder"]},
+    {"label": "synthesis_powder_rack_01-1", "position": {"x": 160.0, "y": 80.0, "z": 0.0}, "size": {"width": 70.0, "height": 70.0, "depth": 50.0}, "content_type": ["synthesis_powder"]},
+    {"label": "synthesis_powder_rack_01-2", "position": {"x": 240.0, "y": 80.0, "z": 0.0}, "size": {"width": 70.0, "height": 70.0, "depth": 50.0}, "content_type": ["synthesis_powder"]},
+    {"label": "synthesis_powder_rack_01-3", "position": {"x": 320.0, "y": 80.0, "z": 0.0}, "size": {"width": 70.0, "height": 70.0, "depth": 50.0}, "content_type": ["synthesis_powder"]},
+    {"label": "synthesis_powder_rack_01-4", "position": {"x": 400.0, "y": 80.0, "z": 0.0}, "size": {"width": 70.0, "height": 70.0, "depth": 50.0}, "content_type": ["synthesis_powder"]},
+    {"label": "synthesis_powder_rack_01-5", "position": {"x": 480.0, "y": 80.0, "z": 0.0}, "size": {"width": 70.0, "height": 70.0, "depth": 50.0}, "content_type": ["synthesis_powder"]},
+    {"label": "synthesis_powder_rack_01-6", "position": {"x": 560.0, "y": 80.0, "z": 0.0}, "size": {"width": 70.0, "height": 70.0, "depth": 50.0}, "content_type": ["synthesis_powder"]},
+    {"label": "synthesis_powder_rack_01-7", "position": {"x": 640.0, "y": 80.0, "z": 0.0}, "size": {"width": 70.0, "height": 70.0, "depth": 50.0}, "content_type": ["synthesis_powder"]},
+    {"label": "synthesis_powder_rack_01-8", "position": {"x": 720.0, "y": 80.0, "z": 0.0}, "size": {"width": 70.0, "height": 70.0, "depth": 50.0}, "content_type": ["synthesis_powder"]},
+    {"label": "synthesis_powder_rack_01-9", "position": {"x": 800.0, "y": 80.0, "z": 0.0}, "size": {"width": 70.0, "height": 70.0, "depth": 50.0}, "content_type": ["synthesis_powder"]},
+]
+SYNTHESIS_CRUCIBLE_RACK_AVAILABLE_SITES = [
+    {"label": "synthesis_crucible_rack_01-0", "position": {"x": 80.0, "y": 80.0, "z": 0.0}, "size": {"width": 90.0, "height": 90.0, "depth": 70.0}, "content_type": ["synthesis_crucible"]},
+    {"label": "synthesis_crucible_rack_01-1", "position": {"x": 160.0, "y": 80.0, "z": 0.0}, "size": {"width": 90.0, "height": 90.0, "depth": 70.0}, "content_type": ["synthesis_crucible"]},
+    {"label": "synthesis_crucible_rack_01-2", "position": {"x": 240.0, "y": 80.0, "z": 0.0}, "size": {"width": 90.0, "height": 90.0, "depth": 70.0}, "content_type": ["synthesis_crucible"]},
+    {"label": "synthesis_crucible_rack_01-3", "position": {"x": 320.0, "y": 80.0, "z": 0.0}, "size": {"width": 90.0, "height": 90.0, "depth": 70.0}, "content_type": ["synthesis_crucible"]},
+    {"label": "synthesis_crucible_rack_01-4", "position": {"x": 400.0, "y": 80.0, "z": 0.0}, "size": {"width": 90.0, "height": 90.0, "depth": 70.0}, "content_type": ["synthesis_crucible"]},
+    {"label": "synthesis_crucible_rack_01-5", "position": {"x": 480.0, "y": 80.0, "z": 0.0}, "size": {"width": 90.0, "height": 90.0, "depth": 70.0}, "content_type": ["synthesis_crucible"]},
+    {"label": "synthesis_crucible_rack_01-6", "position": {"x": 560.0, "y": 80.0, "z": 0.0}, "size": {"width": 90.0, "height": 90.0, "depth": 70.0}, "content_type": ["synthesis_crucible"]},
+    {"label": "synthesis_crucible_rack_01-7", "position": {"x": 640.0, "y": 80.0, "z": 0.0}, "size": {"width": 90.0, "height": 90.0, "depth": 70.0}, "content_type": ["synthesis_crucible"]},
+    {"label": "synthesis_crucible_rack_01-8", "position": {"x": 720.0, "y": 80.0, "z": 0.0}, "size": {"width": 90.0, "height": 90.0, "depth": 70.0}, "content_type": ["synthesis_crucible"]},
+    {"label": "synthesis_crucible_rack_01-9", "position": {"x": 800.0, "y": 80.0, "z": 0.0}, "size": {"width": 90.0, "height": 90.0, "depth": 70.0}, "content_type": ["synthesis_crucible"]},
+]
+SYNTHESIS_BEAD_RACK_AVAILABLE_SITES = [
+    {"label": "synthesis_bead_rack_01-0", "position": {"x": 80.0, "y": 80.0, "z": 0.0}, "size": {"width": 70.0, "height": 70.0, "depth": 50.0}, "content_type": ["synthesis_bead_bottle"]},
+    {"label": "synthesis_bead_rack_01-1", "position": {"x": 160.0, "y": 80.0, "z": 0.0}, "size": {"width": 70.0, "height": 70.0, "depth": 50.0}, "content_type": ["synthesis_bead_bottle"]},
+    {"label": "synthesis_bead_rack_01-2", "position": {"x": 240.0, "y": 80.0, "z": 0.0}, "size": {"width": 70.0, "height": 70.0, "depth": 50.0}, "content_type": ["synthesis_bead_bottle"]},
+    {"label": "synthesis_bead_rack_01-3", "position": {"x": 320.0, "y": 80.0, "z": 0.0}, "size": {"width": 70.0, "height": 70.0, "depth": 50.0}, "content_type": ["synthesis_bead_bottle"]},
+]
+SYNTHESIS_TRAY_RACK_AVAILABLE_SITES = [
+    {"label": "synthesis_tray_rack_01-0", "position": {"x": 100.0, "y": 100.0, "z": 0.0}, "size": {"width": 420.0, "height": 300.0, "depth": 35.0}, "content_type": ["synthesis_tray"]},
+    {"label": "synthesis_tray_rack_01-1", "position": {"x": 240.0, "y": 100.0, "z": 0.0}, "size": {"width": 420.0, "height": 300.0, "depth": 35.0}, "content_type": ["synthesis_tray"]},
+    {"label": "synthesis_tray_rack_01-2", "position": {"x": 380.0, "y": 100.0, "z": 0.0}, "size": {"width": 420.0, "height": 300.0, "depth": 35.0}, "content_type": ["synthesis_tray"]},
+    {"label": "synthesis_tray_rack_01-3", "position": {"x": 520.0, "y": 100.0, "z": 0.0}, "size": {"width": 420.0, "height": 300.0, "depth": 35.0}, "content_type": ["synthesis_tray"]},
+]
+
+
 class _SynthesisContainer(Container):
     """统一尺寸和元数据的合成物料容器基类。"""
 
@@ -196,6 +237,7 @@ def _apply_site_config(warehouse: Any, sites: list[Any] | None) -> Any:
     id="synthesis_powder_rack",
     displayname="合成粉料架",
     category=["synthesis", "warehouse", "powder"],
+    available_sites=SYNTHESIS_POWDER_RACK_AVAILABLE_SITES,
     description="合成粉料盒的固定 2×5 库位架；每个库位只允许 synthesis_powder。",
 )
 def synthesis_powder_rack(name: str = "synthesis_powder_rack", sites: list[Any] | None = None) -> Any:
@@ -206,6 +248,7 @@ def synthesis_powder_rack(name: str = "synthesis_powder_rack", sites: list[Any] 
     id="synthesis_crucible_rack",
     displayname="合成坩埚架",
     category=["synthesis", "warehouse", "crucible"],
+    available_sites=SYNTHESIS_CRUCIBLE_RACK_AVAILABLE_SITES,
     description="合成坩埚的固定 2×5 库位架；每个库位只允许 synthesis_crucible。",
 )
 def synthesis_crucible_rack(name: str = "synthesis_crucible_rack", sites: list[Any] | None = None) -> Any:
@@ -216,6 +259,7 @@ def synthesis_crucible_rack(name: str = "synthesis_crucible_rack", sites: list[A
     id="synthesis_tray_rack",
     displayname="合成托盘架",
     category=["synthesis", "warehouse", "tray"],
+    available_sites=SYNTHESIS_TRAY_RACK_AVAILABLE_SITES,
     description="合成托盘的固定库位架；每个库位只允许 synthesis_tray。",
 )
 def synthesis_tray_rack(name: str = "synthesis_tray_rack", sites: list[Any] | None = None) -> Any:
@@ -228,6 +272,7 @@ def synthesis_tray_rack(name: str = "synthesis_tray_rack", sites: list[Any] | No
     id="synthesis_bead_rack",
     displayname="合成磨球瓶架",
     category=["synthesis", "warehouse", "bead"],
+    available_sites=SYNTHESIS_BEAD_RACK_AVAILABLE_SITES,
     description="合成磨球瓶的固定库位架；每个库位只允许 synthesis_bead_bottle。",
 )
 def synthesis_bead_rack(name: str = "synthesis_bead_rack", sites: list[Any] | None = None) -> Any:
