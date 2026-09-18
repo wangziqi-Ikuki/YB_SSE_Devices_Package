@@ -481,29 +481,30 @@ class MockSynthesisState:
             self._advance_post(post, step)
 
     def _advance_task(self, task: dict[str, Any], step: int) -> None:
+        current_state = int(task.get("task_state") or 0)
         if step <= 0:
-            task["task_state"] = 1
+            task["task_state"] = max(current_state, 1)
             return
         if step == 1:
-            task["task_state"] = 2
+            task["task_state"] = max(current_state, 2)
             task["fetch_cubic_state"] = 1
             return
         if step == 2:
-            task["task_state"] = 2
+            task["task_state"] = max(current_state, 2)
             task["fetch_cubic_state"] = 2
             task["synthesis_state"] = 1
             return
         if step == 3:
-            task["task_state"] = 3
+            task["task_state"] = max(current_state, 3)
             task["synthesis_state"] = 2
             self._ensure_lots(task, sampling=True)
             return
         if step == 4:
-            task["task_state"] = 3
+            task["task_state"] = max(current_state, 3)
             task["synthesis_state"] = 3
             self._finish_sampling(task)
             return
-        task["task_state"] = 4 if step == 5 else 5
+        task["task_state"] = max(current_state, 4 if step == 5 else 5)
         task["synthesis_state"] = 3
         self._finish_sampling(task)
         if int(task["task_state"]) == 5:
@@ -621,7 +622,7 @@ class MockSynthesisState:
 
     def _advance_post(self, post: dict[str, Any], step: int) -> None:
         state = min(7, max(1, step + 1))
-        post["post_state"] = state
+        post["post_state"] = max(int(post.get("post_state") or 0), state)
         stamp = _now_text()
         for lot in post.get("LOT") or []:
             if state <= 3:

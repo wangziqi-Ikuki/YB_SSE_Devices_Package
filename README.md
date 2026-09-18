@@ -24,7 +24,7 @@ YB_SSE_Labpackage/
     ├── synthesis_modbus.py        # Modbus TCP 驱动、寄存器与编码
     ├── synthesis_direct.py        # 直连控制器
     ├── synthesis_modbus_station.py # Uni-Lab 直连设备入口
-    ├── simulation/                # 扫码绑定与称粉 PLC 行为模型
+    ├── simulation/                # PLC、扫描握手与 TASK/POST/LOT 业务仿真
     ├── resources/                 # 电导料架 + 合成粉料/坩埚/磨球瓶/托盘资源树
     ├── experiment_operations/     # 可复用的合成称粉实验操作
     ├── workflows/                 # 电导与合成完整工作流
@@ -57,8 +57,24 @@ unilab --check_mode \
 `source_site` 与 PLC 槽位一致，并透传扫码二维码、称量值和结果码。
 `advance_simulation` 可推进确定性时钟，`inject_simulation_fault` 可注入扫码、二维码和称粉故障；
 `pause` 会冻结仿真时钟，`clear_fault`/`reset` 可恢复仿真，动作握手历史、延迟和故障计划可由启动图配置。
-仿真核心不启动 TCP/JSON Mock；它与真实 PLC 共用同一 `ModbusTransport` 接口，便于之后切换
-到现场 PLC。
+直连设备默认同时启用设备包内的业务状态机，因此可以不启动 Qt 或 TCP Mock 走完整链路：
+
+```text
+upload_recipe → create_task → start_task → upload_cubic → close_cabin_outer_door
+→ confirm_recipe → start_recipt → start_acoustic_resonance
+→ fetch_acoustic_resonance → finish_acoustic_resonance
+→ scan_big_cubic_to_bottle → create_post → start_post → scan_lot_to_batch
+→ confirm_lot_batch → scan_lot_to_small_cubic → complete_lot_to_small_cubic
+→ confirm_joule_heating_schedule → start_sintering → fetch_furnace/fetch_joule_heating
+→ scan_bottle_to_stock
+```
+
+这里的 `create_post` 及后续人工扫码动作会检查顺序、重复扫码、未知 LOT/瓶码和炉次
+状态；`advance_simulation` 可推进 TASK/POST 状态，`pause`、`reconnect`、`reset` 和
+`BusinessSimulation.snapshot()` 可用于暂停、断线恢复和断点联调。业务状态只在
+`simulation: true` 下启用；真实 Modbus 模式若未注入正式协议实现，会明确返回
+`not_supported: true`，不会向未确认的寄存器写入假命令。PLC 低层仿真仍与真实 PLC
+共用同一 `ModbusTransport` 接口，便于之后切换到现场 PLC。
 
 ## Modbus TCP 仿真器
 
@@ -79,7 +95,16 @@ Modbus TCP 服务层；生产图不会自动启动它。
 
 查询：`query_tasks`、`query_posts`、`station_status`、`query_lot`、`query_bottle_code`、`test_connection`。
 
-下单：`upload_recipe`、`create_task`。
+下单与 TASK：`upload_recipe`、`create_task`、`start_task`、`upload_cubic`、
+`query_upload_cubic_status`、`close_cabin_outer_door`、`confirm_recipe`、
+`start_recipt`、`get_recipt_status`。
+
+声共振、POST/LOT、烧结和入库：`start_acoustic_resonance`、
+`fetch_acoustic_resonance`、`get_acoustic_resonance_status`、
+`finish_acoustic_resonance`、`scan_big_cubic_to_bottle`、`create_post`、
+`start_post`、`scan_lot_to_batch`、`confirm_lot_batch`、`scan_lot_to_small_cubic`、
+`complete_lot_to_small_cubic`、`confirm_joule_heating_schedule`、`start_sintering`、
+`get_sintering_status`、`fetch_joule_heating`、`fetch_furnace`、`scan_bottle_to_stock`。
 
 资源：`YBSynthesisDeck` 下挂粉料架、坩埚架、磨球瓶架和托盘架；实例条码、父子关系、库位和
 `occupied_by` 写在启动图中。旧的 `SynthesisStation_Deck` 保留给 Qt/TCP 兼容路径。

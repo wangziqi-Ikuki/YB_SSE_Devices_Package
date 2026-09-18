@@ -1,8 +1,8 @@
 """YB 合成工站的本地仿真组件。
 
-本包有意不启动 TCP 服务，也不复刻 ``synthesis_mock_server`` 的高层 JSON
-接口。它提供一个确定性的 PLC 行为模型，供 dry-run、Modbus 适配器和测试
-使用。生产设备不会自动导入或启动这里的模型。
+本包有意不启动 TCP 服务。它提供确定性的 PLC 行为模型，以及直连设备在
+仿真模式下使用的配方/TASK/POST/LOT 业务适配器。生产 Modbus 模式不会
+自动导入或启动这里的模型。
 """
 
 from .plc_model import (
@@ -18,6 +18,8 @@ from .plc_model import (
 )
 from .modbus_transport import SynthesisSimulationTransport
 from .modbus_server import ModbusTcpSimulator
+from .scan_gateway import PendingScan, ScanContext, ScanError, ScanEvent, ScanGateway
+from .business import BusinessSimulation, BusinessSimulator
 
 __all__ = [
     "BoundCrucible",
@@ -31,4 +33,11 @@ __all__ = [
     "SynthesisPlcSimulation",
     "SynthesisSimulationTransport",
     "ModbusTcpSimulator",
+    "PendingScan",
+    "ScanContext",
+    "ScanError",
+    "ScanEvent",
+    "ScanGateway",
+    "BusinessSimulation",
+    "BusinessSimulator",
 ]

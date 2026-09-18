@@ -145,7 +145,7 @@ class YBSynthesisModbusStation:
         material_names: list[str] | None = None,
         business_simulation: Any = None,
         business_state: Any = None,
-        business_simulation_auto_advance: bool = True,
+        business_simulation_auto_advance: bool = False,
         business_simulation_step_interval: float = 0.1,
         business_simulation_load_demo: bool = False,
         **_: Any,
@@ -378,12 +378,18 @@ class YBSynthesisModbusStation:
         """显式建立 PLC 连接；构造设备时不会连接。"""
 
         self.controller.connect()
+        reconnect_business = getattr(self.business_state, "reconnect", None)
+        if callable(reconnect_business):
+            reconnect_business()
 
     @not_action
     def disconnect(self) -> None:
         """显式关闭 PLC 连接。"""
 
         self.controller.close()
+        disconnect_business = getattr(self.business_state, "disconnect", None)
+        if callable(disconnect_business):
+            disconnect_business()
 
     @not_action
     def close(self) -> None:
