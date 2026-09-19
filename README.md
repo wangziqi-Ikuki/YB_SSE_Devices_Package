@@ -24,6 +24,7 @@ YB_SSE_Labpackage/
     ├── synthesis_modbus.py        # Modbus TCP 驱动、寄存器与编码
     ├── synthesis_direct.py        # 直连控制器
     ├── synthesis_modbus_station.py # Uni-Lab 直连设备入口
+    ├── synthesis_atomic.py        # Modbus 原子动作和物料位置记账
     ├── simulation/                # PLC、扫描握手与 TASK/POST/LOT 业务仿真
     ├── resources/                 # 电导料架 + 合成粉料/坩埚/磨球瓶/托盘资源树
     ├── experiment_operations/     # 可复用的合成称粉实验操作
@@ -32,6 +33,13 @@ YB_SSE_Labpackage/
 ```
 
 合成工站使用说明见 [合成工站使用说明.md](合成工站使用说明.md)，协议见 [合成工站下单软件接口.md](合成工站下单软件接口.md)。
+
+合成原子动作设计见 [docs/合成原子动作设计.md](docs/合成原子动作设计.md)。新增设备入口
+`yb_synthesis_atomic_station` 默认使用设备包内仿真，按“PLC/业务完成反馈后再记账”的规则
+执行取大坩埚、内部扫码称粉加珠、声共振、装瓶、分配小坩埚、烧结出炉和成品入库；启动图
+示例为 `deployment/graphs/synthesis-atomic-dry-run.json`。
+对应的单批次 OS 工作流位于 `yb_sse_devices/workflows/synthesis_atomic_single.py`；出炉后返回
+待入库小坩埚清单，再由 `store_fired_material` 逐件完成扫码入库。
 
 ## Modbus 直连开发路径
 

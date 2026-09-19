@@ -1,0 +1,30 @@
+{
+  "metadata": {
+    "purpose": "simulation",
+    "owner": "yb-sse-lab",
+    "version": "0.1.0",
+    "notes": "YB 合成原子动作仿真；设备包内 Modbus 和 TASK/POST/LOT 仿真。"
+  },
+  "nodes": [
+    {
+      "id": "yb_synthesis_atomic_station_01",
+      "name": "YB 合成工站（Modbus 原子动作仿真）",
+      "type": "device",
+      "class": "community.yb_sse_devices.yb_synthesis_atomic_station",
+      "parent": null,
+      "position": {"x": 0.0, "y": 0.0, "z": 0.0},
+      "config": {
+        "simulation": true,
+        "simulation_crucible_id": "CRU-SIM-001",
+        "simulation_dosing_duration": 0.2,
+        "simulation_handshake_delay": 0.1,
+        "business_simulation_auto_advance": false,
+        "business_firing_duration": 0.5,
+        "action_timeout": 15.0,
+        "simulation_step": 0.1
+      },
+      "data": {}
+    }
+  ],
+  "links": []
+}
