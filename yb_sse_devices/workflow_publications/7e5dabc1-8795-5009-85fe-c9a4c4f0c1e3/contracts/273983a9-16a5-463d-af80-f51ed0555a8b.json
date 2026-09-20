@@ -1,0 +1,3012 @@
+{
+  "contract": {
+    "boundary_mapping": {
+      "source_mappings": {
+        "03909a37-2293-5a78-99e6-b2fe2412e481": {
+          "kind": "node_output",
+          "source_handle_uuid": "f86259b7-0194-5d33-b195-169004e92b1c",
+          "workflow_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c"
+        },
+        "04e5c9c1-c62e-5966-88ac-cf1ea63a54cd": {
+          "kind": "node_output",
+          "source_handle_uuid": "e2a21994-d86f-54f6-aa79-1d1c3343d46f",
+          "workflow_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c"
+        },
+        "0a34abb8-7618-5a01-b823-9505d954f2de": {
+          "kind": "node_output",
+          "source_handle_uuid": "053be95b-579c-5cd2-a770-f24af43c87cd",
+          "workflow_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c"
+        },
+        "13a9d667-f6ab-5f6a-bf7f-a6b9bed8965c": {
+          "kind": "node_output",
+          "source_handle_uuid": "f44d9f08-c51b-590f-8c7d-98f3dfd949c1",
+          "workflow_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c"
+        },
+        "3c2d09fd-9dda-5f15-96a5-9b50c14f9835": {
+          "kind": "node_output",
+          "source_handle_uuid": "1beec1c6-9cd5-5d77-b3cd-fe37e355e98a",
+          "workflow_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c"
+        },
+        "85eb186f-28f0-5a8a-a678-53790e378a70": {
+          "kind": "node_output",
+          "source_handle_uuid": "60eb9412-a98a-5a44-b7fb-f96973f8a3a7",
+          "workflow_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c"
+        },
+        "a4d34c9e-4321-5360-9755-969f352f702f": {
+          "kind": "workflow_input",
+          "parameter": "slot_num"
+        },
+        "a54434a7-1938-527e-b7de-de6564e9affd": {
+          "kind": "node_output",
+          "source_handle_uuid": "3bd7454b-ecf9-5cf3-ab68-0d13e21212c2",
+          "workflow_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c"
+        },
+        "b96d7c94-ea99-5d5d-84e3-12ee51af9fac": {
+          "kind": "node_output",
+          "source_handle_uuid": "2db93b12-2c87-5bce-8fb5-5c3a2797c17f",
+          "workflow_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c"
+        },
+        "d5befaa2-7f53-573c-b6ff-523bae23dabe": {
+          "kind": "node_output",
+          "source_handle_uuid": "f6fe53e5-93c4-592c-b283-e344da775009",
+          "workflow_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c"
+        },
+        "e763b9d1-dd3c-52d3-8a86-996f5e8c9457": {
+          "kind": "node_output",
+          "source_handle_uuid": "a96aa1f0-93f8-5524-8e20-d96c24de2ee8",
+          "workflow_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c"
+        }
+      },
+      "structural_mappings": {
+        "completion_sources": [],
+        "entry_targets": []
+      },
+      "target_mappings": {
+        "03686540-e071-54cd-a5b6-2eacf3680dc1": [
+          {
+            "target_handle_uuid": "df2d8306-f674-54bd-a4c2-e1b2b0ed7d6d",
+            "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+          },
+          {
+            "target_handle_uuid": "9bb901da-646a-51f1-ab5f-1f48aaf89a35",
+            "workflow_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c"
+          }
+        ],
+        "0ab3106b-b268-50a0-b098-fce8065f267a": [
+          {
+            "target_handle_uuid": "24c176c8-a70a-547e-bf37-848d5b580571",
+            "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+          },
+          {
+            "target_handle_uuid": "6d432a97-ca42-500b-b19c-8333ae1f476c",
+            "workflow_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c"
+          }
+        ],
+        "0b021443-1b8c-5448-8a5f-8bdf82db0514": [
+          {
+            "target_handle_uuid": "dfa35bfc-6a88-56d9-ba32-e13fff31a151",
+            "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+          },
+          {
+            "target_handle_uuid": "20b6a0cc-fd28-5fdf-a280-e839d4ebee04",
+            "workflow_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c"
+          }
+        ],
+        "2abbc697-1dbf-5e44-87bf-465ae271d926": [
+          {
+            "target_handle_uuid": "d0b3fca3-deae-50ca-8f05-5f03b2fc1f62",
+            "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+          },
+          {
+            "target_handle_uuid": "4d58a7b2-710d-5e05-adb1-faeaf8c8d21a",
+            "workflow_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c"
+          }
+        ],
+        "2dcf588f-5344-50e1-a874-3db456dc53fd": [
+          {
+            "target_handle_uuid": "0d693db6-c0c2-5937-8487-3b492a093d23",
+            "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+          },
+          {
+            "target_handle_uuid": "ae5a4eb4-e4c6-55bb-8854-53f0e1b3b5a9",
+            "workflow_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c"
+          }
+        ],
+        "3fa7b5fd-b3ea-5ff0-9283-8563881a9788": [
+          {
+            "target_handle_uuid": "ee4e1cc7-25e1-5d30-85d8-f6d63ff32eef",
+            "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+          },
+          {
+            "target_handle_uuid": "54ca6cdc-8545-5e53-9cb4-8c969c001fc1",
+            "workflow_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c"
+          }
+        ],
+        "60d5bb29-c9f2-5a83-bcca-6f0c3c57f640": [
+          {
+            "target_handle_uuid": "dfef1ea4-b453-5f23-9553-094959213305",
+            "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+          },
+          {
+            "target_handle_uuid": "a660a191-e133-51d5-8098-be54c13ac955",
+            "workflow_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c"
+          }
+        ],
+        "7ba018a3-a331-5eb7-b30c-61f9c793d49d": [
+          {
+            "target_handle_uuid": "788c393f-cef1-5a1d-9763-af0caa08ef64",
+            "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+          },
+          {
+            "target_handle_uuid": "c639bc98-ef85-5cd8-8169-430b48cc2b95",
+            "workflow_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c"
+          }
+        ],
+        "8cc6f1ec-594e-5955-a5dd-53fb187638b6": [
+          {
+            "target_handle_uuid": "4519d194-adb6-5011-a7bf-1b6e9a7fd18b",
+            "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+          },
+          {
+            "target_handle_uuid": "4d09157f-ca03-557a-89f4-84cd65a9fe08",
+            "workflow_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c"
+          }
+        ],
+        "8e8dc9c1-b730-5e1c-82f1-21d884a1d3be": [
+          {
+            "target_handle_uuid": "167af113-166f-53f7-b482-b551575030d6",
+            "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+          },
+          {
+            "target_handle_uuid": "4e030904-c4ae-5835-abe3-d1d414bc5294",
+            "workflow_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c"
+          }
+        ]
+      }
+    },
+    "contract_digest": "sha256:17377743751e5cc711d9ad0389e4e89ef5a01c945848b3f4d0130755ee133e27",
+    "create_time": "2026-09-20T15:11:49.378089Z",
+    "description": "选择一个坩埚资源，完成 PLC 扫码绑定和称粉，并保留资源追踪引用。",
+    "edge_count": 1,
+    "executor_binding_mapping": {
+      "858a1bbd-9297-5563-b89c-dd407ef3d8d3": "executor_1"
+    },
+    "executor_requirements": [
+      {
+        "display_name": "执行设备 1",
+        "key": "executor_1",
+        "required": true,
+        "resource_template_uuid": "1aade68a-3c83-5565-b6c5-fbd3b2ac5539"
+      }
+    ],
+    "graph_snapshot": {
+      "edges": [
+        {
+          "create_time": "2026-09-20T15:10:29.232455Z",
+          "meta_data": {},
+          "source_handle_uuid": "2386e169-d7ce-5376-bf0b-15caa16729aa",
+          "source_node_uuid": "8d62b9fd-85b6-4c6c-8f6d-8c4f61256b8b",
+          "target_handle_uuid": "9984258f-1b01-504d-a51d-53c22a6ea694",
+          "target_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c",
+          "update_time": "2026-09-20T15:10:29.232455Z",
+          "uuid": "d49e0034-163a-53d7-9427-490b288b2358"
+        }
+      ],
+      "handle_templates": [
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "crucible",
+          "data_source": "goal",
+          "display_name": "crucible",
+          "handle_key": "crucible",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": [
+                "bc1d5401-e757-4951-95a5-a2c4c1f91517"
+              ],
+              "contract_order": 0,
+              "editor_control": "material_port",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "uuid": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "uuid"
+                ],
+                "type": "object",
+                "x-unilabos-material-lock": true
+              }
+            }
+          },
+          "required": true,
+          "type": "ResourceSlot",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "04a56a0c-6134-51ba-9715-a67d0cc04d68",
+          "workflow_node_template_uuid": "d404259a-ef18-5fa4-988c-eba170314078"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "result_codes",
+          "data_source": "result",
+          "description": "",
+          "display_name": "result_codes",
+          "handle_key": "result_codes",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "value_schema": {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array"
+              }
+            }
+          },
+          "required": false,
+          "type": "array",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "053be95b-579c-5cd2-a770-f24af43c87cd",
+          "workflow_node_template_uuid": "dccbfcb1-5ca5-5ebf-a754-61247c3ac11c"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "timeout",
+          "data_source": "goal",
+          "display_name": "timeout",
+          "handle_key": "timeout",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 11,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": 30.0,
+                "type": "number"
+              }
+            }
+          },
+          "required": false,
+          "type": "number",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "0a00822c-f637-5842-86da-a92a8155b104",
+          "workflow_node_template_uuid": "d404259a-ef18-5fa4-988c-eba170314078"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "bead_count",
+          "data_source": "goal",
+          "display_name": "bead_count",
+          "handle_key": "bead_count",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 8,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": 0,
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "0d693db6-c0c2-5937-8487-3b492a093d23",
+          "workflow_node_template_uuid": "d404259a-ef18-5fa4-988c-eba170314078"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "result_codes",
+          "data_source": "executor",
+          "display_name": "result_codes",
+          "handle_key": "result_codes",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 22,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array"
+              }
+            }
+          },
+          "required": false,
+          "type": "array",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "142fa281-91b4-5fa2-970f-e6af95ef45fe",
+          "workflow_node_template_uuid": "d404259a-ef18-5fa4-988c-eba170314078"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "status_code",
+          "data_source": "executor",
+          "display_name": "status_code",
+          "handle_key": "status_code",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 19,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "166a2aa1-cf6d-5c2f-bdc8-af1d6ff6320a",
+          "workflow_node_template_uuid": "d404259a-ef18-5fa4-988c-eba170314078"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "cubic_type",
+          "data_source": "goal",
+          "display_name": "cubic_type",
+          "handle_key": "cubic_type",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 7,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": 1,
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "167af113-166f-53f7-b482-b551575030d6",
+          "workflow_node_template_uuid": "d404259a-ef18-5fa4-988c-eba170314078"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "resource",
+          "data_source": "result",
+          "description": "",
+          "display_name": "resource",
+          "handle_key": "resource",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": [
+                "bc1d5401-e757-4951-95a5-a2c4c1f91517"
+              ],
+              "editor_control": "material_port",
+              "implicit_passthrough": false,
+              "value_schema": {
+                "$slot": "ResourceSlot",
+                "allowed_resource_template_uuids": [
+                  "bc1d5401-e757-4951-95a5-a2c4c1f91517"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "ResourceSlot",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "1beec1c6-9cd5-5d77-b3cd-fe37e355e98a",
+          "workflow_node_template_uuid": "dccbfcb1-5ca5-5ebf-a754-61247c3ac11c"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "material_names",
+          "data_source": "goal",
+          "description": "",
+          "display_name": "material_names",
+          "handle_key": "material_names",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "value_schema": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            }
+          },
+          "required": true,
+          "type": "array",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "20b6a0cc-fd28-5fdf-a280-e839d4ebee04",
+          "workflow_node_template_uuid": "dccbfcb1-5ca5-5ebf-a754-61247c3ac11c"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "display_name": "ready",
+          "handle_key": "ready",
+          "io_type": "target",
+          "meta_data": {},
+          "required": false,
+          "type": "default",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "21087fc2-12aa-54be-a043-72ffc0ccc17f",
+          "workflow_node_template_uuid": "dccbfcb1-5ca5-5ebf-a754-61247c3ac11c"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "material",
+          "data_source": "executor",
+          "description": "向下游节点传递具体物料实例的物料占位符。",
+          "display_name": "Material",
+          "handle_key": "material",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "value_schema": {
+                "$slot": "ResourceSlot"
+              }
+            }
+          },
+          "required": false,
+          "type": "ResourceSlot",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "2386e169-d7ce-5376-bf0b-15caa16729aa",
+          "workflow_node_template_uuid": "9a48a520-b592-5454-8ece-cdc28a552866"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "from_outside",
+          "data_source": "goal",
+          "display_name": "from_outside",
+          "handle_key": "from_outside",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 9,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": false,
+                "type": "boolean"
+              }
+            }
+          },
+          "required": false,
+          "type": "boolean",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "24c176c8-a70a-547e-bf37-848d5b580571",
+          "workflow_node_template_uuid": "d404259a-ef18-5fa4-988c-eba170314078"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "qr_code",
+          "data_source": "result",
+          "description": "",
+          "display_name": "qr_code",
+          "handle_key": "qr_code",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "2db93b12-2c87-5bce-8fb5-5c3a2797c17f",
+          "workflow_node_template_uuid": "dccbfcb1-5ca5-5ebf-a754-61247c3ac11c"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "status_name",
+          "data_source": "executor",
+          "display_name": "status_name",
+          "handle_key": "status_name",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 20,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "3aea55fc-32dd-5b84-bcd4-b20d2a0e9154",
+          "workflow_node_template_uuid": "d404259a-ef18-5fa4-988c-eba170314078"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "source_site",
+          "data_source": "result",
+          "description": "",
+          "display_name": "source_site",
+          "handle_key": "source_site",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "3bd7454b-ecf9-5cf3-ab68-0d13e21212c2",
+          "workflow_node_template_uuid": "dccbfcb1-5ca5-5ebf-a754-61247c3ac11c"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "tolerances",
+          "data_source": "goal",
+          "display_name": "tolerances",
+          "handle_key": "tolerances",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 6,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": null,
+                "items": {
+                  "type": "number"
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "array",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "4519d194-adb6-5011-a7bf-1b6e9a7fd18b",
+          "workflow_node_template_uuid": "d404259a-ef18-5fa4-988c-eba170314078"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "crucible",
+          "data_source": "executor",
+          "display_name": "crucible",
+          "handle_key": "crucible",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 24,
+              "editor_control": "material_port",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "uuid": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "uuid"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": false,
+          "type": "ResourceSlot",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "477c31ee-e692-50df-810a-f5c0e20da28b",
+          "workflow_node_template_uuid": "d404259a-ef18-5fa4-988c-eba170314078"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "weights",
+          "data_source": "executor",
+          "display_name": "weights",
+          "handle_key": "weights",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 21,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "items": {
+                  "type": "number"
+                },
+                "type": "array"
+              }
+            }
+          },
+          "required": false,
+          "type": "array",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "48a4e90a-7b19-55f8-b4c9-db1a136ea005",
+          "workflow_node_template_uuid": "d404259a-ef18-5fa4-988c-eba170314078"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "tolerances",
+          "data_source": "goal",
+          "description": "",
+          "display_name": "tolerances",
+          "handle_key": "tolerances",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "value_schema": {
+                "items": {
+                  "type": "number"
+                },
+                "type": "array"
+              }
+            }
+          },
+          "required": true,
+          "type": "array",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "4d09157f-ca03-557a-89f4-84cd65a9fe08",
+          "workflow_node_template_uuid": "dccbfcb1-5ca5-5ebf-a754-61247c3ac11c"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "slot_num",
+          "data_source": "result",
+          "description": "",
+          "display_name": "slot_num",
+          "handle_key": "slot_num",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "value_schema": {
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "4d1ae441-33e9-5733-81ca-46efe37da041",
+          "workflow_node_template_uuid": "dccbfcb1-5ca5-5ebf-a754-61247c3ac11c"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "source_site",
+          "data_source": "goal",
+          "description": "",
+          "display_name": "source_site",
+          "handle_key": "source_site",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "4d58a7b2-710d-5e05-adb1-faeaf8c8d21a",
+          "workflow_node_template_uuid": "dccbfcb1-5ca5-5ebf-a754-61247c3ac11c"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "cubic_type",
+          "data_source": "goal",
+          "description": "",
+          "display_name": "cubic_type",
+          "handle_key": "cubic_type",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "value_schema": {
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "4e030904-c4ae-5835-abe3-d1d414bc5294",
+          "workflow_node_template_uuid": "dccbfcb1-5ca5-5ebf-a754-61247c3ac11c"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "task_id",
+          "data_source": "goal",
+          "description": "",
+          "display_name": "task_id",
+          "handle_key": "task_id",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "54ca6cdc-8545-5e53-9cb4-8c969c001fc1",
+          "workflow_node_template_uuid": "dccbfcb1-5ca5-5ebf-a754-61247c3ac11c"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "accepted",
+          "data_source": "executor",
+          "display_name": "accepted",
+          "handle_key": "accepted",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 13,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "boolean"
+              }
+            }
+          },
+          "required": false,
+          "type": "boolean",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "57582858-3c95-5f57-8e56-e2889d3099c0",
+          "workflow_node_template_uuid": "d404259a-ef18-5fa4-988c-eba170314078"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "display_name": "ready",
+          "handle_key": "ready",
+          "io_type": "target",
+          "meta_data": {},
+          "required": false,
+          "type": "default",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "5fe87538-ab6d-519d-904b-b95f794d971f",
+          "workflow_node_template_uuid": "d404259a-ef18-5fa4-988c-eba170314078"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "message",
+          "data_source": "result",
+          "description": "",
+          "display_name": "message",
+          "handle_key": "message",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "60eb9412-a98a-5a44-b7fb-f96973f8a3a7",
+          "workflow_node_template_uuid": "dccbfcb1-5ca5-5ebf-a754-61247c3ac11c"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "display_name": "ready",
+          "handle_key": "ready",
+          "io_type": "source",
+          "meta_data": {},
+          "required": false,
+          "type": "default",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "62d160dc-bb54-5616-b918-a5190afce3e5",
+          "workflow_node_template_uuid": "d404259a-ef18-5fa4-988c-eba170314078"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "success",
+          "data_source": "executor",
+          "display_name": "success",
+          "handle_key": "success",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 14,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "boolean"
+              }
+            }
+          },
+          "required": false,
+          "type": "boolean",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "64d307b0-e265-53dd-9486-c6a6a62995a4",
+          "workflow_node_template_uuid": "d404259a-ef18-5fa4-988c-eba170314078"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "qr_code",
+          "data_source": "executor",
+          "display_name": "qr_code",
+          "handle_key": "qr_code",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 23,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "686a8b3d-d06f-5cef-8746-5e1c40971ad0",
+          "workflow_node_template_uuid": "d404259a-ef18-5fa4-988c-eba170314078"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "from_outside",
+          "data_source": "goal",
+          "description": "",
+          "display_name": "from_outside",
+          "handle_key": "from_outside",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "value_schema": {
+                "type": "boolean"
+              }
+            }
+          },
+          "required": false,
+          "type": "boolean",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "6d432a97-ca42-500b-b19c-8333ae1f476c",
+          "workflow_node_template_uuid": "dccbfcb1-5ca5-5ebf-a754-61247c3ac11c"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "rack_positions",
+          "data_source": "goal",
+          "display_name": "rack_positions",
+          "handle_key": "rack_positions",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 4,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": null,
+                "items": {
+                  "type": "integer"
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "array",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "788c393f-cef1-5a1d-9763-af0caa08ef64",
+          "workflow_node_template_uuid": "d404259a-ef18-5fa4-988c-eba170314078"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "message",
+          "data_source": "executor",
+          "display_name": "message",
+          "handle_key": "message",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 26,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "7a9dd954-1e9f-5804-8e93-dc0bdd08fc11",
+          "workflow_node_template_uuid": "d404259a-ef18-5fa4-988c-eba170314078"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "step",
+          "data_source": "goal",
+          "display_name": "step",
+          "handle_key": "step",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 12,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": 0.1,
+                "type": "number"
+              }
+            }
+          },
+          "required": false,
+          "type": "number",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "97fd9a21-cf04-5dee-8ac6-b2d4de3da30e",
+          "workflow_node_template_uuid": "d404259a-ef18-5fa4-988c-eba170314078"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "resource",
+          "data_source": "goal",
+          "description": "",
+          "display_name": "resource",
+          "handle_key": "resource",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": [
+                "bc1d5401-e757-4951-95a5-a2c4c1f91517"
+              ],
+              "editor_control": "material_port",
+              "implicit_passthrough": false,
+              "value_schema": {
+                "$slot": "ResourceSlot",
+                "allowed_resource_template_uuids": [
+                  "bc1d5401-e757-4951-95a5-a2c4c1f91517"
+                ]
+              }
+            }
+          },
+          "required": true,
+          "type": "ResourceSlot",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "9984258f-1b01-504d-a51d-53c22a6ea694",
+          "workflow_node_template_uuid": "dccbfcb1-5ca5-5ebf-a754-61247c3ac11c"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "masses",
+          "data_source": "goal",
+          "description": "",
+          "display_name": "masses",
+          "handle_key": "masses",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "value_schema": {
+                "items": {
+                  "type": "number"
+                },
+                "type": "array"
+              }
+            }
+          },
+          "required": true,
+          "type": "array",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "9bb901da-646a-51f1-ab5f-1f48aaf89a35",
+          "workflow_node_template_uuid": "dccbfcb1-5ca5-5ebf-a754-61247c3ac11c"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "source_site",
+          "data_source": "executor",
+          "display_name": "source_site",
+          "handle_key": "source_site",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 25,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "9ff5a51f-cbbd-5117-856c-52dd7ab4f6bd",
+          "workflow_node_template_uuid": "d404259a-ef18-5fa4-988c-eba170314078"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "slot_num",
+          "data_source": "goal",
+          "description": "",
+          "display_name": "slot_num",
+          "handle_key": "slot_num",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "value_schema": {
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "a660a191-e133-51d5-8098-be54c13ac955",
+          "workflow_node_template_uuid": "dccbfcb1-5ca5-5ebf-a754-61247c3ac11c"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "accepted",
+          "data_source": "result",
+          "description": "",
+          "display_name": "accepted",
+          "handle_key": "accepted",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "value_schema": {
+                "type": "boolean"
+              }
+            }
+          },
+          "required": false,
+          "type": "boolean",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "a96aa1f0-93f8-5524-8e20-d96c24de2ee8",
+          "workflow_node_template_uuid": "dccbfcb1-5ca5-5ebf-a754-61247c3ac11c"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "bead_count",
+          "data_source": "goal",
+          "description": "",
+          "display_name": "bead_count",
+          "handle_key": "bead_count",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "value_schema": {
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "ae5a4eb4-e4c6-55bb-8854-53f0e1b3b5a9",
+          "workflow_node_template_uuid": "dccbfcb1-5ca5-5ebf-a754-61247c3ac11c"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "rack_positions",
+          "data_source": "goal",
+          "description": "",
+          "display_name": "rack_positions",
+          "handle_key": "rack_positions",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "value_schema": {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array"
+              }
+            }
+          },
+          "required": true,
+          "type": "array",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "c639bc98-ef85-5cd8-8169-430b48cc2b95",
+          "workflow_node_template_uuid": "dccbfcb1-5ca5-5ebf-a754-61247c3ac11c"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "task_id",
+          "data_source": "executor",
+          "display_name": "task_id",
+          "handle_key": "task_id",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 16,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "c9b08f5a-df59-5e0c-a88a-6d48abed91cd",
+          "workflow_node_template_uuid": "d404259a-ef18-5fa4-988c-eba170314078"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "display_name": "ready",
+          "handle_key": "ready",
+          "io_type": "source",
+          "meta_data": {},
+          "required": false,
+          "type": "default",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "d06c35c8-1dc3-5adf-998d-24133475be68",
+          "workflow_node_template_uuid": "dccbfcb1-5ca5-5ebf-a754-61247c3ac11c"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "source_site",
+          "data_source": "goal",
+          "display_name": "source_site",
+          "handle_key": "source_site",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 1,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": true,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "d0b3fca3-deae-50ca-8f05-5f03b2fc1f62",
+          "workflow_node_template_uuid": "d404259a-ef18-5fa4-988c-eba170314078"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "masses",
+          "data_source": "goal",
+          "display_name": "masses",
+          "handle_key": "masses",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 5,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": null,
+                "items": {
+                  "type": "number"
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "array",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "df2d8306-f674-54bd-a4c2-e1b2b0ed7d6d",
+          "workflow_node_template_uuid": "d404259a-ef18-5fa4-988c-eba170314078"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "material_names",
+          "data_source": "goal",
+          "display_name": "material_names",
+          "handle_key": "material_names",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 10,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": null,
+                "items": {
+                  "type": "string"
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "array",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "dfa35bfc-6a88-56d9-ba32-e13fff31a151",
+          "workflow_node_template_uuid": "d404259a-ef18-5fa4-988c-eba170314078"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "slot_num",
+          "data_source": "goal",
+          "display_name": "slot_num",
+          "handle_key": "slot_num",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 3,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": 1,
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "dfef1ea4-b453-5f23-9553-094959213305",
+          "workflow_node_template_uuid": "d404259a-ef18-5fa4-988c-eba170314078"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "task_id",
+          "data_source": "result",
+          "description": "",
+          "display_name": "task_id",
+          "handle_key": "task_id",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "e2a21994-d86f-54f6-aa79-1d1c3343d46f",
+          "workflow_node_template_uuid": "dccbfcb1-5ca5-5ebf-a754-61247c3ac11c"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "slot_num",
+          "data_source": "executor",
+          "display_name": "slot_num",
+          "handle_key": "slot_num",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 17,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "e95dd957-86fd-5efd-a17d-99133d153353",
+          "workflow_node_template_uuid": "d404259a-ef18-5fa4-988c-eba170314078"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "command",
+          "data_source": "executor",
+          "display_name": "command",
+          "handle_key": "command",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 15,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "ec5d0142-71de-5d32-9e61-2a9d39ef6fd6",
+          "workflow_node_template_uuid": "d404259a-ef18-5fa4-988c-eba170314078"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "task_id",
+          "data_source": "goal",
+          "display_name": "task_id",
+          "handle_key": "task_id",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 2,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": "",
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "ee4e1cc7-25e1-5d30-85d8-f6d63ff32eef",
+          "workflow_node_template_uuid": "d404259a-ef18-5fa4-988c-eba170314078"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "status_name",
+          "data_source": "result",
+          "description": "",
+          "display_name": "status_name",
+          "handle_key": "status_name",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "f44d9f08-c51b-590f-8c7d-98f3dfd949c1",
+          "workflow_node_template_uuid": "dccbfcb1-5ca5-5ebf-a754-61247c3ac11c"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "success",
+          "data_source": "result",
+          "description": "",
+          "display_name": "success",
+          "handle_key": "success",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "value_schema": {
+                "type": "boolean"
+              }
+            }
+          },
+          "required": false,
+          "type": "boolean",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "f6fe53e5-93c4-592c-b283-e344da775009",
+          "workflow_node_template_uuid": "dccbfcb1-5ca5-5ebf-a754-61247c3ac11c"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "weights",
+          "data_source": "result",
+          "description": "",
+          "display_name": "weights",
+          "handle_key": "weights",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "value_schema": {
+                "items": {
+                  "type": "number"
+                },
+                "type": "array"
+              }
+            }
+          },
+          "required": false,
+          "type": "array",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "f86259b7-0194-5d33-b195-169004e92b1c",
+          "workflow_node_template_uuid": "dccbfcb1-5ca5-5ebf-a754-61247c3ac11c"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "material_count",
+          "data_source": "executor",
+          "display_name": "material_count",
+          "handle_key": "material_count",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 18,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "fb729924-8bdc-5f94-962c-4f32c3d8ed65",
+          "workflow_node_template_uuid": "d404259a-ef18-5fa4-988c-eba170314078"
+        }
+      ],
+      "node_templates": [
+        {
+          "class": "unilabos.workflow.authoring:material_source",
+          "create_time": "1970-01-01T00:00:00Z",
+          "description": "声明工作流进入边界的物料来源。",
+          "display_name": "Material Source",
+          "feedback": {},
+          "goal": {},
+          "goal_default": {},
+          "meta_data": {
+            "unilab": {
+              "framework_owner_only": true,
+              "resource_template": {
+                "display_name": "host_node",
+                "name": "host_node",
+                "uuid": "06259194-f142-5e2b-84dc-133f38f47eb3"
+              }
+            }
+          },
+          "name": "material_source",
+          "node_type": "material_source",
+          "resource_template_uuid": "06259194-f142-5e2b-84dc-133f38f47eb3",
+          "result": {},
+          "schema": "{\"additionalProperties\":false,\"properties\":{\"custody_policy\":{\"enum\":[\"task_exclusive\",\"shared_source\"],\"type\":\"string\"},\"flow_role\":{\"enum\":[\"primary_sample\",\"aliquot_sample\",\"reagent\",\"consumable\"],\"type\":\"string\"},\"material_uuid\":{\"format\":\"uuid\",\"type\":[\"string\",\"null\"]},\"mode\":{\"enum\":[\"existing\",\"create_new\"],\"type\":\"string\"},\"mount\":{\"additionalProperties\":false,\"properties\":{\"uuid\":{\"format\":\"uuid\",\"type\":\"string\"}},\"required\":[\"uuid\"],\"type\":\"object\"},\"resource_template_uuid\":{\"format\":\"uuid\",\"type\":\"string\"},\"site\":{\"format\":\"uuid\",\"type\":[\"string\",\"null\"],\"x-unilabos-editor-control\":\"site_selector\",\"x-unilabos-site-selector\":{\"allow_occupied\":false,\"occupant\":\"resource_template_uuid\",\"owner\":\"mount\",\"show_occupied\":true,\"version\":1}},\"slot_range\":{\"items\":{\"format\":\"uuid\",\"type\":\"string\"},\"minItems\":1,\"type\":[\"array\",\"null\"],\"uniqueItems\":true}},\"required\":[\"mode\",\"resource_template_uuid\",\"mount\",\"material_uuid\",\"site\",\"slot_range\",\"flow_role\",\"custody_policy\"],\"type\":\"object\"}",
+          "type": "material_source",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "9a48a520-b592-5454-8ece-cdc28a552866"
+        },
+        {
+          "class": "yb_sse_devices.synthesis_modbus_station:YBSynthesisModbusStation",
+          "create_time": "1970-01-01T00:00:00Z",
+          "description": "使用指定坩埚 ResourceSlot 执行扫码绑定和称粉",
+          "display_name": "sample_with_materials",
+          "feedback": {},
+          "goal": {
+            "bead_count": "bead_count",
+            "crucible": "crucible",
+            "cubic_type": "cubic_type",
+            "from_outside": "from_outside",
+            "masses": "masses",
+            "material_names": "material_names",
+            "rack_positions": "rack_positions",
+            "slot_num": "slot_num",
+            "source_site": "source_site",
+            "step": "step",
+            "task_id": "task_id",
+            "timeout": "timeout",
+            "tolerances": "tolerances"
+          },
+          "goal_default": {
+            "bead_count": 0,
+            "cubic_type": 1,
+            "from_outside": false,
+            "masses": null,
+            "material_names": null,
+            "rack_positions": null,
+            "slot_num": 1,
+            "step": 0.1,
+            "task_id": "",
+            "timeout": 30.0,
+            "tolerances": null
+          },
+          "meta_data": {
+            "unilab": {
+              "action_contract_schema": {
+                "description": "使用指定坩埚 ResourceSlot 执行扫码绑定和称粉",
+                "properties": {
+                  "feedback": {},
+                  "goal": {
+                    "_unilabos_placeholder_info": {},
+                    "additionalProperties": false,
+                    "properties": {
+                      "bead_count": {
+                        "default": 0,
+                        "type": "integer"
+                      },
+                      "crucible": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "uuid": {
+                            "format": "uuid",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "uuid"
+                        ],
+                        "type": "object",
+                        "x-unilabos-material-lock": true
+                      },
+                      "cubic_type": {
+                        "default": 1,
+                        "type": "integer"
+                      },
+                      "from_outside": {
+                        "default": false,
+                        "type": "boolean"
+                      },
+                      "masses": {
+                        "default": null,
+                        "items": {
+                          "type": "number"
+                        },
+                        "type": [
+                          "array",
+                          "null"
+                        ]
+                      },
+                      "material_names": {
+                        "default": null,
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": [
+                          "array",
+                          "null"
+                        ]
+                      },
+                      "rack_positions": {
+                        "default": null,
+                        "items": {
+                          "type": "integer"
+                        },
+                        "type": [
+                          "array",
+                          "null"
+                        ]
+                      },
+                      "slot_num": {
+                        "default": 1,
+                        "type": "integer"
+                      },
+                      "source_site": {
+                        "type": "string"
+                      },
+                      "step": {
+                        "default": 0.1,
+                        "type": "number"
+                      },
+                      "task_id": {
+                        "default": "",
+                        "type": "string"
+                      },
+                      "timeout": {
+                        "default": 30.0,
+                        "type": "number"
+                      },
+                      "tolerances": {
+                        "default": null,
+                        "items": {
+                          "type": "number"
+                        },
+                        "type": [
+                          "array",
+                          "null"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "crucible",
+                      "source_site"
+                    ],
+                    "type": "object"
+                  },
+                  "result": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "accepted": {
+                        "type": "boolean"
+                      },
+                      "command": {
+                        "type": "string"
+                      },
+                      "crucible": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "uuid": {
+                            "format": "uuid",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "uuid"
+                        ],
+                        "type": "object"
+                      },
+                      "material_count": {
+                        "type": "integer"
+                      },
+                      "message": {
+                        "type": "string"
+                      },
+                      "qr_code": {
+                        "type": "string"
+                      },
+                      "result_codes": {
+                        "items": {
+                          "type": "integer"
+                        },
+                        "type": "array"
+                      },
+                      "slot_num": {
+                        "type": "integer"
+                      },
+                      "source_site": {
+                        "type": "string"
+                      },
+                      "status_code": {
+                        "type": "integer"
+                      },
+                      "status_name": {
+                        "type": "string"
+                      },
+                      "success": {
+                        "type": "boolean"
+                      },
+                      "task_id": {
+                        "type": "string"
+                      },
+                      "weights": {
+                        "items": {
+                          "type": "number"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "accepted",
+                      "success",
+                      "command",
+                      "task_id",
+                      "slot_num",
+                      "material_count",
+                      "status_code",
+                      "status_name",
+                      "weights",
+                      "result_codes",
+                      "qr_code",
+                      "crucible",
+                      "source_site",
+                      "message"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "goal"
+                ],
+                "title": "sample_with_materials参数",
+                "type": "object",
+                "x-unilabos-action-contract": {
+                  "input_order": [
+                    "crucible",
+                    "source_site",
+                    "task_id",
+                    "slot_num",
+                    "rack_positions",
+                    "masses",
+                    "tolerances",
+                    "cubic_type",
+                    "bead_count",
+                    "from_outside",
+                    "material_names",
+                    "timeout",
+                    "step"
+                  ],
+                  "output_order": [
+                    "accepted",
+                    "success",
+                    "command",
+                    "task_id",
+                    "slot_num",
+                    "material_count",
+                    "status_code",
+                    "status_name",
+                    "weights",
+                    "result_codes",
+                    "qr_code",
+                    "crucible",
+                    "source_site",
+                    "message"
+                  ],
+                  "resource_template_symbols": {
+                    "goal": {
+                      "crucible": [
+                        "yb_sse_devices.resources.synthesis_resources:SynthesisCrucible"
+                      ]
+                    },
+                    "result": {}
+                  },
+                  "version": 2
+                }
+              },
+              "contract_kind": "typed",
+              "resource_template": {
+                "display_name": "yb_synthesis_modbus_station",
+                "name": "community.yb_sse_devices.yb_synthesis_modbus_station",
+                "uuid": "1aade68a-3c83-5565-b6c5-fbd3b2ac5539"
+              }
+            }
+          },
+          "name": "sample_with_materials",
+          "node_type": "ILab",
+          "resource_template_uuid": "1aade68a-3c83-5565-b6c5-fbd3b2ac5539",
+          "result": {},
+          "schema": "{\"_unilabos_placeholder_info\":{},\"additionalProperties\":false,\"properties\":{\"bead_count\":{\"default\":0,\"type\":\"integer\"},\"crucible\":{\"additionalProperties\":false,\"properties\":{\"uuid\":{\"format\":\"uuid\",\"type\":\"string\"}},\"required\":[\"uuid\"],\"type\":\"object\",\"x-unilabos-material-lock\":true},\"cubic_type\":{\"default\":1,\"type\":\"integer\"},\"from_outside\":{\"default\":false,\"type\":\"boolean\"},\"masses\":{\"default\":null,\"items\":{\"type\":\"number\"},\"type\":[\"array\",\"null\"]},\"material_names\":{\"default\":null,\"items\":{\"type\":\"string\"},\"type\":[\"array\",\"null\"]},\"rack_positions\":{\"default\":null,\"items\":{\"type\":\"integer\"},\"type\":[\"array\",\"null\"]},\"slot_num\":{\"default\":1,\"type\":\"integer\"},\"source_site\":{\"type\":\"string\"},\"step\":{\"default\":0.1,\"type\":\"number\"},\"task_id\":{\"default\":\"\",\"type\":\"string\"},\"timeout\":{\"default\":30.0,\"type\":\"number\"},\"tolerances\":{\"default\":null,\"items\":{\"type\":\"number\"},\"type\":[\"array\",\"null\"]}},\"required\":[\"crucible\",\"source_site\"],\"type\":\"object\"}",
+          "type": "UniLabJsonCommand",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "d404259a-ef18-5fa4-988c-eba170314078"
+        },
+        {
+          "class": "yb_sse_devices.experiment_operations.synthesis_sampling:synthesis_sampling",
+          "create_time": "1970-01-01T00:00:00Z",
+          "description": "PLC 内部完成坩埚扫码绑定后执行称粉；实验操作保持坩埚 ResourceSlot 不变，并把任务参数和设备回执交给上层工作流。",
+          "display_name": "YB 合成工站称粉",
+          "feedback": {},
+          "goal": {
+            "bead_count": "bead_count",
+            "cubic_type": "cubic_type",
+            "from_outside": "from_outside",
+            "masses": "masses",
+            "material_names": "material_names",
+            "rack_positions": "rack_positions",
+            "resource": "resource",
+            "slot_num": "slot_num",
+            "source_site": "source_site",
+            "task_id": "task_id",
+            "tolerances": "tolerances"
+          },
+          "goal_default": {
+            "bead_count": 0,
+            "cubic_type": 1,
+            "from_outside": false,
+            "slot_num": 1,
+            "source_site": "synthesis_crucible_rack_01-0",
+            "task_id": ""
+          },
+          "meta_data": {
+            "resource_template": {
+              "display_name": "host_node",
+              "name": "host_node",
+              "uuid": "06259194-f142-5e2b-84dc-133f38f47eb3"
+            },
+            "unilab": {
+              "framework_owner_only": true,
+              "workflow_source": {
+                "definition_content_hash": "sha256:066092fa9e8e969970f2452aa46b6515bb4ceb50cd057b2953124f2f50c6d425",
+                "definition_fqid": "yb_sse_devices.experiment_operations.synthesis_sampling.synthesis_sampling",
+                "kind": "package",
+                "module": "yb_sse_devices.experiment_operations.synthesis_sampling",
+                "package_catalog_digest": "sha256:3118353bfbb119075184c18c217b8777a436ad519bee18a802818f7fb2866cb4",
+                "symbol": "synthesis_sampling"
+              }
+            }
+          },
+          "name": "workflow:72cb4f07-9a92-46eb-ae2a-79d08e2c3b67",
+          "node_type": "workflow",
+          "resource_template_uuid": "06259194-f142-5e2b-84dc-133f38f47eb3",
+          "result": {
+            "accepted": "accepted",
+            "message": "message",
+            "qr_code": "qr_code",
+            "resource": "resource",
+            "result_codes": "result_codes",
+            "slot_num": "slot_num",
+            "source_site": "source_site",
+            "status_name": "status_name",
+            "success": "success",
+            "task_id": "task_id",
+            "weights": "weights"
+          },
+          "schema": "{\"additionalProperties\":false,\"properties\":{\"goal\":{\"additionalProperties\":false,\"properties\":{\"bead_count\":{\"default\":0,\"type\":\"integer\"},\"cubic_type\":{\"default\":1,\"type\":\"integer\"},\"from_outside\":{\"default\":false,\"type\":\"boolean\"},\"masses\":{\"items\":{\"type\":\"number\"},\"type\":\"array\"},\"material_names\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"},\"rack_positions\":{\"items\":{\"type\":\"integer\"},\"type\":\"array\"},\"resource\":{\"$slot\":\"ResourceSlot\",\"allowed_resource_template_uuids\":[\"bc1d5401-e757-4951-95a5-a2c4c1f91517\"]},\"slot_num\":{\"default\":1,\"type\":\"integer\"},\"source_site\":{\"default\":\"synthesis_crucible_rack_01-0\",\"type\":\"string\"},\"task_id\":{\"default\":\"\",\"type\":\"string\"},\"tolerances\":{\"items\":{\"type\":\"number\"},\"type\":\"array\"}},\"required\":[\"resource\",\"rack_positions\",\"masses\",\"tolerances\",\"material_names\"],\"type\":\"object\"},\"result\":{\"additionalProperties\":false,\"properties\":{\"accepted\":{\"type\":\"boolean\"},\"message\":{\"type\":\"string\"},\"qr_code\":{\"type\":\"string\"},\"resource\":{\"$slot\":\"ResourceSlot\",\"allowed_resource_template_uuids\":[\"bc1d5401-e757-4951-95a5-a2c4c1f91517\"]},\"result_codes\":{\"items\":{\"type\":\"integer\"},\"type\":\"array\"},\"slot_num\":{\"type\":\"integer\"},\"source_site\":{\"type\":\"string\"},\"status_name\":{\"type\":\"string\"},\"success\":{\"type\":\"boolean\"},\"task_id\":{\"type\":\"string\"},\"weights\":{\"items\":{\"type\":\"number\"},\"type\":\"array\"}},\"required\":[\"resource\",\"task_id\",\"slot_num\",\"accepted\",\"success\",\"status_name\",\"qr_code\",\"weights\",\"result_codes\",\"source_site\",\"message\"],\"type\":\"object\"}},\"required\":[\"goal\",\"result\"],\"type\":\"object\",\"x-unilabos-workflow-contract\":{\"applied_source_hash\":\"sha256:066092fa9e8e969970f2452aa46b6515bb4ceb50cd057b2953124f2f50c6d425\",\"compatibility_version\":1,\"composition_allow_transparent\":false,\"contract_digest\":\"sha256:21107f50a807ad3cef04f2d329203fb39da748ff24adf0841b81d6cb75275927\",\"input_order\":[\"resource\",\"source_site\",\"task_id\",\"slot_num\",\"rack_positions\",\"masses\",\"tolerances\",\"cubic_type\",\"bead_count\",\"from_outside\",\"material_names\"],\"output_order\":[\"resource\",\"task_id\",\"slot_num\",\"accepted\",\"success\",\"status_name\",\"qr_code\",\"weights\",\"result_codes\",\"source_site\",\"message\"],\"version\":1,\"workflow_revision\":2,\"workflow_uuid\":\"72cb4f07-9a92-46eb-ae2a-79d08e2c3b67\"}}",
+          "type": "workflow",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "dccbfcb1-5ca5-5ebf-a754-61247c3ac11c"
+        }
+      ],
+      "nodes": [
+        {
+          "action_name": "sample_with_materials",
+          "action_type": "UniLabJsonCommand",
+          "create_time": "2026-09-20T15:10:29.232455Z",
+          "description": "使用指定坩埚 ResourceSlot 执行扫码绑定和称粉",
+          "disabled": false,
+          "execution_policy": {},
+          "material_uuid": null,
+          "meta_data": {
+            "unilab": {
+              "authoring_result_name": "accepted",
+              "authoring_source_order": 0,
+              "executor_binding": {
+                "device_id": "yb_synthesis_modbus_station_01",
+                "mode": "fixed"
+              },
+              "input_bindings": {
+                "0d693db6-c0c2-5937-8487-3b492a093d23": {
+                  "parameter": "bead_count"
+                },
+                "167af113-166f-53f7-b482-b551575030d6": {
+                  "parameter": "cubic_type"
+                },
+                "24c176c8-a70a-547e-bf37-848d5b580571": {
+                  "parameter": "from_outside"
+                },
+                "4519d194-adb6-5011-a7bf-1b6e9a7fd18b": {
+                  "parameter": "tolerances"
+                },
+                "788c393f-cef1-5a1d-9763-af0caa08ef64": {
+                  "parameter": "rack_positions"
+                },
+                "d0b3fca3-deae-50ca-8f05-5f03b2fc1f62": {
+                  "parameter": "source_site"
+                },
+                "df2d8306-f674-54bd-a4c2-e1b2b0ed7d6d": {
+                  "parameter": "masses"
+                },
+                "dfa35bfc-6a88-56d9-ba32-e13fff31a151": {
+                  "parameter": "material_names"
+                },
+                "dfef1ea4-b453-5f23-9553-094959213305": {
+                  "parameter": "slot_num"
+                },
+                "ee4e1cc7-25e1-5d30-85d8-f6d63ff32eef": {
+                  "parameter": "task_id"
+                }
+              },
+              "material_passthrough_handles": {
+                "477c31ee-e692-50df-810a-f5c0e20da28b": "04a56a0c-6134-51ba-9715-a67d0cc04d68"
+              },
+              "output_schema_overrides": {
+                "477c31ee-e692-50df-810a-f5c0e20da28b": {
+                  "$slot": "ResourceSlot",
+                  "allowed_resource_template_uuids": [
+                    "bc1d5401-e757-4951-95a5-a2c4c1f91517"
+                  ]
+                }
+              }
+            }
+          },
+          "minimized": false,
+          "name": "sample_with_materials",
+          "param": {},
+          "parent_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c",
+          "pose": {},
+          "status": "idle",
+          "type": "ILab",
+          "update_time": "2026-09-20T15:10:29.232455Z",
+          "uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3",
+          "workflow_node_template_uuid": "d404259a-ef18-5fa4-988c-eba170314078",
+          "workflow_uuid": "7e5dabc1-8795-5009-85fe-c9a4c4f0c1e3"
+        },
+        {
+          "action_name": "material_source",
+          "create_time": "2026-09-20T15:10:29.232455Z",
+          "description": "声明工作流进入边界的物料来源。",
+          "disabled": false,
+          "execution_policy": {},
+          "meta_data": {
+            "unilab": {
+              "authoring_result_name": "source_resource",
+              "authoring_source_order": 0,
+              "input_bindings": {},
+              "material_source_site_binding": {
+                "parameter": "source_site"
+              },
+              "resource_refs": {
+                "mount": {
+                  "resource_id": "synthesis_crucible_rack_01"
+                }
+              }
+            }
+          },
+          "minimized": false,
+          "name": "Material Source",
+          "param": {
+            "custody_policy": "task_exclusive",
+            "flow_role": "primary_sample",
+            "material_uuid": null,
+            "mode": "existing",
+            "mount": {
+              "uuid": "7df4ee2a-f2d6-5888-aa28-ced7e6feb201"
+            },
+            "resource_template_uuid": "bc1d5401-e757-4951-95a5-a2c4c1f91517",
+            "site": null,
+            "slot_range": null
+          },
+          "pose": {},
+          "status": "idle",
+          "type": "material_source",
+          "update_time": "2026-09-20T15:10:29.232455Z",
+          "uuid": "8d62b9fd-85b6-4c6c-8f6d-8c4f61256b8b",
+          "workflow_node_template_uuid": "9a48a520-b592-5454-8ece-cdc28a552866",
+          "workflow_uuid": "7e5dabc1-8795-5009-85fe-c9a4c4f0c1e3"
+        },
+        {
+          "create_time": "2026-09-20T15:10:29.232455Z",
+          "description": "PLC 内部完成坩埚扫码绑定后执行称粉；实验操作保持坩埚 ResourceSlot 不变，并把任务参数和设备回执交给上层工作流。",
+          "disabled": false,
+          "execution_policy": {},
+          "meta_data": {
+            "unilab": {
+              "authoring_result_name": "sampled",
+              "authoring_source_order": 1,
+              "composite": {
+                "child_applied_source_hash": "sha256:066092fa9e8e969970f2452aa46b6515bb4ceb50cd057b2953124f2f50c6d425",
+                "child_workflow_revision": 2,
+                "child_workflow_uuid": "72cb4f07-9a92-46eb-ae2a-79d08e2c3b67",
+                "composition_allow_transparent": false,
+                "contract_compatibility": {
+                  "digest": "sha256:21107f50a807ad3cef04f2d329203fb39da748ff24adf0841b81d6cb75275927",
+                  "mode": false,
+                  "outputs": [
+                    {
+                      "handle_uuid": "1beec1c6-9cd5-5d77-b3cd-fe37e355e98a",
+                      "implicit": false,
+                      "name": "resource",
+                      "schema": {
+                        "$slot": "ResourceSlot",
+                        "allowed_resource_template_uuids": [
+                          "bc1d5401-e757-4951-95a5-a2c4c1f91517"
+                        ]
+                      }
+                    },
+                    {
+                      "handle_uuid": "e2a21994-d86f-54f6-aa79-1d1c3343d46f",
+                      "implicit": false,
+                      "name": "task_id",
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "handle_uuid": "4d1ae441-33e9-5733-81ca-46efe37da041",
+                      "implicit": false,
+                      "name": "slot_num",
+                      "schema": {
+                        "type": "integer"
+                      }
+                    },
+                    {
+                      "handle_uuid": "a96aa1f0-93f8-5524-8e20-d96c24de2ee8",
+                      "implicit": false,
+                      "name": "accepted",
+                      "schema": {
+                        "type": "boolean"
+                      }
+                    },
+                    {
+                      "handle_uuid": "f6fe53e5-93c4-592c-b283-e344da775009",
+                      "implicit": false,
+                      "name": "success",
+                      "schema": {
+                        "type": "boolean"
+                      }
+                    },
+                    {
+                      "handle_uuid": "f44d9f08-c51b-590f-8c7d-98f3dfd949c1",
+                      "implicit": false,
+                      "name": "status_name",
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "handle_uuid": "2db93b12-2c87-5bce-8fb5-5c3a2797c17f",
+                      "implicit": false,
+                      "name": "qr_code",
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "handle_uuid": "f86259b7-0194-5d33-b195-169004e92b1c",
+                      "implicit": false,
+                      "name": "weights",
+                      "schema": {
+                        "items": {
+                          "type": "number"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    {
+                      "handle_uuid": "053be95b-579c-5cd2-a770-f24af43c87cd",
+                      "implicit": false,
+                      "name": "result_codes",
+                      "schema": {
+                        "items": {
+                          "type": "integer"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    {
+                      "handle_uuid": "3bd7454b-ecf9-5cf3-ab68-0d13e21212c2",
+                      "implicit": false,
+                      "name": "source_site",
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "handle_uuid": "60eb9412-a98a-5a44-b7fb-f96973f8a3a7",
+                      "implicit": false,
+                      "name": "message",
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                  ],
+                  "parameters": [
+                    {
+                      "handle_uuid": "9984258f-1b01-504d-a51d-53c22a6ea694",
+                      "has_default": false,
+                      "name": "resource",
+                      "required": true,
+                      "schema": {
+                        "$slot": "ResourceSlot",
+                        "allowed_resource_template_uuids": [
+                          "bc1d5401-e757-4951-95a5-a2c4c1f91517"
+                        ]
+                      }
+                    },
+                    {
+                      "default": "synthesis_crucible_rack_01-0",
+                      "handle_uuid": "4d58a7b2-710d-5e05-adb1-faeaf8c8d21a",
+                      "has_default": true,
+                      "name": "source_site",
+                      "required": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "default": "",
+                      "handle_uuid": "54ca6cdc-8545-5e53-9cb4-8c969c001fc1",
+                      "has_default": true,
+                      "name": "task_id",
+                      "required": false,
+                      "schema": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "default": 1,
+                      "handle_uuid": "a660a191-e133-51d5-8098-be54c13ac955",
+                      "has_default": true,
+                      "name": "slot_num",
+                      "required": false,
+                      "schema": {
+                        "type": "integer"
+                      }
+                    },
+                    {
+                      "handle_uuid": "c639bc98-ef85-5cd8-8169-430b48cc2b95",
+                      "has_default": false,
+                      "name": "rack_positions",
+                      "required": true,
+                      "schema": {
+                        "items": {
+                          "type": "integer"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    {
+                      "handle_uuid": "9bb901da-646a-51f1-ab5f-1f48aaf89a35",
+                      "has_default": false,
+                      "name": "masses",
+                      "required": true,
+                      "schema": {
+                        "items": {
+                          "type": "number"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    {
+                      "handle_uuid": "4d09157f-ca03-557a-89f4-84cd65a9fe08",
+                      "has_default": false,
+                      "name": "tolerances",
+                      "required": true,
+                      "schema": {
+                        "items": {
+                          "type": "number"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    {
+                      "default": 1,
+                      "handle_uuid": "4e030904-c4ae-5835-abe3-d1d414bc5294",
+                      "has_default": true,
+                      "name": "cubic_type",
+                      "required": false,
+                      "schema": {
+                        "type": "integer"
+                      }
+                    },
+                    {
+                      "default": 0,
+                      "handle_uuid": "ae5a4eb4-e4c6-55bb-8854-53f0e1b3b5a9",
+                      "has_default": true,
+                      "name": "bead_count",
+                      "required": false,
+                      "schema": {
+                        "type": "integer"
+                      }
+                    },
+                    {
+                      "default": false,
+                      "handle_uuid": "6d432a97-ca42-500b-b19c-8333ae1f476c",
+                      "has_default": true,
+                      "name": "from_outside",
+                      "required": false,
+                      "schema": {
+                        "type": "boolean"
+                      }
+                    },
+                    {
+                      "handle_uuid": "20b6a0cc-fd28-5fdf-a280-e839d4ebee04",
+                      "has_default": false,
+                      "name": "material_names",
+                      "required": true,
+                      "schema": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      }
+                    }
+                  ],
+                  "template_uuid": "dccbfcb1-5ca5-5ebf-a754-61247c3ac11c",
+                  "workflow_uuid": "72cb4f07-9a92-46eb-ae2a-79d08e2c3b67"
+                },
+                "contract_digest": "sha256:21107f50a807ad3cef04f2d329203fb39da748ff24adf0841b81d6cb75275927",
+                "executor_requirements": [
+                  {
+                    "display_name": "执行设备 1",
+                    "key": "executor_1",
+                    "required": true,
+                    "resource_template_uuid": "1aade68a-3c83-5565-b6c5-fbd3b2ac5539"
+                  }
+                ],
+                "source_mappings": {
+                  "053be95b-579c-5cd2-a770-f24af43c87cd": {
+                    "kind": "node_output",
+                    "source_handle_uuid": "142fa281-91b4-5fa2-970f-e6af95ef45fe",
+                    "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+                  },
+                  "1beec1c6-9cd5-5d77-b3cd-fe37e355e98a": {
+                    "kind": "workflow_input",
+                    "parameter": "resource"
+                  },
+                  "2db93b12-2c87-5bce-8fb5-5c3a2797c17f": {
+                    "kind": "node_output",
+                    "source_handle_uuid": "686a8b3d-d06f-5cef-8746-5e1c40971ad0",
+                    "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+                  },
+                  "3bd7454b-ecf9-5cf3-ab68-0d13e21212c2": {
+                    "kind": "node_output",
+                    "source_handle_uuid": "9ff5a51f-cbbd-5117-856c-52dd7ab4f6bd",
+                    "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+                  },
+                  "4d1ae441-33e9-5733-81ca-46efe37da041": {
+                    "kind": "workflow_input",
+                    "parameter": "slot_num"
+                  },
+                  "60eb9412-a98a-5a44-b7fb-f96973f8a3a7": {
+                    "kind": "node_output",
+                    "source_handle_uuid": "7a9dd954-1e9f-5804-8e93-dc0bdd08fc11",
+                    "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+                  },
+                  "a96aa1f0-93f8-5524-8e20-d96c24de2ee8": {
+                    "kind": "node_output",
+                    "source_handle_uuid": "57582858-3c95-5f57-8e56-e2889d3099c0",
+                    "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+                  },
+                  "e2a21994-d86f-54f6-aa79-1d1c3343d46f": {
+                    "kind": "node_output",
+                    "source_handle_uuid": "c9b08f5a-df59-5e0c-a88a-6d48abed91cd",
+                    "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+                  },
+                  "f44d9f08-c51b-590f-8c7d-98f3dfd949c1": {
+                    "kind": "node_output",
+                    "source_handle_uuid": "3aea55fc-32dd-5b84-bcd4-b20d2a0e9154",
+                    "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+                  },
+                  "f6fe53e5-93c4-592c-b283-e344da775009": {
+                    "kind": "node_output",
+                    "source_handle_uuid": "64d307b0-e265-53dd-9486-c6a6a62995a4",
+                    "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+                  },
+                  "f86259b7-0194-5d33-b195-169004e92b1c": {
+                    "kind": "node_output",
+                    "source_handle_uuid": "48a4e90a-7b19-55f8-b4c9-db1a136ea005",
+                    "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+                  }
+                },
+                "structural_mappings": {
+                  "completion_sources": [
+                    {
+                      "source_handle_uuid": "62d160dc-bb54-5616-b918-a5190afce3e5",
+                      "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+                    }
+                  ],
+                  "entry_targets": [
+                    {
+                      "target_handle_uuid": "5fe87538-ab6d-519d-904b-b95f794d971f",
+                      "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+                    }
+                  ]
+                },
+                "target_mappings": {
+                  "20b6a0cc-fd28-5fdf-a280-e839d4ebee04": [
+                    {
+                      "target_handle_uuid": "dfa35bfc-6a88-56d9-ba32-e13fff31a151",
+                      "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+                    }
+                  ],
+                  "4d09157f-ca03-557a-89f4-84cd65a9fe08": [
+                    {
+                      "target_handle_uuid": "4519d194-adb6-5011-a7bf-1b6e9a7fd18b",
+                      "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+                    }
+                  ],
+                  "4d58a7b2-710d-5e05-adb1-faeaf8c8d21a": [
+                    {
+                      "target_handle_uuid": "d0b3fca3-deae-50ca-8f05-5f03b2fc1f62",
+                      "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+                    }
+                  ],
+                  "4e030904-c4ae-5835-abe3-d1d414bc5294": [
+                    {
+                      "target_handle_uuid": "167af113-166f-53f7-b482-b551575030d6",
+                      "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+                    }
+                  ],
+                  "54ca6cdc-8545-5e53-9cb4-8c969c001fc1": [
+                    {
+                      "target_handle_uuid": "ee4e1cc7-25e1-5d30-85d8-f6d63ff32eef",
+                      "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+                    }
+                  ],
+                  "6d432a97-ca42-500b-b19c-8333ae1f476c": [
+                    {
+                      "target_handle_uuid": "24c176c8-a70a-547e-bf37-848d5b580571",
+                      "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+                    }
+                  ],
+                  "9984258f-1b01-504d-a51d-53c22a6ea694": [
+                    {
+                      "target_handle_uuid": "04a56a0c-6134-51ba-9715-a67d0cc04d68",
+                      "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+                    }
+                  ],
+                  "9bb901da-646a-51f1-ab5f-1f48aaf89a35": [
+                    {
+                      "target_handle_uuid": "df2d8306-f674-54bd-a4c2-e1b2b0ed7d6d",
+                      "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+                    }
+                  ],
+                  "a660a191-e133-51d5-8098-be54c13ac955": [
+                    {
+                      "target_handle_uuid": "dfef1ea4-b453-5f23-9553-094959213305",
+                      "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+                    }
+                  ],
+                  "ae5a4eb4-e4c6-55bb-8854-53f0e1b3b5a9": [
+                    {
+                      "target_handle_uuid": "0d693db6-c0c2-5937-8487-3b492a093d23",
+                      "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+                    }
+                  ],
+                  "c639bc98-ef85-5cd8-8169-430b48cc2b95": [
+                    {
+                      "target_handle_uuid": "788c393f-cef1-5a1d-9763-af0caa08ef64",
+                      "workflow_node_uuid": "858a1bbd-9297-5563-b89c-dd407ef3d8d3"
+                    }
+                  ]
+                },
+                "version": 1
+              },
+              "input_bindings": {
+                "20b6a0cc-fd28-5fdf-a280-e839d4ebee04": {
+                  "parameter": "material_names"
+                },
+                "4d09157f-ca03-557a-89f4-84cd65a9fe08": {
+                  "parameter": "tolerances"
+                },
+                "4d58a7b2-710d-5e05-adb1-faeaf8c8d21a": {
+                  "parameter": "source_site"
+                },
+                "4e030904-c4ae-5835-abe3-d1d414bc5294": {
+                  "parameter": "cubic_type"
+                },
+                "54ca6cdc-8545-5e53-9cb4-8c969c001fc1": {
+                  "parameter": "task_id"
+                },
+                "6d432a97-ca42-500b-b19c-8333ae1f476c": {
+                  "parameter": "from_outside"
+                },
+                "9bb901da-646a-51f1-ab5f-1f48aaf89a35": {
+                  "parameter": "masses"
+                },
+                "a660a191-e133-51d5-8098-be54c13ac955": {
+                  "parameter": "slot_num"
+                },
+                "ae5a4eb4-e4c6-55bb-8854-53f0e1b3b5a9": {
+                  "parameter": "bead_count"
+                },
+                "c639bc98-ef85-5cd8-8169-430b48cc2b95": {
+                  "parameter": "rack_positions"
+                }
+              },
+              "output_schema_overrides": {
+                "1beec1c6-9cd5-5d77-b3cd-fe37e355e98a": {
+                  "$slot": "ResourceSlot",
+                  "allowed_resource_template_uuids": [
+                    "bc1d5401-e757-4951-95a5-a2c4c1f91517"
+                  ]
+                },
+                "4d1ae441-33e9-5733-81ca-46efe37da041": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "minimized": false,
+          "name": "YB 合成工站称粉",
+          "param": {},
+          "pose": {},
+          "status": "idle",
+          "type": "workflow",
+          "update_time": "2026-09-20T15:10:29.232455Z",
+          "uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c",
+          "workflow_node_template_uuid": "dccbfcb1-5ca5-5ebf-a754-61247c3ac11c",
+          "workflow_uuid": "7e5dabc1-8795-5009-85fe-c9a4c4f0c1e3"
+        }
+      ],
+      "workflow": {
+        "create_time": "2026-09-20T15:10:28.444914Z",
+        "description": "选择一个坩埚资源，完成 PLC 扫码绑定和称粉，并保留资源追踪引用。",
+        "meta_data": {
+          "unilab": {
+            "authoring_function_name": "synthesis_batch",
+            "authoring_result_record_name": "SynthesisBatchResult",
+            "input_contract": {
+              "parameters": [
+                {
+                  "default": "synthesis_crucible_rack_01-0",
+                  "name": "source_site",
+                  "required": false,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "default": "",
+                  "name": "task_id",
+                  "required": false,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "default": 1,
+                  "name": "slot_num",
+                  "required": false,
+                  "schema": {
+                    "type": "integer"
+                  }
+                },
+                {
+                  "default": [
+                    1
+                  ],
+                  "name": "rack_positions",
+                  "required": false,
+                  "schema": {
+                    "items": {
+                      "type": "integer"
+                    },
+                    "type": "array"
+                  }
+                },
+                {
+                  "default": [
+                    0.9
+                  ],
+                  "name": "masses",
+                  "required": false,
+                  "schema": {
+                    "items": {
+                      "type": "number"
+                    },
+                    "type": "array"
+                  }
+                },
+                {
+                  "default": [
+                    0.0007
+                  ],
+                  "name": "tolerances",
+                  "required": false,
+                  "schema": {
+                    "items": {
+                      "type": "number"
+                    },
+                    "type": "array"
+                  }
+                },
+                {
+                  "default": 1,
+                  "name": "cubic_type",
+                  "required": false,
+                  "schema": {
+                    "type": "integer"
+                  }
+                },
+                {
+                  "default": 0,
+                  "name": "bead_count",
+                  "required": false,
+                  "schema": {
+                    "type": "integer"
+                  }
+                },
+                {
+                  "default": false,
+                  "name": "from_outside",
+                  "required": false,
+                  "schema": {
+                    "type": "boolean"
+                  }
+                },
+                {
+                  "default": [
+                    "Li2S"
+                  ],
+                  "name": "material_names",
+                  "required": false,
+                  "schema": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  }
+                }
+              ],
+              "version": 1
+            },
+            "output_bindings": {
+              "accepted": {
+                "kind": "node_output",
+                "source_handle_uuid": "a96aa1f0-93f8-5524-8e20-d96c24de2ee8",
+                "workflow_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c"
+              },
+              "message": {
+                "kind": "node_output",
+                "source_handle_uuid": "60eb9412-a98a-5a44-b7fb-f96973f8a3a7",
+                "workflow_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c"
+              },
+              "qr_code": {
+                "kind": "node_output",
+                "source_handle_uuid": "2db93b12-2c87-5bce-8fb5-5c3a2797c17f",
+                "workflow_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c"
+              },
+              "resource": {
+                "kind": "node_output",
+                "source_handle_uuid": "1beec1c6-9cd5-5d77-b3cd-fe37e355e98a",
+                "workflow_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c"
+              },
+              "result_codes": {
+                "kind": "node_output",
+                "source_handle_uuid": "053be95b-579c-5cd2-a770-f24af43c87cd",
+                "workflow_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c"
+              },
+              "slot_num": {
+                "kind": "workflow_input",
+                "parameter": "slot_num"
+              },
+              "source_site": {
+                "kind": "node_output",
+                "source_handle_uuid": "3bd7454b-ecf9-5cf3-ab68-0d13e21212c2",
+                "workflow_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c"
+              },
+              "status_name": {
+                "kind": "node_output",
+                "source_handle_uuid": "f44d9f08-c51b-590f-8c7d-98f3dfd949c1",
+                "workflow_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c"
+              },
+              "success": {
+                "kind": "node_output",
+                "source_handle_uuid": "f6fe53e5-93c4-592c-b283-e344da775009",
+                "workflow_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c"
+              },
+              "task_id": {
+                "kind": "node_output",
+                "source_handle_uuid": "e2a21994-d86f-54f6-aa79-1d1c3343d46f",
+                "workflow_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c"
+              },
+              "weights": {
+                "kind": "node_output",
+                "source_handle_uuid": "f86259b7-0194-5d33-b195-169004e92b1c",
+                "workflow_node_uuid": "f0eeb0d9-7e4e-43a4-a3a9-f8d9adac2b9c"
+              }
+            },
+            "output_contract": {
+              "outputs": [
+                {
+                  "implicit": false,
+                  "name": "resource",
+                  "schema": {
+                    "$slot": "ResourceSlot",
+                    "allowed_resource_template_uuids": [
+                      "bc1d5401-e757-4951-95a5-a2c4c1f91517"
+                    ]
+                  }
+                },
+                {
+                  "implicit": false,
+                  "name": "task_id",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "implicit": false,
+                  "name": "slot_num",
+                  "schema": {
+                    "type": "integer"
+                  }
+                },
+                {
+                  "implicit": false,
+                  "name": "accepted",
+                  "schema": {
+                    "type": "boolean"
+                  }
+                },
+                {
+                  "implicit": false,
+                  "name": "success",
+                  "schema": {
+                    "type": "boolean"
+                  }
+                },
+                {
+                  "implicit": false,
+                  "name": "status_name",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "implicit": false,
+                  "name": "qr_code",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "implicit": false,
+                  "name": "weights",
+                  "schema": {
+                    "items": {
+                      "type": "number"
+                    },
+                    "type": "array"
+                  }
+                },
+                {
+                  "implicit": false,
+                  "name": "result_codes",
+                  "schema": {
+                    "items": {
+                      "type": "integer"
+                    },
+                    "type": "array"
+                  }
+                },
+                {
+                  "implicit": false,
+                  "name": "source_site",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "implicit": false,
+                  "name": "message",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "version": 1
+            },
+            "source_bootstrap": {
+              "kind": "editable_package_manifest",
+              "package_id": "yb_sse_devices",
+              "relative_path": "workflows/synthesis_batch.py",
+              "source_uri": "package://yb_sse_devices/workflows/synthesis_batch.py"
+            }
+          }
+        },
+        "name": "YB 合成称粉批次",
+        "revision": 2,
+        "tags": [],
+        "update_time": "2026-09-20T15:10:29.224801Z",
+        "uuid": "7e5dabc1-8795-5009-85fe-c9a4c4f0c1e3",
+        "workflow_type": "normal"
+      }
+    },
+    "input_contract": {
+      "parameters": [
+        {
+          "default": "synthesis_crucible_rack_01-0",
+          "name": "source_site",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "default": "",
+          "name": "task_id",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "default": 1,
+          "name": "slot_num",
+          "required": false,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "default": [
+            1
+          ],
+          "name": "rack_positions",
+          "required": false,
+          "schema": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array"
+          }
+        },
+        {
+          "default": [
+            0.9
+          ],
+          "name": "masses",
+          "required": false,
+          "schema": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array"
+          }
+        },
+        {
+          "default": [
+            0.0007
+          ],
+          "name": "tolerances",
+          "required": false,
+          "schema": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array"
+          }
+        },
+        {
+          "default": 1,
+          "name": "cubic_type",
+          "required": false,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "default": 0,
+          "name": "bead_count",
+          "required": false,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "default": false,
+          "name": "from_outside",
+          "required": false,
+          "schema": {
+            "type": "boolean"
+          }
+        },
+        {
+          "default": [
+            "Li2S"
+          ],
+          "name": "material_names",
+          "required": false,
+          "schema": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        }
+      ],
+      "version": 1
+    },
+    "meta_data": {},
+    "name": "YB 合成称粉批次",
+    "node_count": 3,
+    "node_template_uuid": "baf41dbc-5571-4aeb-972f-c5abc6a4899a",
+    "output_contract": {
+      "outputs": [
+        {
+          "implicit": false,
+          "name": "resource",
+          "schema": {
+            "$slot": "ResourceSlot",
+            "allowed_resource_template_uuids": [
+              "bc1d5401-e757-4951-95a5-a2c4c1f91517"
+            ]
+          }
+        },
+        {
+          "implicit": false,
+          "name": "task_id",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "implicit": false,
+          "name": "slot_num",
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "implicit": false,
+          "name": "accepted",
+          "schema": {
+            "type": "boolean"
+          }
+        },
+        {
+          "implicit": false,
+          "name": "success",
+          "schema": {
+            "type": "boolean"
+          }
+        },
+        {
+          "implicit": false,
+          "name": "status_name",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "implicit": false,
+          "name": "qr_code",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "implicit": false,
+          "name": "weights",
+          "schema": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array"
+          }
+        },
+        {
+          "implicit": false,
+          "name": "result_codes",
+          "schema": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array"
+          }
+        },
+        {
+          "implicit": false,
+          "name": "source_site",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "implicit": false,
+          "name": "message",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "version": 1
+    },
+    "source_hash": "sha256:ce232654f103210324aec5586d90db71dcf85228ecd5d09afbc6e291a1ff8822",
+    "tags": [],
+    "update_time": "2026-09-20T15:11:49.378089Z",
+    "uuid": "273983a9-16a5-463d-af80-f51ed0555a8b",
+    "version": 1,
+    "workflow_revision": 2,
+    "workflow_uuid": "7e5dabc1-8795-5009-85fe-c9a4c4f0c1e3"
+  },
+  "source_draft_hash": "sha256:5c5e5ef4d688a68fc3292c73c7d98b59f29844ef8e054882b6988c945da94dfb"
+}
