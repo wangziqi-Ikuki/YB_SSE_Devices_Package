@@ -5,6 +5,36 @@
       "version": 1,
       "workflow_revision": 2,
       "workflow_uuid": "3c8f1a62-9b74-4e2d-a5c1-7d0e8f4b2196"
+    },
+    {
+      "contract_uuid": "273983a9-16a5-463d-af80-f51ed0555a8b",
+      "version": 1,
+      "workflow_revision": 2,
+      "workflow_uuid": "7e5dabc1-8795-5009-85fe-c9a4c4f0c1e3"
+    },
+    {
+      "contract_uuid": "36663ee8-5038-42ac-8040-1ccc7be68313",
+      "version": 1,
+      "workflow_revision": 2,
+      "workflow_uuid": "f7c79ca5-1ed4-4d2a-9571-a8bbf9786c44"
+    },
+    {
+      "contract_uuid": "63c1f42f-7ad4-445d-88e1-169b90846eed",
+      "version": 2,
+      "workflow_revision": 3,
+      "workflow_uuid": "f7c79ca5-1ed4-4d2a-9571-a8bbf9786c44"
+    },
+    {
+      "contract_uuid": "30b2214c-78ba-436f-9de4-6e1e07c9134c",
+      "version": 3,
+      "workflow_revision": 4,
+      "workflow_uuid": "f7c79ca5-1ed4-4d2a-9571-a8bbf9786c44"
+    },
+    {
+      "contract_uuid": "88c4021d-df8a-44ef-a8f1-8f88206cfc85",
+      "version": 4,
+      "workflow_revision": 5,
+      "workflow_uuid": "f7c79ca5-1ed4-4d2a-9571-a8bbf9786c44"
     }
   ],
   "storage": "workflow_publications",
