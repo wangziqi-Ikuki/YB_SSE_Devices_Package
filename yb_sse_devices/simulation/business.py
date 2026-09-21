@@ -126,8 +126,21 @@ class BusinessSimulation:
         """Create one explicit POST for a finished TASK, idempotently."""
 
         task_id = str(task.get("task_id") or "")
+        task_lot_ids = {
+            str(lot.get("lotId") or "")
+            for lot in task.get("LOT") or []
+            if lot.get("lotId")
+        }
         for post in self.state.posts:
             if str(post.get("_task_id") or "") == task_id:
+                return post
+            post_lot_ids = {
+                str(lot.get("lotId") or "")
+                for lot in post.get("LOT") or []
+                if lot.get("lotId")
+            }
+            if task_lot_ids and task_lot_ids.issubset(post_lot_ids):
+                post["_task_id"] = task_id
                 return post
         before = {str(item.get("post_id") or "") for item in self.state.posts}
         self.state._ensure_post_for_task(task)

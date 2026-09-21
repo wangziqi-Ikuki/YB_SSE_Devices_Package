@@ -1,0 +1,307 @@
+{
+  "target_lab_uuid": "c005f754-b2b4-46bf-81c8-39ec8d10bd3d",
+  "name": "合成工站 加粉加珠流程 方舱",
+  "data": {
+    "workflow_uuid": "00cdaee3-7c63-4c77-875d-3d7093d0e5e3",
+    "workflow_name": "合成工站 加粉加珠流程 方舱",
+    "nodes": [
+      {
+        "uuid": "28cecad0-49fa-4cd0-8b9c-a26f70a9a916",
+        "parent_uuid": "",
+        "name": "close_cabin_outer_door",
+        "type": "ILab",
+        "icon": "",
+        "pose": {
+          "layout": "x-y",
+          "position": {
+            "x": 687.75134,
+            "y": 66.76503,
+            "z": 0
+          },
+          "position_3d": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "size": {
+            "width": 0,
+            "height": 0,
+            "depth": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "extra": null,
+          "cross_section_type": "rectangle"
+        },
+        "param": {
+          "task_id": ""
+        },
+        "footer": "",
+        "device_name": "SYNTHESIS_STATION",
+        "disabled": false,
+        "minimized": false,
+        "lab_node_type": "Device",
+        "template_uuid": "bfb918a9-0e8e-4083-adcd-6d2030b88ccf",
+        "template_name": "close_cabin_outer_door",
+        "resource_name": "synthesis_station"
+      },
+      {
+        "uuid": "181c63c6-59fc-4f49-8e25-19cc0a3b8cc4",
+        "parent_uuid": "",
+        "name": "manual_confirm",
+        "type": "manual_confirm",
+        "icon": "",
+        "pose": {
+          "layout": "x-y",
+          "position": {
+            "x": 377.64688,
+            "y": 80.12201,
+            "z": 0
+          },
+          "position_3d": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "size": {
+            "width": 0,
+            "height": 0,
+            "depth": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "extra": null,
+          "cross_section_type": "rectangle"
+        },
+        "param": {
+          "timeout_seconds": 3600,
+          "assignee_user_ids": [
+            "4372731"
+          ]
+        },
+        "footer": "",
+        "device_name": "host_node",
+        "disabled": false,
+        "minimized": false,
+        "lab_node_type": "Device",
+        "template_uuid": "f8b82876-51c9-4e42-8923-0703ed338f57",
+        "template_name": "manual_confirm",
+        "resource_name": "host_node"
+      },
+      {
+        "uuid": "bc32d696-e88a-4e68-acce-2b57347178d1",
+        "parent_uuid": "",
+        "name": "manual_confirm",
+        "type": "manual_confirm",
+        "icon": "",
+        "pose": {
+          "layout": "x-y",
+          "position": {
+            "x": 201.37361,
+            "y": 537.61584,
+            "z": 0
+          },
+          "position_3d": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "size": {
+            "width": 0,
+            "height": 0,
+            "depth": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "extra": null,
+          "cross_section_type": "rectangle"
+        },
+        "param": {
+          "timeout_seconds": 3600,
+          "assignee_user_ids": [
+            "4372731"
+          ]
+        },
+        "footer": "",
+        "device_name": "host_node",
+        "disabled": false,
+        "minimized": false,
+        "lab_node_type": "Device",
+        "template_uuid": "f8b82876-51c9-4e42-8923-0703ed338f57",
+        "template_name": "manual_confirm",
+        "resource_name": "host_node"
+      },
+      {
+        "uuid": "9b3df649-10b0-4ade-88d6-be3221a43cbf",
+        "parent_uuid": "",
+        "name": "start_recipt",
+        "type": "ILab",
+        "icon": "",
+        "pose": {
+          "layout": "x-y",
+          "position": {
+            "x": 682.42474,
+            "y": 522.3152,
+            "z": 0
+          },
+          "position_3d": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "size": {
+            "width": 0,
+            "height": 0,
+            "depth": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "extra": null,
+          "cross_section_type": "rectangle"
+        },
+        "param": {
+          "task_id": "TASK-000071"
+        },
+        "footer": "",
+        "device_name": "SYNTHESIS_STATION",
+        "disabled": false,
+        "minimized": false,
+        "lab_node_type": "Device",
+        "template_uuid": "01567f8c-5582-4fdf-8bd1-a0371e749b78",
+        "template_name": "start_recipt",
+        "resource_name": "synthesis_station"
+      },
+      {
+        "uuid": "b021ed6e-a61d-447e-a321-078e457ec762",
+        "parent_uuid": "",
+        "name": "upload_cubic",
+        "type": "ILab",
+        "icon": "",
+        "pose": {
+          "layout": "x-y",
+          "position": {
+            "x": 76.119415,
+            "y": 79.23573,
+            "z": 0
+          },
+          "position_3d": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "size": {
+            "width": 0,
+            "height": 0,
+            "depth": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "extra": null,
+          "cross_section_type": "rectangle"
+        },
+        "param": {
+          "task_id": "TASK-000076",
+          "fetch_cubic_source": 1
+        },
+        "footer": "",
+        "device_name": "SYNTHESIS_STATION",
+        "disabled": false,
+        "minimized": false,
+        "lab_node_type": "Device",
+        "template_uuid": "0664cf77-7cf8-4e00-8ec0-692eb727d256",
+        "template_name": "upload_cubic",
+        "resource_name": "synthesis_station"
+      }
+    ],
+    "edges": [
+      {
+        "source_node_uuid": "b021ed6e-a61d-447e-a321-078e457ec762",
+        "target_node_uuid": "181c63c6-59fc-4f49-8e25-19cc0a3b8cc4",
+        "source_handle_key": "ready",
+        "source_handle_io": "source",
+        "target_handle_key": "ready",
+        "target_handle_io": "target"
+      },
+      {
+        "source_node_uuid": "181c63c6-59fc-4f49-8e25-19cc0a3b8cc4",
+        "target_node_uuid": "28cecad0-49fa-4cd0-8b9c-a26f70a9a916",
+        "source_handle_key": "ready",
+        "source_handle_io": "source",
+        "target_handle_key": "ready",
+        "target_handle_io": "target"
+      },
+      {
+        "source_node_uuid": "b021ed6e-a61d-447e-a321-078e457ec762",
+        "target_node_uuid": "28cecad0-49fa-4cd0-8b9c-a26f70a9a916",
+        "source_handle_key": "task_id",
+        "source_handle_io": "source",
+        "target_handle_key": "task_id",
+        "target_handle_io": "target"
+      },
+      {
+        "source_node_uuid": "28cecad0-49fa-4cd0-8b9c-a26f70a9a916",
+        "target_node_uuid": "9b3df649-10b0-4ade-88d6-be3221a43cbf",
+        "source_handle_key": "task_id",
+        "source_handle_io": "source",
+        "target_handle_key": "task_id",
+        "target_handle_io": "target"
+      },
+      {
+        "source_node_uuid": "28cecad0-49fa-4cd0-8b9c-a26f70a9a916",
+        "target_node_uuid": "bc32d696-e88a-4e68-acce-2b57347178d1",
+        "source_handle_key": "ready",
+        "source_handle_io": "source",
+        "target_handle_key": "ready",
+        "target_handle_io": "target"
+      },
+      {
+        "source_node_uuid": "bc32d696-e88a-4e68-acce-2b57347178d1",
+        "target_node_uuid": "9b3df649-10b0-4ade-88d6-be3221a43cbf",
+        "source_handle_key": "ready",
+        "source_handle_io": "source",
+        "target_handle_key": "ready",
+        "target_handle_io": "target"
+      }
+    ]
+  }
+}

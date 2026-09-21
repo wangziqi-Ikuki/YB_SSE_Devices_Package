@@ -1104,6 +1104,14 @@ class MockSynthesisState:
                 matched = True
         if not matched:
             return self._response(request_id, result=12)
+        lots = task.get("LOT") or []
+        if lots and all(int(lot.get("bottle_state") or 0) == 1 for lot in lots):
+            # Scanning the final large crucible completes the synthesis TASK.
+            # Without this transition, a successful workflow leaves the TASK
+            # in the running state and the next batch is rejected with result=8.
+            task["task_state"] = 5
+            self.task_started.pop(task_id, None)
+            self._ensure_post_for_task(task)
         return self._response(request_id)
 
     def _handle_start_sintering(

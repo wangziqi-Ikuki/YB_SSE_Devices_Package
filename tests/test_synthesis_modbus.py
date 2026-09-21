@@ -251,7 +251,38 @@ class _FakeModbusSocket:
         return None
 
 
+class _BrokenSendSocket:
+    def __init__(self) -> None:
+        self.closed = False
+
+    def settimeout(self, _timeout: float) -> None:
+        return None
+
+    def sendall(self, _frame: bytes) -> None:
+        raise BrokenPipeError(32, "Broken pipe")
+
+    def recv(self, _size: int) -> bytes:
+        raise AssertionError("a broken send must not attempt to receive")
+
+    def close(self) -> None:
+        self.closed = True
+
+
 class TcpTransportTests(unittest.TestCase):
+    def test_read_reconnects_once_after_broken_pipe(self) -> None:
+        broken = _BrokenSendSocket()
+        healthy = _FakeModbusSocket()
+        sockets = iter((broken, healthy))
+        transport = ModbusTcpTransport(
+            "127.0.0.1",
+            socket_factory=lambda _address, _timeout: next(sockets),
+        )
+        transport.connect()
+
+        self.assertEqual(transport.read_holding_registers(40100, 2), (1, 2))
+        self.assertTrue(broken.closed)
+        transport.close()
+
     def test_read_and_both_write_function_codes(self) -> None:
         sock = _FakeModbusSocket()
         transport = ModbusTcpTransport(

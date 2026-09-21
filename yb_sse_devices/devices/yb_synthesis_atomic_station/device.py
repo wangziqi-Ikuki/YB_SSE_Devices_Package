@@ -38,6 +38,14 @@ class AtomicResult(TypedDict):
     small_crucible: ResourceSlot | None
 
 
+class LegacyTaskActionResult(TypedDict):
+    """Stable result returned by one-to-one legacy task action adapters."""
+
+    task_id: str
+    state: str
+    message: str
+
+
 class AtomicSamplingResult(TypedDict):
     """Stable result contract for the reusable PLC sampling boundary."""
 
@@ -252,6 +260,122 @@ class YBSynthesisAtomicStation:
             if str(post.get("post_id") or "") == post_id:
                 return post
         raise RuntimeError(f"查询不到 POST: {post_id}")
+
+    def _legacy_task_result(
+        self,
+        task_id: str,
+        state: str,
+        message: str,
+    ) -> LegacyTaskActionResult:
+        """Record and return the stable boundary for a legacy task action."""
+
+        if not self._task_id:
+            self._task_id = task_id
+        self._state = state
+        return {"task_id": task_id, "state": state, "message": message}
+
+    @action(description="兼容旧流程：从方舱或料架2上大坩埚")
+    def upload_cubic(
+        self,
+        task_id: str = "",
+        fetch_cubic_source: int = 1,
+    ) -> LegacyTaskActionResult:
+        with self._lock:
+            resolved = self._require_task(task_id)
+            source = int(fetch_cubic_source)
+            if source not in {0, 1}:
+                raise ValueError("fetch_cubic_source 必须是 0（方舱）或 1（料架2）")
+            self._require_ok(
+                self.station.upload_cubic(resolved, source),
+                "旧流程上坩埚",
+            )
+            return self._legacy_task_result(
+                resolved,
+                "LEGACY_CUBIC_UPLOADED",
+                "旧流程上坩埚命令已接受",
+            )
+
+    @action(description="兼容旧流程：人工确认后关闭方舱外门")
+    def close_cabin_outer_door(
+        self,
+        task_id: str = "",
+    ) -> LegacyTaskActionResult:
+        with self._lock:
+            resolved = self._require_task(task_id)
+            self._require_ok(
+                self.station.close_cabin_outer_door(resolved),
+                "旧流程关闭方舱外门",
+            )
+            return self._legacy_task_result(
+                resolved,
+                "LEGACY_CABIN_CLOSED",
+                "旧流程方舱外门已关闭",
+            )
+
+    @action(description="兼容旧流程：启动加粉加珠")
+    def start_recipt(self, task_id: str = "") -> LegacyTaskActionResult:
+        with self._lock:
+            resolved = self._require_task(task_id)
+            self._require_ok(
+                self.station.start_recipt(resolved),
+                "旧流程启动加粉加珠",
+            )
+            return self._legacy_task_result(
+                resolved,
+                "LEGACY_DOSING_STARTED",
+                "旧流程加粉加珠已启动",
+            )
+
+    @action(description="兼容旧流程：启动声共振")
+    def start_acoustic_resonance(
+        self,
+        task_id: str = "",
+    ) -> LegacyTaskActionResult:
+        with self._lock:
+            resolved = self._require_task(task_id)
+            self._require_ok(
+                self.station.start_acoustic_resonance(resolved),
+                "旧流程启动声共振",
+            )
+            return self._legacy_task_result(
+                resolved,
+                "LEGACY_RESONANCE_STARTED",
+                "旧流程声共振已启动",
+            )
+
+    @action(description="兼容旧流程：声共振下料")
+    def fetch_acoustic_resonance(
+        self,
+        task_id: str = "",
+    ) -> LegacyTaskActionResult:
+        with self._lock:
+            resolved = self._require_task(task_id)
+            self._require_ok(
+                self.station.fetch_acoustic_resonance(resolved),
+                "旧流程声共振下料",
+            )
+            return self._legacy_task_result(
+                resolved,
+                "LEGACY_RESONANCE_FETCHED",
+                "旧流程声共振下料已完成",
+            )
+
+    @action(description="兼容旧流程：结束声共振")
+    def finish_acoustic_resonance(
+        self,
+        task_id: str = "",
+    ) -> LegacyTaskActionResult:
+        with self._lock:
+            resolved = self._require_task(task_id)
+            self._require_ok(
+                self.station.finish_acoustic_resonance(resolved),
+                "旧流程结束声共振",
+            )
+            return self._legacy_task_result(
+                resolved,
+                "LEGACY_RESONANCE_FINISHED",
+                "旧流程声共振已结束",
+            )
 
     @action(description="创建并启动合成 TASK，同时建立物料初始账")
     def create_batch(

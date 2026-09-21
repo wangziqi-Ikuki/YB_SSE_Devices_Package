@@ -10,3 +10,9 @@ workflows:
     source: yb_sse_devices/workflows/synthesis_atomic_single.py
   - workflow_uuid: 7e5dabc1-8795-5009-85fe-c9a4c4f0c1e3
     source: yb_sse_devices/workflows/synthesis_batch.py
+  - workflow_uuid: 00cdaee3-7c63-4c77-875d-3d7093d0e5e3
+    source: yb_sse_devices/workflows/synthesis_powder_bead_cabin.py
+  - workflow_uuid: 2b618ad2-cb04-4ce0-8f0f-4155497740b2
+    source: yb_sse_devices/workflows/synthesis_powder_bead_rack2.py
+  - workflow_uuid: bbf54bc0-4119-48be-a7b7-29d84a6a45a9
+    source: yb_sse_devices/workflows/synthesis_mixing.py

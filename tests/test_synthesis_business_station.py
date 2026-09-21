@@ -62,6 +62,27 @@ def test_direct_business_simulation_covers_post_and_stock_chain() -> None:
     assert station.query_posts()["data"]["posts"][0]["post_state"] == 7
 
 
+def test_completed_business_task_allows_next_batch() -> None:
+    station = _station()
+    first_task_id, _lot_id, _big_cubic = _start_sampling_business(station)
+
+    first_task = next(
+        task
+        for task in station.query_tasks()["data"]["tasks"]
+        if task["task_id"] == first_task_id
+    )
+    assert first_task["task_state"] == 5
+
+    second_task_id = station.create_task(
+        pallet_type=1,
+        cubic_type=1,
+        task_slot_nums=[1],
+        task_recipe_names=["TEST-RECIPE"],
+    )["task_id"]
+    assert second_task_id != first_task_id
+    assert station.start_task(second_task_id)["result"] == 0
+
+
 def test_business_simulation_rejects_wrong_order_and_duplicate_bottle() -> None:
     station = _station()
     task_id, lot_id, _ = _start_sampling_business(station)

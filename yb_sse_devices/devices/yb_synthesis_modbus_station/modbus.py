@@ -256,9 +256,20 @@ class ModbusTcpTransport:
         if not isinstance(count, int) or isinstance(count, bool) or not 1 <= count <= 125:
             raise ValueError("count must be in the range 1..125")
         offset = holding_register_offset(address, base_address=self.base_address)
-        pdu = self._request(
-            struct.pack(">BHH", 3, offset, count), unit_id=self.unit_id if unit_id is None else unit_id
-        )
+        request_pdu = struct.pack(">BHH", 3, offset, count)
+        try:
+            pdu = self._request(
+                request_pdu,
+                unit_id=self.unit_id if unit_id is None else unit_id,
+            )
+        except ModbusConnectionError:
+            # Reads are idempotent, so reconnecting and retrying once is safe.
+            # Writes intentionally remain single-attempt because a lost reply
+            # cannot prove whether the PLC already applied the command.
+            pdu = self._request(
+                request_pdu,
+                unit_id=self.unit_id if unit_id is None else unit_id,
+            )
         if len(pdu) < 2 or pdu[0] != 3:
             raise ModbusProtocolError("unexpected function code in read response")
         byte_count = pdu[1]

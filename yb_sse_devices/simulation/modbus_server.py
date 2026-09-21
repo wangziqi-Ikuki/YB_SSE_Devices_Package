@@ -129,7 +129,7 @@ class ModbusTcpSimulator:
         handshake_delay: float = 0.1,
         failure_plan: Mapping[str, str] | None = None,
         tick_interval: float = 0.05,
-        request_timeout: float = 5.0,
+        request_timeout: float = 3600.0,
         communication_history_limit: int = 2000,
         trace_file: str | pathlib.Path | None = None,
         trace_sink: TraceSink | None = None,

@@ -1,6 +1,18 @@
 {
   "publications": [
     {
+      "contract_uuid": "2ca0970e-7f54-491e-b8ff-8fd6c7fd4183",
+      "version": 1,
+      "workflow_revision": 2,
+      "workflow_uuid": "00cdaee3-7c63-4c77-875d-3d7093d0e5e3"
+    },
+    {
+      "contract_uuid": "6ccafa0f-de07-419f-b72e-c8e5c5563524",
+      "version": 1,
+      "workflow_revision": 2,
+      "workflow_uuid": "2b618ad2-cb04-4ce0-8f0f-4155497740b2"
+    },
+    {
       "contract_uuid": "be8cff69-be60-4c6b-b7ab-1f61c5bbd0f8",
       "version": 1,
       "workflow_revision": 2,
@@ -53,6 +65,12 @@
       "version": 3,
       "workflow_revision": 4,
       "workflow_uuid": "7e5dabc1-8795-5009-85fe-c9a4c4f0c1e3"
+    },
+    {
+      "contract_uuid": "f9b2d049-d415-4c84-81e2-e39714156251",
+      "version": 1,
+      "workflow_revision": 2,
+      "workflow_uuid": "bbf54bc0-4119-48be-a7b7-29d84a6a45a9"
     },
     {
       "contract_uuid": "36663ee8-5038-42ac-8040-1ccc7be68313",
