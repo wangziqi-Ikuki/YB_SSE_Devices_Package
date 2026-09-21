@@ -4,10 +4,9 @@ YB 固态电解质合成工站和电导率测试工站的 Uni-Lab-OS 外部设�
 
 ## 目录约定
 
-这里的 `yb_sse_devices/` 是设备包的 Python import package，对应模板图中的
-`my-device-package/`。因此 `devices/`、`resources/` 和 `workflows/` 是这个包内的一级目录，
-不是仓库根目录下的三个 Python 包。现在每个可注册对象都有自己的目录，目录名就是稳定的
-`device_id` 或资源 ID：
+仓库根目录是项目目录，`yb_sse_devices/` 是其中真正的 Python 包目录，对应模板图中的
+`my-device-package/`。设备、资源和工作流分别放在这个包下面的 `devices/`、`resources/`
+和 `workflows/` 一级目录中；每个设备或资源再使用稳定的 `device_id` 或资源 ID 作为自己的目录名：
 
 ```text
 YB_SSE_Devices_Package/
@@ -36,9 +35,10 @@ YB_SSE_Devices_Package/
 │   │   ├── synthesis_station_deck/resource.py
 │   │   ├── yb_synthesis_deck/resource.py
 │   │   └── conductivity_*/resource.py
-│   ├── workflows/                       # 工作流和实验操作源码
+│   ├── experiment_operations/           # 可复用实验操作
+│   │   └── synthesis_sampling.py        # 称粉实验操作
+│   ├── workflows/                       # 完整业务工作流
 │   │   ├── synthesis_atomic_single.py   # 原子动作完整合成流程
-│   │   ├── synthesis_sampling.py        # 可复用称粉实验操作
 │   │   ├── synthesis_batch.py           # 调用称粉实验操作的批次流程
 │   │   └── start_batch.py               # 电导工站流程
 │   ├── workflow_publications/           # OS 生成的不可变 publication/contract
@@ -61,7 +61,7 @@ import package `yb_sse_devices/` 下的 `devices/` 和 `resources/` 目录扫描
 
 `YB 合成批次（原子动作）` 按物理边界拆成连续动作节点：创建 TASK、取大坩埚、确认配方、PLC 内部扫码绑定并称粉加珠、声共振上下料、扫码装瓶、POST/LOT 处理、分配小坩埚、确认烧结计划、烧结和出炉。每个动作只有在设备返回完成后才更新设备包侧物料账；扫码、称粉和加珠在 PLC 中必须作为不可中断的连续过程。
 
-`YB 合成工站称粉` 是可复用实验操作，`YB 合成称粉批次` 调用它并保留 `ResourceSlot` 引用。它们的 UUID 只在 `package.yaml` 中声明一次。发布合同必须与当前源码和图的修订一致，不能手工复制旧合同。
+`YB 合成工站称粉` 是可复用实验操作，放在 `experiment_operations/`；`YB 合成称粉批次` 是完整工作流，放在 `workflows/` 并调用它。两者都在 `package.yaml` 中登记，各自 UUID 只声明一次。发布合同必须与当前源码和图的修订一致，不能手工复制旧合同。
 
 ## PLC 协议和两种仿真
 
@@ -98,7 +98,7 @@ UNILAB_PYTHON_ENV=unilab ./scripts/check-package.sh
 
 检查项目包括：
 
-1. `package.yaml` 中工作流 UUID 唯一，源码全部位于 `workflows/`；
+1. `package.yaml` 中工作流 UUID 唯一，完整工作流位于 `workflows/`，可复用实验操作位于 `experiment_operations/`；
 2. 设备、资源和工作流目录按职责分离；
 3. 设备/资源 ID 唯一且为稳定的 snake_case；
 4. 启动图节点、父子关系和连线引用有效；
