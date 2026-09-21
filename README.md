@@ -95,6 +95,25 @@ mamba run -n unilab python -m yb_sse_devices.modbus_sim_server \
   --host 127.0.0.1 --port 5020
 ```
 
+要核对“工作流成功”是否真的经过了 PLC 通讯，可以打开结构化通信日志：
+
+```bash
+PYTHONPATH=/Users/dp/Desktop/0918YB/YB_SSE_Devices_Package \
+mamba run -n unilab python -m yb_sse_devices.modbus_sim_server \
+  --host 127.0.0.1 --port 5020 \
+  --log-file /tmp/yb-modbus-sim.jsonl --verbose
+```
+
+每一条 JSONL 记录对应一个 Modbus 请求和响应，包含事务号、功能码、40001 风格寄存器地址、
+读写值、响应是否成功、异常码，以及请求完成时的 PLC 阶段、40100–40116 状态寄存器和最近的
+握手阶段。例如称粉动作至少应看到一条 `write_multiple_registers` 命令写入 40001，随后多条
+读取 40102 的轮询，最后记录中的 `state.plc_phase` 为 `completed`、40102 为 `2`。只有动作返回
+成功但没有这些写入/状态变化时，不能认为验证了 PLC 通讯；那可能只是设备包内部的进程内仿真。
+
+日志保存在仿真器进程，不会自动出现在 Uni-Lab 前端的运行日志页。桌面前端可以读取 JSONL，或通过
+`ModbusTcpSimulator.get_communication_log()` 获取最近记录，再把请求/响应和阶段展示给实验人员。
+`--log-history` 控制内存中保留的记录数，文件日志会持续追加；停止仿真器时文件会正常关闭。
+
 然后使用 `deployment/graphs/integration.json`，它会以 `simulation: false` 连接
 `127.0.0.1:5020`。这个仿真器仍然复用设备包内的 `SynthesisPlcModel`，只是增加了真实
 Modbus TCP 服务层；生产图不会自动启动它。
