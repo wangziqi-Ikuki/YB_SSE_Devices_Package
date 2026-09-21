@@ -60,6 +60,31 @@
       }
     },
     {
+      "id": "yb_synthesis_atomic_station_01",
+      "name": "YB 合成工站（Modbus 原子动作仿真）",
+      "type": "device",
+      "class": "community.yb_sse_devices.yb_synthesis_atomic_station",
+      "parent": null,
+      "position": {
+        "x": 0.0,
+        "y": 180.0,
+        "z": 0.0
+      },
+      "config": {
+        "simulation": true,
+        "business_simulation_auto_advance": false,
+        "simulation_crucible_id": "CRU-SIM-001",
+        "simulation_dosing_duration": 0.2,
+        "simulation_handshake_delay": 0.1,
+        "business_firing_duration": 0.5,
+        "action_timeout": 15.0,
+        "simulation_step": 0.1
+      },
+      "data": {
+        "status": "offline"
+      }
+    },
+    {
       "id": "synthesis_powder_rack_01",
       "name": "合成粉料架",
       "type": "warehouse",
@@ -109,7 +134,7 @@
               "synthesis_powder"
             ],
             "visible": true,
-            "occupied_by": null
+            "occupied_by": "synthesis_powder_002"
           },
           {
             "label": "synthesis_powder_rack_01-2",
@@ -128,7 +153,7 @@
               "synthesis_powder"
             ],
             "visible": true,
-            "occupied_by": null
+            "occupied_by": "synthesis_powder_003"
           },
           {
             "label": "synthesis_powder_rack_01-3",
@@ -147,7 +172,7 @@
               "synthesis_powder"
             ],
             "visible": true,
-            "occupied_by": null
+            "occupied_by": "synthesis_powder_004"
           },
           {
             "label": "synthesis_powder_rack_01-4",
@@ -267,7 +292,10 @@
       },
       "data": {},
       "children": [
-        "synthesis_powder_001"
+        "synthesis_powder_001",
+        "synthesis_powder_002",
+        "synthesis_powder_003",
+        "synthesis_powder_004"
       ]
     },
     {
@@ -335,7 +363,7 @@
               "synthesis_crucible"
             ],
             "visible": true,
-            "occupied_by": null
+            "occupied_by": "synthesis_crucible_002"
           },
           {
             "label": "synthesis_crucible_rack_01-2",
@@ -493,7 +521,8 @@
       },
       "data": {},
       "children": [
-        "synthesis_crucible_001"
+        "synthesis_crucible_001",
+        "synthesis_crucible_002"
       ]
     },
     {
@@ -731,6 +760,66 @@
       },
       "data": {
         "lifecycle_state": "available"
+      }
+    },
+    {
+      "id": "synthesis_powder_002",
+      "name": "仿真粉料盒 002",
+      "type": "container",
+      "class": "community.yb_sse_devices.synthesis_powder",
+      "parent": "synthesis_powder_rack_01",
+      "barcode": "POWDER-SIM-002",
+      "config": {
+        "name": "synthesis_powder_002"
+      },
+      "data": {
+        "lifecycle_state": "available",
+        "material": "LiBr"
+      }
+    },
+    {
+      "id": "synthesis_powder_003",
+      "name": "仿真粉料盒 003",
+      "type": "container",
+      "class": "community.yb_sse_devices.synthesis_powder",
+      "parent": "synthesis_powder_rack_01",
+      "barcode": "POWDER-SIM-003",
+      "config": {
+        "name": "synthesis_powder_003"
+      },
+      "data": {
+        "lifecycle_state": "available",
+        "material": "LiCl"
+      }
+    },
+    {
+      "id": "synthesis_powder_004",
+      "name": "仿真粉料盒 004",
+      "type": "container",
+      "class": "community.yb_sse_devices.synthesis_powder",
+      "parent": "synthesis_powder_rack_01",
+      "barcode": "POWDER-SIM-004",
+      "config": {
+        "name": "synthesis_powder_004"
+      },
+      "data": {
+        "lifecycle_state": "available",
+        "material": "P2S5"
+      }
+    },
+    {
+      "id": "synthesis_crucible_002",
+      "name": "仿真坩埚 002",
+      "type": "container",
+      "class": "community.yb_sse_devices.synthesis_crucible",
+      "parent": "synthesis_crucible_rack_01",
+      "barcode": "CRU-SIM-002",
+      "config": {
+        "name": "synthesis_crucible_002"
+      },
+      "data": {
+        "lifecycle_state": "available",
+        "cubic_type": 1
       }
     }
   ],

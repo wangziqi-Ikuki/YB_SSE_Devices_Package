@@ -8,11 +8,13 @@
 
 from __future__ import annotations
 
-from typing import TypedDict
+from typing import Annotated, TypedDict
 
+from unilabos.registry.annotations import AllowedResourceTemplates
 from unilabos.registry.placeholder_type import ResourceSlot
 from unilabos.workflow.authoring import device, workflow
 
+from yb_sse_devices.resources.synthesis_resources import SynthesisCrucible
 from yb_sse_devices.synthesis_modbus_station import YBSynthesisModbusStation
 
 
@@ -44,17 +46,20 @@ yb_synthesis_station: YBSynthesisModbusStation = device("yb_synthesis_modbus_sta
 )
 def synthesis_sampling(
     *,
-    resource: ResourceSlot,
+    resource: Annotated[
+        ResourceSlot,
+        AllowedResourceTemplates(SynthesisCrucible),
+    ],
     source_site: str = "synthesis_crucible_rack_01-0",
     task_id: str = "",
     slot_num: int = 1,
-    rack_positions: list[int] = [1],
-    masses: list[float] = [0.9],
-    tolerances: list[float] = [0.0007],
+    rack_positions: list[int],
+    masses: list[float],
+    tolerances: list[float],
     cubic_type: int = 1,
     bead_count: int = 0,
     from_outside: bool = False,
-    material_names: list[str] = ["Li2S"],
+    material_names: list[str],
 ) -> SynthesisSamplingResult:
     # unilab:node_uuid=4dc40329-4e2d-4e0e-98c0-24c292e20d26
     accepted = yb_synthesis_station.sample_with_materials(

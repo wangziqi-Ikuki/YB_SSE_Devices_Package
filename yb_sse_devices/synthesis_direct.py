@@ -14,6 +14,7 @@ from typing import Any, Sequence
 from yb_sse_devices.synthesis_modbus import (
     ModbusTransport,
     SynthesisModbusClient,
+    cubic_source_to_plc,
     encode_sampling_command,
     encode_acoustic_resonance_command,
     encode_add_bead_command,
@@ -228,8 +229,36 @@ class SynthesisDirectController:
         )
 
     def fetch_cubic(self, **kwargs: Any) -> dict[str, Any]:
+        """Write command 7 using the PLC/Qt source-position values.
+
+        This low-level method accepts the IO-table values (for example 1 for
+        the cabin, 2 for rack 2, and other valid PLC source positions).  Use
+        :meth:`fetch_cubic_from_package` when the caller has the device
+        package's 0/1 source enum.
+        """
+
         return self._send_operation(
-            encode_fetch_cubic_command(**kwargs), "fetch_cubic"
+            encode_fetch_cubic_command(**kwargs),
+            "fetch_cubic",
+        )
+
+    def fetch_cubic_from_package(
+        self,
+        *,
+        source: int = 0,
+        destination: int = 1,
+        pallet_type: int = 1,
+        slot_numbers: Sequence[int] = (),
+        bead_source: int = 0,
+    ) -> dict[str, Any]:
+        """Write command 7 after converting the package source enum."""
+
+        return self.fetch_cubic(
+            source=cubic_source_to_plc(source),
+            destination=destination,
+            pallet_type=pallet_type,
+            slot_numbers=slot_numbers,
+            bead_source=bead_source,
         )
 
     def add_bead(self, *, source: int) -> dict[str, Any]:

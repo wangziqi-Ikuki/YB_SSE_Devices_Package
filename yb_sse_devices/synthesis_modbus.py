@@ -452,6 +452,33 @@ class SynthesisCommand(IntEnum):
     FETCH_ACOUSTIC_RESONANCE = 9
 
 
+class CubicSource(IntEnum):
+    """坩埚来源的设备包编号。
+
+    上位机/PLC 的 command 7 使用 1 表示方舱、2 表示料架 2；设备包的
+    高层动作使用从 0 开始的语义编号。两套编号必须在直连控制器边界转换，
+    不能把设备包编号直接写入 PLC。
+    """
+
+    CABIN = 0
+    RACK2 = 1
+
+
+def cubic_source_to_plc(source: int) -> int:
+    """Convert a package cubic-source number to the Qt/PLC wire value."""
+
+    if isinstance(source, bool):
+        raise ValueError("坩埚来源编号不能是布尔值")
+    try:
+        package_source = CubicSource(int(source))
+    except (TypeError, ValueError) as exc:
+        raise ValueError("坩埚来源必须是 0（方舱）或 1（料架2）") from exc
+    return {
+        CubicSource.CABIN: 1,
+        CubicSource.RACK2: 2,
+    }[package_source]
+
+
 @dataclass(frozen=True)
 class SynthesisRegisterMap:
     """Versioned addresses shared by the direct driver and PLC simulation."""
@@ -487,11 +514,23 @@ class SynthesisStatusSnapshot:
     add_beads: int
     upper_pallet: int
     acoustic_resonance: int
-    cabin_fetch_cubic: int
+    cabin_feed_state: int
+    acoustic_process: int
     acoustic_fetch: int
     furnace: tuple[int, int, int, int]
     joule_heating: int
     pause: int
+
+    @property
+    def cabin_fetch_cubic(self) -> int:
+        """Backward-compatible alias for the old, misleading field name.
+
+        The PLC project calls register 40108 ``方舱进料状态``.  It is a cabin
+        feed state, not the completion status of command 7; command 7 uses
+        the upper-pallet task status at 40106.
+        """
+
+        return self.cabin_feed_state
 
     @classmethod
     def from_registers(cls, values: Sequence[int]) -> "SynthesisStatusSnapshot":
@@ -506,7 +545,8 @@ class SynthesisStatusSnapshot:
             add_beads=int(values[5]),
             upper_pallet=int(values[6]),
             acoustic_resonance=int(values[7]),
-            cabin_fetch_cubic=int(values[8]),
+            cabin_feed_state=int(values[8]),
+            acoustic_process=int(values[9]),
             acoustic_fetch=int(values[15]),
             furnace=tuple(int(value) for value in values[10:14]),
             joule_heating=int(values[14]),
@@ -830,6 +870,7 @@ __all__ = [
     "ModbusTcpTransport",
     "ModbusTimeoutError",
     "ModbusTransport",
+    "CubicSource",
     "SamplingResults",
     "SynthesisCommand",
     "SynthesisModbusClient",
@@ -837,6 +878,7 @@ __all__ = [
     "SynthesisStatusSnapshot",
     "decode_ascii_registers",
     "decode_float32",
+    "cubic_source_to_plc",
     "encode_ascii_registers",
     "encode_acoustic_resonance_command",
     "encode_add_bead_command",

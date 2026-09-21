@@ -6,6 +6,7 @@ import struct
 import unittest
 
 from yb_sse_devices.synthesis_modbus import (
+    CubicSource,
     MemoryModbusTransport,
     ModbusTcpTransport,
     SynthesisCommand,
@@ -13,6 +14,7 @@ from yb_sse_devices.synthesis_modbus import (
     SynthesisStatusSnapshot,
     decode_ascii_registers,
     decode_float32,
+    cubic_source_to_plc,
     encode_ascii_registers,
     encode_acoustic_resonance_command,
     encode_add_bead_command,
@@ -26,9 +28,20 @@ from yb_sse_devices.synthesis_modbus import (
     encode_up_material_command,
     holding_register_offset,
 )
+from yb_sse_devices.simulation.modbus_transport import SynthesisSimulationTransport
 
 
 class CodecTests(unittest.TestCase):
+    def test_package_cubic_source_maps_to_qt_plc_values(self) -> None:
+        self.assertEqual(cubic_source_to_plc(CubicSource.CABIN), 1)
+        self.assertEqual(cubic_source_to_plc(CubicSource.RACK2), 2)
+        self.assertEqual(cubic_source_to_plc(0), 1)
+        self.assertEqual(cubic_source_to_plc(1), 2)
+        with self.assertRaises(ValueError):
+            cubic_source_to_plc(2)
+        with self.assertRaises(ValueError):
+            cubic_source_to_plc(True)
+
     def test_human_register_address_conversion(self) -> None:
         self.assertEqual(holding_register_offset(40001), 0)
         self.assertEqual(holding_register_offset(40170), 169)
@@ -85,6 +98,14 @@ class CodecTests(unittest.TestCase):
 
 
 class MemoryClientTests(unittest.TestCase):
+    def test_plc_status_40108_is_cabin_feed_and_40109_is_acoustic_process(self) -> None:
+        snapshot = SynthesisStatusSnapshot.from_registers(list(range(17)))
+        self.assertEqual(snapshot.upper_pallet, 6)
+        self.assertEqual(snapshot.cabin_feed_state, 8)
+        self.assertEqual(snapshot.acoustic_process, 9)
+        # Keep old callers source-compatible while exposing the corrected name.
+        self.assertEqual(snapshot.cabin_fetch_cubic, 8)
+
     def test_status_and_sampling_reads(self) -> None:
         transport = MemoryModbusTransport(size=256)
         transport.connect()
@@ -112,6 +133,87 @@ class MemoryClientTests(unittest.TestCase):
         client.write_pause(True)
         self.assertEqual(transport.registers[0], 3)
         self.assertEqual(transport.registers[40098 - 40001 : 40098 - 40001 + 2], [100, 1])
+
+    def test_direct_controller_maps_package_source_before_wire_write(self) -> None:
+        from yb_sse_devices.synthesis_direct import SynthesisDirectController
+
+        transport = MemoryModbusTransport(size=256)
+        controller = SynthesisDirectController(transport)
+        controller.connect()
+
+        controller.fetch_cubic_from_package(source=0, destination=1, pallet_type=1)
+        self.assertEqual(transport.registers[0:4], [7, 1, 1, 1])
+
+        controller.fetch_cubic_from_package(source=1, destination=1, pallet_type=1)
+        self.assertEqual(transport.registers[0:4], [7, 2, 1, 1])
+
+        with self.assertRaises(ValueError):
+            controller.fetch_cubic_from_package(source=2, destination=1, pallet_type=1)
+
+        # Low-level callers can still use other IO-table source positions.
+        controller.fetch_cubic(source=6, destination=1, pallet_type=1)
+        self.assertEqual(transport.registers[0:4], [7, 6, 1, 1])
+        controller.close()
+
+    def test_command_7_uses_upper_pallet_task_40106(self) -> None:
+        transport = SynthesisSimulationTransport(handshake_delay=0.1)
+        transport.connect()
+        transport.write_holding_registers(
+            40001, encode_fetch_cubic_command(source=1, destination=1, pallet_type=1)
+        )
+        status = transport.read_holding_registers(40100, 17)
+        self.assertEqual(status[6], 1)  # 40106 upper-pallet task
+        self.assertEqual(status[8], 0)  # 40108 cabin feed state
+        self.assertEqual(transport.operation_snapshot()["phase"], "cabin_transition")
+        transport.advance(0.04)
+        self.assertEqual(transport.operation_snapshot()["phase"], "robot_pick")
+        transport.advance(0.1)
+        self.assertEqual(transport.read_holding_registers(40106, 1), (2,))
+
+    def test_plc_interlock_rejects_command_before_motion(self) -> None:
+        transport = SynthesisSimulationTransport(handshake_delay=0.1)
+        transport.connect()
+        transport.set_interlock("robot_ready", False)
+        transport.write_holding_registers(
+            40001, encode_fetch_cubic_command(source=1, destination=1, pallet_type=1)
+        )
+        self.assertEqual(transport.read_holding_registers(40106, 1), (3,))
+
+    def test_acoustic_load_updates_task_and_process_registers(self) -> None:
+        transport = SynthesisSimulationTransport(handshake_delay=0.1)
+        transport.connect()
+        transport.write_holding_registers(
+            40001,
+            encode_acoustic_resonance_command(
+                fetch_position=1, accelerations=[2], frequencies=[3], times=[4]
+            ),
+        )
+        status = transport.read_holding_registers(40100, 17)
+        self.assertEqual(status[7], 1)  # 40107 loading task
+        self.assertEqual(status[9], 1)  # 40109 acoustic process
+
+    def test_sampling_exposes_scan_handshake_before_dosing(self) -> None:
+        transport = SynthesisSimulationTransport(
+            material_names=("Li2S",), handshake_delay=0.2
+        )
+        transport.connect()
+        transport.write_holding_registers(
+            40001,
+            encode_sampling_command(
+                slot=1,
+                from_outside=False,
+                rack_positions=[21],
+                masses=[0.9],
+                tolerances=[0.0007],
+                cubic_type=1,
+                bead_count=0,
+            ),
+        )
+        self.assertEqual(transport.read_holding_registers(40102, 1), (1,))
+        transport.advance(0.1)
+        self.assertEqual(transport.read_holding_registers(40102, 1), (1,))
+        transport.advance(0.1)
+        self.assertEqual(transport.read_holding_registers(40102, 1), (1,))
 
 
 class _FakeModbusSocket:

@@ -6,7 +6,7 @@
 # holding-register labels; QModbus uses (address - 40001) as the zero-based offset.
 
 schema_version: 0.1.0
-status: draft
+status: plc-confirmed-state-model
 station: yb_solid_electrolyte_synthesis
 
 source:
@@ -33,10 +33,18 @@ source:
       connection_and_control: "397-573"
       status_poll_and_dispatch: "575-870"
       sample_results: "875-952"
+  plc_project:
+    path: /Users/dp/Downloads/固态电池20260901
+    vendor: Inovance AutoShop
+    entrypoint: MAIN.LD
+    flow_program: SBR_300_自动流程.LD
+    robot_program: SBR_106_机器人.LD
+    sampling_program: SBR_313_S05自动3加样流程.LD
+    alarm_program: SBR_201_报警.LD
   authority:
     register_addresses_and_names: io_workbook
     actual_wire_payload_and_client_side_encoding: qt_client
-    plc_state_machine_and_interlocks: unknown_until_plc_program_or_trace_is_available
+    plc_state_machine_and_interlocks: plc_project
 
 transport:
   protocol: modbus_tcp
@@ -198,6 +206,9 @@ commands:
         count: 6
         fields: [slot_1, slot_2, slot_3, slot_4, slot_5, slot_6]
       "40011": "bead-bottle source when present, otherwise 0"
+      source_position_values:
+        package: {0: cabin, 1: crucible_rack_2}
+        plc_wire: {1: cabin, 2: crucible_rack_2}
       pallet_type_values:
         1: four_slot_pallet
         2: five_slot_pallet
@@ -337,9 +348,38 @@ robot_scan_handshake:
   program_table:
     scan_action: 36
 
+plc_flow_actions:
+  # Confirmed from SBR_300_自动流程.LD and 上位通讯变量.csv.  These are PLC
+  # workflow boundaries; robot program numbers remain internal handshake data.
+  0: upper_loading
+  1: lower_unloading
+  2: dosing_and_grinding
+  3: sinter_loading
+  4: sinter_unloading
+  5: bead_loading
+  6: upper_pallet
+  7: acoustic_loading
+  8: acoustic_unloading
+  mutual_exclusion: true
+  native_task_states: {0: idle, 1: running, 2: complete}
+
+simulation_flow_phases:
+  # These phase names mirror the confirmed PLC/robot handshakes.  They are
+  # observable in the package-local simulator; the real PLC exposes the task
+  # status and alarms rather than a textual phase name.
+  down_material: [robot_permission, robot_motion, position_update]
+  up_material: [robot_permission, robot_motion, position_update]
+  sample_add_powder_and_beads: [scan_request, scan_complete, dosing, result]
+  send_firing: [recipe_written, furnace_load_permission, furnace_process]
+  fetch_firing: [temperature_check, furnace_door_open, robot_unload]
+  fetch_cubic: [cabin_transition, robot_pick, pallet_place]
+  add_bead: [bead_mechanism_ready, robot_pick, bead_load]
+  acoustic_resonance: [resonance_door_open, recipe_selected, resonance_process]
+  fetch_acoustic_resonance: [resonance_reset, robot_unload]
+
 unresolved:
   - item: plc_program_state_machine
-    detail: IO table exposes statuses and robot bits but not complete transition guards, timeouts, reset semantics, or safety interlocks.
+    detail: The supplied PLC project confirms the main flow guards and interlocks; exact rung-level timeout constants and some alarm reset details still require AutoShop online monitoring.
   - item: independent_scan_command
     detail: No PC-side Modbus command dedicated to crucible scan appears in the Qt client; scan likely runs inside command 3.
   - item: scan_failure_reporting

@@ -118,6 +118,23 @@ class SimulationFaultResult(TypedDict):
     message: str
 
 
+class SimulationInterlockResult(TypedDict):
+    name: str
+    allowed: bool
+    initialized: bool
+    emergency_stop: bool
+    doors_closed: bool
+    robot_ready: bool
+    robot_auto: bool
+    robot_safe: bool
+    servo_ready: bool
+    communications_ok: bool
+    scanner_ready: bool
+    furnace_ready: bool
+    furnace_open_allowed: bool
+    resonance_ready: bool
+
+
 @device(
     id="yb_synthesis_modbus_station",
     category=["workstation", "synthesis"],
@@ -359,8 +376,32 @@ class YBSynthesisModbusStation:
 
     @property
     @topic_config()
+    def acoustic_process(self) -> int:
+        """声共振设备本体状态（PLC 40109）。"""
+
+        return self._status_value("acoustic_process")
+
+    @property
+    @topic_config()
+    def cabin_feed_state(self) -> int:
+        """方舱进料状态（PLC 40108），不是 command 7 的任务状态。"""
+
+        return self._status_value("cabin_feed_state")
+
+    @property
+    @topic_config()
     def paused(self) -> int:
         return self._status_value("pause")
+
+    @property
+    @topic_config()
+    def operation_phase(self) -> str:
+        """Current staged PLC phase exposed by the local simulator."""
+
+        snapshotter = getattr(self.controller.transport, "operation_snapshot", None)
+        if not callable(snapshotter):
+            return "unknown"
+        return str(snapshotter().get("phase", "idle"))
 
     def _status_value(self, name: str) -> Any:
         try:
@@ -513,13 +554,16 @@ class YBSynthesisModbusStation:
             "sample_add_powder_and_beads": "sampling",
             "send_firing": "send_firing",
             "fetch_firing": "fetch_firing",
-            "fetch_cubic": "cabin_fetch_cubic",
+            # Command 7 completes on PLC register 40106 (upper-pallet task).
+            # Register 40108 is the cabin feed state and must not be treated
+            # as the command-7 task result.
+            "fetch_cubic": "upper_pallet",
             "add_bead": "add_beads",
             "acoustic_resonance": "acoustic_resonance",
             "fetch_acoustic_resonance": "acoustic_fetch",
             "get_acoustic_resonance_status": "acoustic_resonance",
             "finish_acoustic_resonance": "acoustic_resonance",
-            "close_cabin_door": "cabin_fetch_cubic",
+            "close_cabin_door": "cabin_feed_state",
             "pause": "pause",
             "resume": "pause",
         }
@@ -1076,8 +1120,30 @@ class YBSynthesisModbusStation:
         slot_numbers: list[int] | None = None,
         bead_source: int = 0,
     ) -> CommandResult:
+        """取坩埚/托盘；``source`` 使用 IO 表中的 PLC 位置编号。"""
+
         self._ensure_connected()
         return self._command_result(self.controller.fetch_cubic(
+            source=source,
+            destination=destination,
+            pallet_type=pallet_type,
+            slot_numbers=slot_numbers or [],
+            bead_source=bead_source,
+        ))
+
+    @action(description="按设备包来源编号取大坩埚")
+    def fetch_cubic_from_package(
+        self,
+        source: int = 0,
+        destination: int = 1,
+        pallet_type: int = 1,
+        slot_numbers: list[int] | None = None,
+        bead_source: int = 0,
+    ) -> CommandResult:
+        """将设备包来源 0/1 映射为 PLC 来源 1/2 后取坩埚。"""
+
+        self._ensure_connected()
+        return self._command_result(self.controller.fetch_cubic_from_package(
             source=source,
             destination=destination,
             pallet_type=pallet_type,
@@ -1253,6 +1319,37 @@ class YBSynthesisModbusStation:
             raise RuntimeError("真实 PLC 模式不支持仿真故障清除")
         self.controller.clear_fault(name or None)
         return self.station_status()
+
+    @action(always_free=True, description="设置设备包 PLC 仿真互锁条件")
+    def set_simulation_interlock(
+        self, name: str, allowed: bool = True
+    ) -> SimulationInterlockResult:
+        """模拟 PLC 的门、急停、机器人和子设备就绪条件。"""
+
+        if not self.model or not self.simulation:
+            raise RuntimeError("真实 PLC 模式不支持仿真互锁设置")
+        setter = getattr(self.controller.transport, "set_interlock", None)
+        snapshotter = getattr(self.controller.transport, "interlock_snapshot", None)
+        if not callable(setter) or not callable(snapshotter):
+            raise RuntimeError("当前仿真传输不支持 PLC 互锁设置")
+        setter(name, bool(allowed))
+        snapshot = snapshotter()
+        return {
+            "name": str(name),
+            "allowed": bool(allowed),
+            "initialized": bool(snapshot.get("initialized", False)),
+            "emergency_stop": bool(snapshot.get("emergency_stop", False)),
+            "doors_closed": bool(snapshot.get("doors_closed", False)),
+            "robot_ready": bool(snapshot.get("robot_ready", False)),
+            "robot_auto": bool(snapshot.get("robot_auto", False)),
+            "robot_safe": bool(snapshot.get("robot_safe", False)),
+            "servo_ready": bool(snapshot.get("servo_ready", False)),
+            "communications_ok": bool(snapshot.get("communications_ok", False)),
+            "scanner_ready": bool(snapshot.get("scanner_ready", False)),
+            "furnace_ready": bool(snapshot.get("furnace_ready", False)),
+            "furnace_open_allowed": bool(snapshot.get("furnace_open_allowed", False)),
+            "resonance_ready": bool(snapshot.get("resonance_ready", False)),
+        }
 
     @action(always_free=True, description="重置设备包仿真 PLC 状态")
     def reset(self) -> StationStatusResult:

@@ -2,9 +2,11 @@
 
 The production adapter speaks Modbus TCP.  This transport deliberately keeps
 the same :class:`~yb_sse_devices.synthesis_modbus.ModbusTransport` seam while
-mapping a small, documented subset of command 3 to the in-process PLC model.
-That gives the device package a real protocol loop in dry-run mode without
-starting a second TCP/JSON server or hiding the internal scan interlock.
+mapping the Qt command set to the in-process PLC model.  Sampling uses the
+explicit scan/dosing model; the other PLC flows use staged robot/device
+handshakes and the confirmed 40100--40116 status block.  This gives the
+device package a real protocol loop in dry-run mode without starting a second
+TCP/JSON server or hiding the internal scan interlock.
 """
 
 from __future__ import annotations
@@ -46,7 +48,20 @@ class SynthesisSimulationTransport:
         failure_plan: Mapping[str, str] | None = None,
         handshake_history_limit: int = 100,
     ) -> None:
+        supplied_model = model
         self.model = model or SynthesisPlcModel(auto_scan_id=crucible_id)
+        # An explicitly supplied model with ``auto_scan_id=None`` represents
+        # a real/manual scanner path.  A transport-created model gets the
+        # deterministic scanner answer used by the default dry-run.
+        self._auto_scan_id = (
+            str(self.model.auto_scan_id).strip()
+            if supplied_model is not None and self.model.auto_scan_id
+            else (str(crucible_id).strip() if supplied_model is None else None)
+        )
+        # The transport owns the PLC-side scan handshake delay.  Keep the
+        # lower-level model explicit so a command write does not jump from
+        # "scan requested" straight to "bound" in the same call stack.
+        self.model.auto_scan_id = None
         self.task_id_prefix = str(task_id_prefix).strip() or "SIM-TASK"
         self.crucible_id = str(crucible_id).strip()
         if not self.crucible_id:
@@ -75,18 +90,39 @@ class SynthesisSimulationTransport:
         self._task_sequence = 0
         self._registers: dict[int, int] = {}
         self._pending_sampling: tuple[str, int, dict[str, float]] | None = None
+        self._pending_scan: float | None = None
         # Non-sampling PLC operations use the same status block as the field
         # controller.  The dry-run marks them RUNNING on write and COMPLETED
         # after a short deterministic interval; this exercises the handshake
         # without pretending to model robot motion or furnace physics.
         self._status_registers: dict[int, int] = {}
-        self._pending_operations: list[tuple[int, float]] = []
+        self._active_operation: dict[str, object] | None = None
+        # These are the PLC-side gates confirmed by SBR_105/SBR_106 and the
+        # station flow blocks.  They default to the ready state so a dry-run
+        # can start immediately, but tests and the desktop simulator can turn
+        # them off to exercise the same rejection paths as the PLC.
+        self.interlocks: dict[str, bool] = {
+            "initialized": True,
+            "emergency_stop": False,
+            "doors_closed": True,
+            "robot_ready": True,
+            "robot_auto": True,
+            "robot_safe": True,
+            "servo_ready": True,
+            "communications_ok": True,
+            "scanner_ready": True,
+            "furnace_ready": True,
+            "furnace_open_allowed": True,
+            "resonance_ready": True,
+        }
         self._status_map = {
             int(SynthesisCommand.DOWN_MATERIAL): 0,
             int(SynthesisCommand.UP_MATERIAL): 1,
             int(SynthesisCommand.SEND_FIRING): 3,
             int(SynthesisCommand.FETCH_FIRING): 4,
-            int(SynthesisCommand.FETCH_CUBIC): 8,
+            # PLC 40106 is the upper-pallet task.  40108 is only the cabin
+            # feed/door state and is not the completion register for command 7.
+            int(SynthesisCommand.FETCH_CUBIC): 6,
             int(SynthesisCommand.ACOUSTIC_RESONANCE): 7,
             int(SynthesisCommand.FETCH_ACOUSTIC_RESONANCE): 15,
         }
@@ -106,7 +142,24 @@ class SynthesisSimulationTransport:
 
         self.model.reset()
         self._status_registers.clear()
-        self._pending_operations.clear()
+        self._active_operation = None
+        self._pending_scan = None
+        self.interlocks.update(
+            {
+                "initialized": True,
+                "emergency_stop": False,
+                "doors_closed": True,
+                "robot_ready": True,
+                "robot_auto": True,
+                "robot_safe": True,
+                "servo_ready": True,
+                "communications_ok": True,
+                "scanner_ready": True,
+                "furnace_ready": True,
+                "furnace_open_allowed": True,
+                "resonance_ready": True,
+            }
+        )
         self._pending_sampling = None
         self.last_task_id = ""
         self.execution_task_id = ""
@@ -118,6 +171,17 @@ class SynthesisSimulationTransport:
         for register, value in list(self._status_registers.items()):
             if value == 3:
                 self._status_registers[register] = 0
+
+    def set_interlock(self, name: str, allowed: bool) -> None:
+        """Set one PLC safety/readiness condition in the local simulator."""
+
+        key = str(name).strip()
+        if key not in self.interlocks:
+            raise ValueError(f"未知 PLC 互锁条件: {key}")
+        self.interlocks[key] = bool(allowed)
+
+    def interlock_snapshot(self) -> dict[str, bool]:
+        return dict(self.interlocks)
 
     def _record_handshake(self, command: str, phase: str, **payload: object) -> None:
         self.handshake_history.append(
@@ -182,7 +246,9 @@ class SynthesisSimulationTransport:
                     and len(payload) >= 11
                     and payload[3] == 0
                 ):
-                    self._start_operation(payload[0], status_index=5)
+                    self._start_operation(
+                        payload[0], status_index=5, command_name_override="add_bead"
+                    )
                 elif payload[0] == int(SynthesisCommand.SEND_FIRING):
                     self._start_firing_operation(payload)
                 else:
@@ -204,8 +270,33 @@ class SynthesisSimulationTransport:
             raise ValueError("seconds must be non-negative")
         if self.paused:
             return
+        # Consume the PLC robot-to-scanner handshake before advancing the
+        # dosing timer.  A positive handshake delay makes SCANNING visible to
+        # a poller instead of completing the scan in the command-write call.
+        remaining_time = value
+        if self._pending_scan is not None:
+            self._pending_scan -= remaining_time
+            if self._pending_scan <= 0:
+                # Preserve the established simulator contract: the caller's
+                # elapsed tick is also applied to the dosing step after the
+                # scan handshake.  This keeps ``advance(1.0)`` compatible
+                # with the original deterministic tests while still exposing
+                # the intermediate SCANNING state to pollers.
+                remaining_time = value
+                self._pending_scan = None
+                try:
+                    self.model.bind_crucible(
+                        self.expected_crucible_id or self.crucible_id
+                    )
+                    self._start_pending_sampling()
+                except SimulationError as exc:
+                    self._record_handshake(
+                        "sample_add_powder_and_beads", "failed", message=str(exc)
+                    )
+            else:
+                remaining_time = 0.0
         previous_phase = self.model.phase
-        self.model.advance(value)
+        self.model.advance(remaining_time)
         if previous_phase is not SamplingPhase.COMPLETED and self.model.phase is SamplingPhase.COMPLETED:
             self._record_handshake("sample_add_powder_and_beads", "completed")
         elif previous_phase is not SamplingPhase.FAULT and self.model.phase is SamplingPhase.FAULT:
@@ -215,20 +306,75 @@ class SynthesisSimulationTransport:
                 "failed",
                 message=fault.message if fault else "仿真工艺失败",
             )
-        remaining: list[tuple[int, float]] = []
-        for status_register, due_in in self._pending_operations:
-            due = due_in - value
-            if due <= 0:
-                self._status_registers[status_register] = 2
-                self._record_handshake(
-                    f"status_{status_register}", "completed", status_register=status_register
-                )
-            else:
-                remaining.append((status_register, due))
-        self._pending_operations = remaining
+        self._advance_active_operation(value)
 
-    def _start_operation(self, command: int, *, status_index: int | None = None) -> None:
-        if self._pending_operations or self.model.phase in {
+    def _advance_active_operation(self, seconds: float) -> None:
+        """Advance the staged PLC flow used by non-sampling commands."""
+
+        operation = self._active_operation
+        if operation is None:
+            return
+        remaining = float(seconds)
+        phases = operation["phases"]
+        if not isinstance(phases, list):  # pragma: no cover - defensive
+            return
+        while operation is self._active_operation:
+            phase_index = int(operation["phase_index"])
+            phase_remaining = float(operation["phase_remaining"])
+            if remaining < phase_remaining and phase_remaining > 0:
+                operation["phase_remaining"] = phase_remaining - remaining
+                return
+            remaining = max(0.0, remaining - phase_remaining)
+            phase_name = str(phases[phase_index])
+            self._record_handshake(
+                str(operation["command"]),
+                "phase_completed",
+                stage=phase_name,
+            )
+            next_index = phase_index + 1
+            if next_index >= len(phases):
+                for register in operation["status_registers"]:
+                    self._status_registers[int(register)] = 2
+                self._record_handshake(
+                    str(operation["command"]),
+                    "completed",
+                    status_registers=list(operation["status_registers"]),
+                )
+                self._active_operation = None
+                return
+            operation["phase_index"] = next_index
+            operation["phase_remaining"] = float(operation["phase_durations"][next_index])
+            self._record_handshake(
+                str(operation["command"]),
+                "phase_started",
+                stage=str(phases[next_index]),
+            )
+            if remaining <= 0 and operation["phase_remaining"] > 0:
+                return
+
+    def operation_snapshot(self) -> dict[str, object]:
+        """Return the current staged PLC operation for the local simulator."""
+
+        operation = self._active_operation
+        if operation is None:
+            return {"command": "", "phase": "idle", "running": False}
+        phases = operation["phases"]
+        index = int(operation["phase_index"])
+        return {
+            "command": str(operation["command"]),
+            "phase": str(phases[index]) if isinstance(phases, list) else "running",
+            "phase_index": index,
+            "running": True,
+        }
+
+    def _start_operation(
+        self,
+        command: int,
+        *,
+        status_index: int | None = None,
+        command_name_override: str | None = None,
+    ) -> None:
+        if self._active_operation is not None or self.model.phase in {
             SamplingPhase.SCANNING,
             SamplingPhase.BOUND,
             SamplingPhase.DOSING,
@@ -237,10 +383,33 @@ class SynthesisSimulationTransport:
         index = self._status_map.get(int(command)) if status_index is None else status_index
         if index is None:
             return
-        command_name = SynthesisCommand(int(command)).name.lower()
+        command_name = command_name_override or SynthesisCommand(int(command)).name.lower()
+        return self._start_staged_operation(
+            command_name,
+            index,
+            status_index=status_index,
+        )
+
+    def _start_staged_operation(
+        self,
+        command_name: str,
+        index: int,
+        *,
+        status_index: int | None = None,
+        phase_names: Sequence[str] | None = None,
+    ) -> None:
+        """Start a PLC flow with explicit robot/device phases."""
+
+        failure = self._interlock_failure(command_name)
+        register = SynthesisRegisterMap().status_register(index)
+        if failure:
+            self._status_registers[register] = 3
+            self._record_handshake(command_name, "failed", message=failure)
+            return
+        if self._active_operation is not None:
+            raise SimulationError("上一条 PLC 动作尚未完成，设备动作互斥")
         self._record_handshake(command_name, "parameters_written")
         self._record_handshake(command_name, "accepted")
-        register = SynthesisRegisterMap().status_register(index)
         failure = self.failure_plan.get(command_name)
         if failure:
             self._status_registers[register] = 3
@@ -248,16 +417,56 @@ class SynthesisSimulationTransport:
             return
         self._status_registers[register] = 1
         self._record_handshake(command_name, "running")
-        self._pending_operations.append((register, self.handshake_delay))
+        status_registers = [register]
+        if command_name == SynthesisCommand.ACOUSTIC_RESONANCE.name.lower():
+            # 40107 is the loading task; 40109 is the acoustic process state.
+            process_register = SynthesisRegisterMap().status_register(9)
+            self._status_registers[process_register] = 1
+            status_registers.append(process_register)
+        phases = list(phase_names or self._default_phases(command_name))
+        if not phases:
+            phases = ["device_action"]
+        duration = self.handshake_delay / len(phases)
+        self._active_operation = {
+            "command": command_name,
+            "status_registers": status_registers,
+            "phases": phases,
+            "phase_durations": [duration] * len(phases),
+            "phase_index": 0,
+            "phase_remaining": duration,
+        }
+        self._record_handshake(command_name, "phase_started", stage=phases[0])
+
+    @staticmethod
+    def _default_phases(command_name: str) -> list[str]:
+        return {
+            "down_material": ["robot_permission", "robot_motion", "position_update"],
+            "up_material": ["robot_permission", "robot_motion", "position_update"],
+            "fetch_firing": ["temperature_check", "furnace_door_open", "robot_unload"],
+            "fetch_cubic": ["cabin_transition", "robot_pick", "pallet_place"],
+            "add_bead": ["bead_mechanism_ready", "robot_pick", "bead_load"],
+            "acoustic_resonance": [
+                "resonance_door_open",
+                "recipe_selected",
+                "resonance_process",
+            ],
+            "fetch_acoustic_resonance": ["resonance_reset", "robot_unload"],
+            "send_firing": ["recipe_written", "load_permission", "furnace_process"],
+        }.get(command_name, ["device_action"])
 
     def _start_firing_operation(self, payload: tuple[int, ...]) -> None:
         """Reflect furnace/Joule heating handshake in the status block."""
         command_name = SynthesisCommand.SEND_FIRING.name.lower()
-        if self._pending_operations:
+        if self._active_operation is not None:
             raise SimulationError("上一条 PLC 动作尚未完成，设备动作互斥")
+        failure = self._interlock_failure(command_name)
+        command_register = SynthesisRegisterMap().status_register(3)
+        if failure:
+            self._status_registers[command_register] = 3
+            self._record_handshake(command_name, "failed", message=failure)
+            return
         self._record_handshake(command_name, "parameters_written")
         self._record_handshake(command_name, "accepted")
-        command_register = SynthesisRegisterMap().status_register(3)
         failure = self.failure_plan.get(command_name)
         if failure:
             self._status_registers[command_register] = 3
@@ -265,7 +474,6 @@ class SynthesisSimulationTransport:
             return
         self._status_registers[command_register] = 1
         self._record_handshake(command_name, "running")
-        self._pending_operations.append((command_register, self.handshake_delay))
         position = 0
         for index in range(4):
             marker = 1 + index * 15
@@ -275,18 +483,75 @@ class SynthesisSimulationTransport:
         status_index = 14 if position == 0 else 9 + position
         register = SynthesisRegisterMap().status_register(status_index)
         self._status_registers[register] = 1
-        self._pending_operations.append((register, self.handshake_delay))
+        phases = (
+            ["joule_recipe_written", "joule_load_permission", "joule_process"]
+            if position == 0
+            else ["recipe_written", "furnace_load_permission", "furnace_process"]
+        )
+        duration = self.handshake_delay / len(phases)
+        self._active_operation = {
+            "command": command_name,
+            "status_registers": [command_register, register],
+            "phases": phases,
+            "phase_durations": [duration] * len(phases),
+            "phase_index": 0,
+            "phase_remaining": duration,
+        }
+        self._record_handshake(command_name, "phase_started", stage=phases[0])
+
+    def _interlock_failure(self, command_name: str) -> str | None:
+        """Return a PLC-like rejection reason for an unsafe command."""
+
+        common = (
+            "initialized",
+            "robot_ready",
+            "robot_auto",
+            "robot_safe",
+            "servo_ready",
+            "communications_ok",
+        )
+        for key in common:
+            if not self.interlocks.get(key, False):
+                return f"PLC 互锁未满足: {key}"
+        if self.interlocks.get("emergency_stop", False):
+            return "PLC 互锁未满足: emergency_stop"
+        if command_name == SynthesisCommand.SAMPLE.name.lower():
+            if not self.interlocks.get("scanner_ready", False):
+                return "PLC 互锁未满足: scanner_ready"
+        if command_name in {
+            SynthesisCommand.SEND_FIRING.name.lower(),
+            SynthesisCommand.FETCH_FIRING.name.lower(),
+        } and not self.interlocks.get("furnace_ready", False):
+            return "PLC 互锁未满足: furnace_ready"
+        if command_name == SynthesisCommand.FETCH_FIRING.name.lower() and not self.interlocks.get(
+            "furnace_open_allowed", False
+        ):
+            return "PLC 互锁未满足: furnace_open_allowed"
+        if command_name in {
+            SynthesisCommand.ACOUSTIC_RESONANCE.name.lower(),
+            SynthesisCommand.FETCH_ACOUSTIC_RESONANCE.name.lower(),
+        } and not self.interlocks.get("resonance_ready", False):
+            return "PLC 互锁未满足: resonance_ready"
+        if command_name in {
+            SynthesisCommand.FETCH_CUBIC.name.lower(),
+            "add_bead",
+            SynthesisCommand.DOWN_MATERIAL.name.lower(),
+            SynthesisCommand.UP_MATERIAL.name.lower(),
+        } and not self.interlocks.get("doors_closed", False):
+            return "PLC 互锁未满足: doors_closed"
+        return None
 
     def bind_crucible(self, crucible_id: str | None = None) -> None:
         """Complete a manual scanner response in a non-auto-scan simulation."""
 
+        self._pending_scan = None
         self.model.bind_crucible(crucible_id or self.crucible_id)
         self._start_pending_sampling()
 
     def _apply_sampling_command(self, payload: tuple[int, ...]) -> None:
         if len(payload) < 81:
             raise ValueError("CMD_SAMPLE payload must contain 81 registers")
-        if self._pending_operations:
+        if self._active_operation is not None:
             raise SimulationError("上一条 PLC 动作尚未完成，设备动作互斥")
         slot = int(payload[2])
         if slot <= 0:
@@ -306,6 +571,16 @@ class SynthesisSimulationTransport:
             targets[name] = weight
         if not targets:
             raise ValueError("CMD_SAMPLE 至少需要一组正重量物料")
+        interlock_failure = self._interlock_failure(
+            SynthesisCommand.SAMPLE.name.lower()
+        )
+        if interlock_failure:
+            register = SynthesisRegisterMap().status_register(2)
+            self._status_registers[register] = 3
+            self._record_handshake(
+                "sample_add_powder_and_beads", "failed", message=interlock_failure
+            )
+            return
         self._task_sequence += 1
         task_id = f"{self.task_id_prefix}-{self._task_sequence:04d}"
         self.execution_task_id = task_id
@@ -334,12 +609,19 @@ class SynthesisSimulationTransport:
                 "failed",
                 message=fault.message if fault else "仿真握手失败",
             )
-        # auto_scan_id is an explicit simulation choice.  If disabled, the
-        # caller must invoke bind_crucible() before dosing can begin.
-        if self.model.auto_scan_id:
-            self.model.advance(0)
         self._pending_sampling = (task_id, slot, targets)
-        self._start_pending_sampling()
+        # A zero delay keeps the fast unit-test path; positive delays expose
+        # the PLC scan-request/scan-complete boundary to callers.
+        if self._auto_scan_id is None:
+            # Manual scanner mode: leave the model in SCANNING until the test
+            # or an external scanner calls bind_crucible().
+            self._pending_scan = None
+            return
+        self._pending_scan = self.handshake_delay
+        if self._pending_scan <= 0:
+            self._pending_scan = None
+            self.model.bind_crucible(self._auto_scan_id)
+            self._start_pending_sampling()
 
     def _start_pending_sampling(self) -> None:
         pending = self._pending_sampling
