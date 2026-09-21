@@ -8,6 +8,7 @@ constructor (or hardware connection) is started.
 
 from __future__ import annotations
 
+import ast
 import json
 import re
 from pathlib import Path
@@ -19,6 +20,10 @@ UUID_RE = re.compile(
     re.IGNORECASE,
 )
 SNAKE_ID_RE = re.compile(r"^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$")
+WORKFLOW_DIRECTORIES = {
+    "normal": "workflows",
+    "experiment_operation": "experiment_operations",
+}
 
 RUNTIME_PARTS = frozenset(
     {
@@ -85,11 +90,45 @@ def validate_workflow_manifest(
         source_path = package_root / source
         if not source_path.is_file():
             _error(errors, f"workflow source does not exist: {source}")
-        if not source.startswith("yb_sse_devices/workflows/"):
+            continue
+        source_parts = Path(source).parts
+        if (
+            len(source_parts) != 3
+            or source_parts[0] != "yb_sse_devices"
+            or source_parts[1] not in WORKFLOW_DIRECTORIES.values()
+            or source_path.suffix != ".py"
+        ):
             _error(
                 errors,
-                f"workflow source must live under yb_sse_devices/workflows/: {source}",
+                f"workflow source must live under yb_sse_devices/workflows/ or "
+                f"yb_sse_devices/experiment_operations/: {source}",
             )
+            continue
+        # 按声明类型校验归属，避免把实验操作误移到普通工作流目录。
+        try:
+            tree = ast.parse(source_path.read_text(encoding="utf-8"))
+            declarations = [
+                decorator
+                for node in tree.body
+                if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+                for decorator in node.decorator_list
+                if isinstance(decorator, ast.Call)
+                and isinstance(decorator.func, ast.Name)
+                and decorator.func.id == "workflow"
+            ]
+            if len(declarations) != 1:
+                raise ValueError("source must declare exactly one @workflow")
+            workflow_type = next(
+                (ast.literal_eval(keyword.value)
+                 for keyword in declarations[0].keywords
+                 if keyword.arg == "workflow_type"),
+                "normal",
+            )
+            expected_directory = WORKFLOW_DIRECTORIES.get(workflow_type)
+            if expected_directory is None or source_parts[1] != expected_directory:
+                _error(errors, f"workflow_type {workflow_type!r} does not match directory: {source}")
+        except (OSError, UnicodeError, SyntaxError, ValueError, TypeError) as exc:
+            _error(errors, f"invalid workflow declaration {source}: {exc}")
     return errors
 
 
@@ -193,7 +232,11 @@ def validate_catalog_layout(
     definitions = catalog.get("definitions")
     if not isinstance(definitions, dict):
         return ["package catalog is missing definitions"]
-    for kind, directory in (("devices", "yb_sse_devices/devices"), ("resources", "yb_sse_devices/resources"), ("workflows", "yb_sse_devices/workflows")):
+    for kind, directories in (
+        ("devices", ("yb_sse_devices/devices",)),
+        ("resources", ("yb_sse_devices/resources",)),
+        ("workflows", tuple(f"yb_sse_devices/{directory}" for directory in WORKFLOW_DIRECTORIES.values())),
+    ):
         entries = definitions.get(kind, [])
         if not isinstance(entries, list):
             _error(errors, f"catalog definitions.{kind} must be a list")
@@ -210,8 +253,8 @@ def validate_catalog_layout(
                 _error(errors, f"{kind} has duplicate id: {identifier}")
             seen.add(identifier)
             declaring_file = str(entry.get("declaring_file", ""))
-            if not declaring_file.startswith(directory + "/"):
-                _error(errors, f"{kind} definition is outside {directory}/: {declaring_file}")
+            if not declaring_file.startswith(tuple(directory + "/" for directory in directories)):
+                _error(errors, f"{kind} definition is outside {directories}: {declaring_file}")
             source_path = package_root / declaring_file
             if not source_path.is_file():
                 _error(errors, f"{kind} declaring file does not exist: {declaring_file}")

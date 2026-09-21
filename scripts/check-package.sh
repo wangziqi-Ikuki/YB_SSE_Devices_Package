@@ -36,6 +36,7 @@ echo "[package-check] checking canonical package directories"
 for required_dir in \
   "$ROOT_DIR/yb_sse_devices/devices" \
   "$ROOT_DIR/yb_sse_devices/resources" \
+  "$ROOT_DIR/yb_sse_devices/experiment_operations" \
   "$ROOT_DIR/yb_sse_devices/workflows"; do
   if [[ ! -d "$required_dir" ]]; then
     echo "[package-check] missing canonical directory: ${required_dir#$ROOT_DIR/}" >&2
