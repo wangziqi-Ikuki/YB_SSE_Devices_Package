@@ -10,3 +10,12 @@ venv/
 .env
 *.pkl
 .unilabos/
+
+# Local agent instructions, reports and generated runtime state.
+.agents/
+.package-check/
+.package-build/
+.coverage
+coverage.xml
+.hypothesis/
+.DS_Store

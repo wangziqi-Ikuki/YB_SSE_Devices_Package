@@ -3,9 +3,11 @@
     "36663ee8-5038-42ac-8040-1ccc7be68313",
     "63c1f42f-7ad4-445d-88e1-169b90846eed",
     "30b2214c-78ba-436f-9de4-6e1e07c9134c",
-    "88c4021d-df8a-44ef-a8f1-8f88206cfc85"
+    "88c4021d-df8a-44ef-a8f1-8f88206cfc85",
+    "c84639f3-7c8f-42fc-8b70-46d27e31ac26",
+    "a486698a-6232-4cf8-82ff-d6cd7b756c28"
   ],
-  "latest_contract_uuid": "88c4021d-df8a-44ef-a8f1-8f88206cfc85",
+  "latest_contract_uuid": "a486698a-6232-4cf8-82ff-d6cd7b756c28",
   "version": 1,
   "workflow_uuid": "f7c79ca5-1ed4-4d2a-9571-a8bbf9786c44"
 }

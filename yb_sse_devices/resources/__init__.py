@@ -1,50 +1,34 @@
-"""YB 设备包资源模板：电导工站与合成工站物料、料架、Deck。"""
+"""YB 设备包资源模板。
 
-from typing import Any
+每个可注册资源的实现位于 ``resources/<snake_case_id>/resource.py``；本文件
+只提供稳定的兼容导出，不再承载资源注册装饰器。
+"""
+
+from .conductivity_funnel.resource import ConductivityFunnel
+from .conductivity_mold.resource import ConductivityMold
+from .conductivity_sintering_bottle.resource import ConductivitySinteringBottle
+from .conductivity_station_deck.resource import ConductivityStationDeck
+from .synthesis_bead_bottle.resource import SynthesisBeadBottle
+from .synthesis_bead_rack.resource import synthesis_bead_rack
+from .synthesis_crucible.resource import SynthesisCrucible
+from .synthesis_crucible_rack.resource import synthesis_crucible_rack
+from .synthesis_powder.resource import SynthesisPowder
+from .synthesis_powder_rack.resource import synthesis_powder_rack
+from .synthesis_station_deck.resource import SynthesisStationDeck
+from .synthesis_tray.resource import SynthesisTray
+from .synthesis_tray_rack.resource import synthesis_tray_rack
+from .yb_synthesis_deck.resource import YBSynthesisDeck
+
+# Legacy names remain source compatible; their metadata now uses the canonical
+# snake_case IDs above.
+ConductivityStation_Deck = ConductivityStationDeck
+SynthesisStation_Deck = SynthesisStationDeck
 
 __all__ = [
-    "ConductivityStation_Deck",
-    "ConductivityFunnel",
-    "ConductivityMold",
-    "ConductivitySinteringBottle",
-    "conductivity_rack_layer",
-    "SynthesisStation_Deck",
-    "SynthesisPowder",
-    "SynthesisCrucible",
-    "SynthesisBeadBottle",
-    "SynthesisTray",
-    "synthesis_powder_rack",
-    "synthesis_crucible_rack",
-    "synthesis_tray_rack",
-    "synthesis_bead_rack",
-    "YBSynthesisDeck",
+    "ConductivityStationDeck", "ConductivityStation_Deck",
+    "ConductivityFunnel", "ConductivityMold", "ConductivitySinteringBottle",
+    "SynthesisStationDeck", "SynthesisStation_Deck", "SynthesisPowder",
+    "SynthesisCrucible", "SynthesisBeadBottle", "SynthesisTray",
+    "synthesis_powder_rack", "synthesis_crucible_rack", "synthesis_tray_rack",
+    "synthesis_bead_rack", "YBSynthesisDeck",
 ]
-
-_EXPORTS = {
-    "ConductivityStation_Deck": (".decks", "ConductivityStation_Deck"),
-    "ConductivityFunnel": (".materials", "ConductivityFunnel"),
-    "ConductivityMold": (".materials", "ConductivityMold"),
-    "ConductivitySinteringBottle": (".materials", "ConductivitySinteringBottle"),
-    "conductivity_rack_layer": (".warehouses", "conductivity_rack_layer"),
-    "SynthesisStation_Deck": (".synthesis_deck", "SynthesisStation_Deck"),
-    "SynthesisPowder": (".synthesis_resources", "SynthesisPowder"),
-    "SynthesisCrucible": (".synthesis_resources", "SynthesisCrucible"),
-    "SynthesisBeadBottle": (".synthesis_resources", "SynthesisBeadBottle"),
-    "SynthesisTray": (".synthesis_resources", "SynthesisTray"),
-    "synthesis_powder_rack": (".synthesis_resources", "synthesis_powder_rack"),
-    "synthesis_crucible_rack": (".synthesis_resources", "synthesis_crucible_rack"),
-    "synthesis_tray_rack": (".synthesis_resources", "synthesis_tray_rack"),
-    "synthesis_bead_rack": (".synthesis_resources", "synthesis_bead_rack"),
-    "YBSynthesisDeck": (".synthesis_resources", "YBSynthesisDeck"),
-}
-
-
-def __getattr__(name: str) -> Any:
-    if name not in _EXPORTS:
-        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
-    module_name, attr = _EXPORTS[name]
-    from importlib import import_module
-
-    value = getattr(import_module(module_name, __name__), attr)
-    globals()[name] = value
-    return value

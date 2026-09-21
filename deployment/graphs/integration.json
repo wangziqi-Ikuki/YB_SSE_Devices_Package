@@ -31,38 +31,6 @@
       ]
     },
     {
-      "id": "yb_synthesis_modbus_station_01",
-      "name": "YB 合成工站（Modbus 直连仿真）",
-      "type": "device",
-      "class": "community.yb_sse_devices.yb_synthesis_modbus_station",
-      "parent": null,
-      "position": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0
-      },
-      "config": {
-        "simulation": false,
-        "simulation_crucible_id": "CRU-SIM-001",
-        "simulation_dosing_duration": 1.0,
-        "material_names": [
-          "Li2S",
-          "LiBr",
-          "LiCl",
-          "P2S5"
-        ],
-        "ip": "127.0.0.1",
-        "port": 5020,
-        "simulation_handshake_delay": 0.1,
-        "simulation_failure_plan": {},
-        "simulation_handshake_history_limit": 100
-      },
-      "data": {
-        "status": "offline",
-        "commissioning_required": true
-      }
-    },
-    {
       "id": "yb_synthesis_atomic_station_01",
       "name": "YB 合成工站（Modbus 原子动作）",
       "type": "device",

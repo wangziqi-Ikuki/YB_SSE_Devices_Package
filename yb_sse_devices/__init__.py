@@ -1,58 +1,38 @@
 """YB 固态电解质实验室外部设备包。"""
 
-from typing import Any
+from .devices.conductivity_station.device import ConductivityStation
+from .devices.synthesis_station.device import SynthesisStation
+from .devices.yb_synthesis_atomic_station.device import YBSynthesisAtomicStation
+from .devices.yb_synthesis_modbus_station.device import YBSynthesisModbusStation
+from .devices.yb_synthesis_modbus_station.controller import SynthesisDirectController
+from .resources import (
+    ConductivityFunnel,
+    ConductivityMold,
+    ConductivitySinteringBottle,
+    ConductivityStationDeck,
+    SynthesisBeadBottle,
+    SynthesisCrucible,
+    SynthesisPowder,
+    SynthesisStationDeck,
+    SynthesisTray,
+    YBSynthesisDeck,
+    synthesis_bead_rack,
+    synthesis_crucible_rack,
+    synthesis_powder_rack,
+    synthesis_tray_rack,
+)
+
+# Backwards-compatible public names used by existing workflow code.
+ConductivityStation_Deck = ConductivityStationDeck
+SynthesisStation_Deck = SynthesisStationDeck
 
 __all__ = [
-    "ConductivityStation",
-    "ConductivityStation_Deck",
-    "ConductivityFunnel",
-    "ConductivityMold",
-    "ConductivitySinteringBottle",
-    "SynthesisStation",
-    "YBSynthesisModbusStation",
-    "YBSynthesisAtomicStation",
-    "SynthesisDirectController",
-    "SynthesisStation_Deck",
-    "SynthesisPowder",
-    "SynthesisCrucible",
-    "SynthesisBeadBottle",
-    "SynthesisTray",
-    "YBSynthesisDeck",
-    "synthesis_bead_rack",
+    "ConductivityStation", "SynthesisStation", "YBSynthesisModbusStation",
+    "YBSynthesisAtomicStation", "SynthesisDirectController",
+    "ConductivityStationDeck", "ConductivityStation_Deck",
+    "ConductivityFunnel", "ConductivityMold", "ConductivitySinteringBottle",
+    "SynthesisStationDeck", "SynthesisStation_Deck", "SynthesisPowder",
+    "SynthesisCrucible", "SynthesisBeadBottle", "SynthesisTray",
+    "YBSynthesisDeck", "synthesis_bead_rack", "synthesis_crucible_rack",
+    "synthesis_powder_rack", "synthesis_tray_rack",
 ]
-
-_EXPORTS = {
-    "ConductivityStation": (".conductivity", "ConductivityStation"),
-    "ConductivityStation_Deck": (".resources.decks", "ConductivityStation_Deck"),
-    "ConductivityFunnel": (".resources.materials", "ConductivityFunnel"),
-    "ConductivityMold": (".resources.materials", "ConductivityMold"),
-    "ConductivitySinteringBottle": (
-        ".resources.materials",
-        "ConductivitySinteringBottle",
-    ),
-    "SynthesisStation": (".synthesis_station", "SynthesisStation"),
-    "YBSynthesisModbusStation": (
-        ".synthesis_modbus_station",
-        "YBSynthesisModbusStation",
-    ),
-    "YBSynthesisAtomicStation": (".synthesis_atomic", "YBSynthesisAtomicStation"),
-    "SynthesisStation_Deck": (".resources.synthesis_deck", "SynthesisStation_Deck"),
-    "SynthesisDirectController": (".synthesis_direct", "SynthesisDirectController"),
-    "SynthesisPowder": (".resources.synthesis_resources", "SynthesisPowder"),
-    "SynthesisCrucible": (".resources.synthesis_resources", "SynthesisCrucible"),
-    "SynthesisBeadBottle": (".resources.synthesis_resources", "SynthesisBeadBottle"),
-    "SynthesisTray": (".resources.synthesis_resources", "SynthesisTray"),
-    "YBSynthesisDeck": (".resources.synthesis_resources", "YBSynthesisDeck"),
-    "synthesis_bead_rack": (".resources.synthesis_resources", "synthesis_bead_rack"),
-}
-
-
-def __getattr__(name: str) -> Any:
-    if name not in _EXPORTS:
-        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
-    module_name, attr = _EXPORTS[name]
-    from importlib import import_module
-
-    value = getattr(import_module(module_name, __name__), attr)
-    globals()[name] = value
-    return value

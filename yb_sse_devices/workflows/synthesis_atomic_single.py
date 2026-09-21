@@ -13,12 +13,10 @@ from unilabos.workflow.authoring import (
     workflow,
 )
 
-from yb_sse_devices.resources.synthesis_resources import (
-    SynthesisBeadBottle,
-    SynthesisCrucible,
-    SynthesisPowder,
-)
-from yb_sse_devices.synthesis_atomic import YBSynthesisAtomicStation
+from yb_sse_devices.resources.synthesis_bead_bottle.resource import SynthesisBeadBottle
+from yb_sse_devices.resources.synthesis_crucible.resource import SynthesisCrucible
+from yb_sse_devices.resources.synthesis_powder.resource import SynthesisPowder
+from yb_sse_devices.devices.yb_synthesis_atomic_station.device import YBSynthesisAtomicStation
 
 
 class Result(TypedDict):

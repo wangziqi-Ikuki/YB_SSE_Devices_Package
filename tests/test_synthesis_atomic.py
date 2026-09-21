@@ -31,6 +31,22 @@ def _record(station: YBSynthesisAtomicStation, item_id: str) -> dict:
     return next(row for row in rows if row["item_id"] == item_id)
 
 
+def test_runtime_graph_kwargs_reach_nested_modbus_station() -> None:
+    station = YBSynthesisAtomicStation(
+        simulation=False,
+        ip="127.0.0.1",
+        port=5020,
+        business_simulation=True,
+    )
+    try:
+        assert station.station.simulation is False
+        assert station.station.ip == "127.0.0.1"
+        assert station.station.port == 5020
+        assert station.station.business_state is not None
+    finally:
+        station.close()
+
+
 def test_synthesis_atomic_chain_uses_modbus_and_commits_ledger(
     station: YBSynthesisAtomicStation,
 ) -> None:

@@ -21,7 +21,7 @@ STEP_ACTION_NAMES = {name for _step, name, _label in STEP_ACTIONS}
 
 def test_conductivity_station_actions_are_discoverable_by_registry() -> None:
     tree = ast.parse(
-        (DEVICE_DIR / "conductivity.py").read_text(encoding="utf-8")
+        (DEVICE_DIR / "devices" / "conductivity_station" / "device.py").read_text(encoding="utf-8")
     )
     device_class = next(
         node

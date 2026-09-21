@@ -31,35 +31,6 @@
       ]
     },
     {
-      "id": "yb_synthesis_modbus_station_01",
-      "name": "YB 合成工站（Modbus 直连仿真）",
-      "type": "device",
-      "class": "community.yb_sse_devices.yb_synthesis_modbus_station",
-      "parent": null,
-      "position": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0
-      },
-      "config": {
-        "simulation": true,
-        "simulation_crucible_id": "CRU-SIM-001",
-        "simulation_dosing_duration": 1.0,
-        "material_names": [
-          "Li2S",
-          "LiBr",
-          "LiCl",
-          "P2S5"
-        ],
-        "simulation_handshake_delay": 0.1,
-        "simulation_failure_plan": {},
-        "simulation_handshake_history_limit": 100
-      },
-      "data": {
-        "status": "offline"
-      }
-    },
-    {
       "id": "yb_synthesis_atomic_station_01",
       "name": "YB 合成工站（Modbus 原子动作仿真）",
       "type": "device",
@@ -820,6 +791,28 @@
       "data": {
         "lifecycle_state": "available",
         "cubic_type": 1
+      }
+    },
+    {
+      "id": "conductivity_station_01",
+      "name": "电导率自动化测试工站（进程内仿真）",
+      "type": "device",
+      "class": "community.yb_sse_devices.conductivity_station",
+      "parent": null,
+      "position": {
+        "x": 180.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "config": {
+        "ip": "127.0.0.1",
+        "port": 0,
+        "use_mock": true,
+        "occupancy_poll_interval": 0
+      },
+      "data": {
+        "status": "offline",
+        "commissioning_required": false
       }
     }
   ],

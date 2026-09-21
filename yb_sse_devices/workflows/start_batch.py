@@ -4,7 +4,7 @@ from typing import TypedDict
 
 from unilabos.workflow.authoring import device, workflow
 
-from yb_sse_devices.conductivity import ConductivityStation
+from yb_sse_devices.devices.conductivity_station.device import ConductivityStation
 
 
 class StartConductivityBatchResult(TypedDict):

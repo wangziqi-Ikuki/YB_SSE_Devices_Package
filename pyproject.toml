@@ -29,9 +29,6 @@ yb_sse_devices = [
     "**/*.webp",
 ]
 
-[tool.setuptools.data-files]
-protocol = ["protocol/yb_synthesis_modbus.yaml"]
-
 [tool.unilabos.startup]
 graph = "deployment/graphs/simulation.json"
 config = "deployment/local_config.py"

@@ -1,8 +1,9 @@
 {
   "contract_uuids": [
-    "be8cff69-be60-4c6b-b7ab-1f61c5bbd0f8"
+    "be8cff69-be60-4c6b-b7ab-1f61c5bbd0f8",
+    "f1589024-8c58-4d59-88e7-f01573bfa358"
   ],
-  "latest_contract_uuid": "be8cff69-be60-4c6b-b7ab-1f61c5bbd0f8",
+  "latest_contract_uuid": "f1589024-8c58-4d59-88e7-f01573bfa358",
   "version": 1,
   "workflow_uuid": "3c8f1a62-9b74-4e2d-a5c1-7d0e8f4b2196"
 }

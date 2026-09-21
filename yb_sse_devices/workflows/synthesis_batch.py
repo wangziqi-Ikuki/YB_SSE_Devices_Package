@@ -1,7 +1,7 @@
 from typing import TypedDict
 
-from yb_sse_devices.experiment_operations.synthesis_sampling import synthesis_sampling
-from yb_sse_devices.resources.synthesis_resources import SynthesisCrucible
+from yb_sse_devices.resources.synthesis_crucible.resource import SynthesisCrucible
+from yb_sse_devices.workflows.synthesis_sampling import synthesis_sampling
 from unilabos.registry.placeholder_type import ResourceSlot
 from unilabos.workflow.authoring import device, workflow, MaterialCustodyPolicy, MaterialFlowRole, material_source, resource_ref
 

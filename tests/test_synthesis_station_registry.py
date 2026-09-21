@@ -20,7 +20,7 @@ DEVICE_DIR = ROOT / "yb_sse_devices"
 
 
 def test_synthesis_station_actions_are_discoverable_by_registry() -> None:
-    tree = ast.parse((DEVICE_DIR / "synthesis_station.py").read_text(encoding="utf-8"))
+    tree = ast.parse((DEVICE_DIR / "devices" / "synthesis_station" / "device.py").read_text(encoding="utf-8"))
     device_class = next(
         node
         for node in tree.body
@@ -175,7 +175,7 @@ def test_template_decorator_metadata_is_registered() -> None:
 
     resource_meta = get_resource_meta(SynthesisStation_Deck)
     assert resource_meta is not None
-    assert resource_meta["resource_id"] == "SynthesisStation_Deck"
+    assert resource_meta["resource_id"] == "synthesis_station_deck"
     assert resource_meta["icon"] == DECK_ICON
 
 
@@ -192,7 +192,7 @@ def test_slot_and_material_typeddict_fields_are_concrete() -> None:
 
 
 def _action_arg_names(method_name: str) -> set[str]:
-    tree = ast.parse((DEVICE_DIR / "synthesis_station.py").read_text(encoding="utf-8"))
+    tree = ast.parse((DEVICE_DIR / "devices" / "synthesis_station" / "device.py").read_text(encoding="utf-8"))
     device_class = next(
         node
         for node in tree.body
