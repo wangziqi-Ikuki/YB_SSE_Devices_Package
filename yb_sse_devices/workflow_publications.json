@@ -31,6 +31,12 @@
       "workflow_uuid": "72cb4f07-9a92-46eb-ae2a-79d08e2c3b67"
     },
     {
+      "contract_uuid": "97a2df22-29c4-42ea-982e-0407d7c80302",
+      "version": 4,
+      "workflow_revision": 5,
+      "workflow_uuid": "72cb4f07-9a92-46eb-ae2a-79d08e2c3b67"
+    },
+    {
       "contract_uuid": "273983a9-16a5-463d-af80-f51ed0555a8b",
       "version": 1,
       "workflow_revision": 2,
