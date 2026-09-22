@@ -1,0 +1,3853 @@
+{
+  "contract": {
+    "boundary_mapping": {
+      "source_mappings": {
+        "44e31967-2c87-533a-930b-3c0897373d62": {
+          "kind": "node_output",
+          "source_handle_uuid": "f3ffb8b6-ce4b-53d7-8132-ed09ae71ae59",
+          "workflow_node_uuid": "76ec0634-9277-4474-bfa6-b0ea0b4f8969"
+        }
+      },
+      "structural_mappings": {
+        "completion_sources": [],
+        "entry_targets": []
+      },
+      "target_mappings": {
+        "01f3e3dc-949c-5d79-92f8-6c3e7390bf0f": [
+          {
+            "target_handle_uuid": "6635dee8-d008-5f3b-be55-e33895a1e0e4",
+            "workflow_node_uuid": "ab618ad2-cb04-4ce0-8f0f-4155497740b2"
+          }
+        ],
+        "0a6466f9-a94e-58fd-9b23-8e79df1431d7": [
+          {
+            "target_handle_uuid": "14c68682-146c-5bde-a9de-0aca26b42e84",
+            "workflow_node_uuid": "ab618ad2-cb04-4ce0-8f0f-4155497740b2"
+          }
+        ],
+        "232ac506-7be6-55a1-a31e-db4badd81eb6": [
+          {
+            "target_handle_uuid": "c89b546f-b82d-5935-97ad-b1e7d2e9af35",
+            "workflow_node_uuid": "ab618ad2-cb04-4ce0-8f0f-4155497740b2"
+          }
+        ],
+        "2673ddd6-17ed-5bc5-a210-dc65b9cbda4e": [
+          {
+            "target_handle_uuid": "e6c97181-f9ef-546b-bb36-f394193b2865",
+            "workflow_node_uuid": "5adb998b-3240-47a8-b19b-63b6694aa76b"
+          },
+          {
+            "target_handle_uuid": "cb3a5282-0672-5373-822f-c8665820339d",
+            "workflow_node_uuid": "ab618ad2-cb04-4ce0-8f0f-4155497740b2"
+          }
+        ],
+        "3e5aafbf-21ea-5f3d-b69e-d5332ddbf4e7": [
+          {
+            "target_handle_uuid": "767775d9-f6e5-5df7-8814-5d0ede389e64",
+            "workflow_node_uuid": "ab618ad2-cb04-4ce0-8f0f-4155497740b2"
+          }
+        ],
+        "4a4fdec5-6139-5a5f-99b6-ddc6de7b676f": [
+          {
+            "target_handle_uuid": "c9705a58-46b0-5d92-9e82-948f67d2317e",
+            "workflow_node_uuid": "ab618ad2-cb04-4ce0-8f0f-4155497740b2"
+          }
+        ],
+        "4c79b551-412e-562b-8d8d-b02896ab44fa": [
+          {
+            "target_handle_uuid": "f017baa7-0c35-5309-8de9-c3722c3f903c",
+            "workflow_node_uuid": "ab618ad2-cb04-4ce0-8f0f-4155497740b2"
+          }
+        ],
+        "4fe1c94c-cb3d-5f6f-8db2-796876b5ace2": [
+          {
+            "target_handle_uuid": "13e7a2eb-62b2-5eca-b71c-69eb7d45ae7d",
+            "workflow_node_uuid": "5adb998b-3240-47a8-b19b-63b6694aa76b"
+          }
+        ],
+        "511af2a3-061b-5cdc-862c-e413c9d20657": [
+          {
+            "target_handle_uuid": "c72db684-841c-54e2-8416-636e1f7c7ce8",
+            "workflow_node_uuid": "ab618ad2-cb04-4ce0-8f0f-4155497740b2"
+          }
+        ],
+        "5173008d-aa77-5dfe-9dd5-846fa21ceb22": [
+          {
+            "target_handle_uuid": "91d35f4f-33cf-55a9-a791-823270fab6c2",
+            "workflow_node_uuid": "ab618ad2-cb04-4ce0-8f0f-4155497740b2"
+          }
+        ],
+        "726a5839-924f-5098-9296-2081040fdf18": [
+          {
+            "target_handle_uuid": "064215d2-1536-5517-88a6-108434ca78c1",
+            "workflow_node_uuid": "5adb998b-3240-47a8-b19b-63b6694aa76b"
+          },
+          {
+            "target_handle_uuid": "d4412821-8c70-5f07-8ecd-7b012c987ff4",
+            "workflow_node_uuid": "ab618ad2-cb04-4ce0-8f0f-4155497740b2"
+          }
+        ],
+        "7de68ca8-4ac6-5f3d-a840-83d8ac996499": [
+          {
+            "target_handle_uuid": "fb3244ae-a968-56e6-aeea-5598d59fd3ac",
+            "workflow_node_uuid": "76ec0634-9277-4474-bfa6-b0ea0b4f8969"
+          },
+          {
+            "target_handle_uuid": "f12b3c9a-e96b-53ae-91aa-f8e1dca91f49",
+            "workflow_node_uuid": "ab618ad2-cb04-4ce0-8f0f-4155497740b2"
+          }
+        ],
+        "9349f5a6-2710-5d36-9dbd-68ad38c52370": [
+          {
+            "target_handle_uuid": "58f3e249-e05e-5c21-9494-1680f243a725",
+            "workflow_node_uuid": "ab618ad2-cb04-4ce0-8f0f-4155497740b2"
+          }
+        ],
+        "ba69d9fe-3d58-5a95-b666-497832641b53": [
+          {
+            "target_handle_uuid": "57d6ed30-0adb-50e0-b020-e4ca46b17325",
+            "workflow_node_uuid": "5adb998b-3240-47a8-b19b-63b6694aa76b"
+          },
+          {
+            "target_handle_uuid": "37702a8d-da23-513f-9e77-fc49e18cc7ba",
+            "workflow_node_uuid": "ab618ad2-cb04-4ce0-8f0f-4155497740b2"
+          }
+        ],
+        "bcacbf3a-a794-5163-851b-bbd2ebe0bc88": [
+          {
+            "target_handle_uuid": "d0912d39-31ed-5b3f-8e8f-7f55601ab7db",
+            "workflow_node_uuid": "ab618ad2-cb04-4ce0-8f0f-4155497740b2"
+          }
+        ],
+        "d2fa29fa-7c03-5adc-85cb-002a5d0aeae0": [
+          {
+            "target_handle_uuid": "a8788582-8dbf-5e11-b27c-20c97bfcaf5f",
+            "workflow_node_uuid": "ab618ad2-cb04-4ce0-8f0f-4155497740b2"
+          }
+        ],
+        "d6ed090e-63a6-5843-a7f6-7b0ab23282e6": [
+          {
+            "target_handle_uuid": "defaeaea-ac1d-5468-b6e4-c1899443964f",
+            "workflow_node_uuid": "ab618ad2-cb04-4ce0-8f0f-4155497740b2"
+          }
+        ]
+      }
+    },
+    "contract_digest": "sha256:c0be82aa47ea4315aa24a7e60a13e0d578991f8228378368f4f99f92fa2e0518",
+    "create_time": "2026-09-21T15:59:47.027987Z",
+    "description": "由旧 JSON 工作流转换；保留料架2上坩埚、OS人工确认标记和PLC命令3加粉加珠的顺序。",
+    "edge_count": 2,
+    "executor_binding_mapping": {
+      "5adb998b-3240-47a8-b19b-63b6694aa76b": "executor_1",
+      "76ec0634-9277-4474-bfa6-b0ea0b4f8969": "executor_1",
+      "ab618ad2-cb04-4ce0-8f0f-4155497740b2": "executor_1"
+    },
+    "executor_requirements": [
+      {
+        "display_name": "执行设备 1",
+        "key": "executor_1",
+        "required": true,
+        "resource_template_uuid": "e4cf23b6-d482-5de4-8e04-f38d9c87a061"
+      }
+    ],
+    "graph_snapshot": {
+      "edges": [
+        {
+          "create_time": "2026-09-21T15:59:39.482635Z",
+          "meta_data": {},
+          "source_handle_uuid": "30853ef9-9b9d-5090-9f4f-43196b70b355",
+          "source_node_uuid": "ab618ad2-cb04-4ce0-8f0f-4155497740b2",
+          "target_handle_uuid": "76614cac-96cc-52e1-94b0-5e436e10aa97",
+          "target_node_uuid": "5adb998b-3240-47a8-b19b-63b6694aa76b",
+          "update_time": "2026-09-21T15:59:39.482635Z",
+          "uuid": "00401bd4-d52b-5782-a482-180a2c733d71"
+        },
+        {
+          "create_time": "2026-09-21T15:59:39.482635Z",
+          "meta_data": {},
+          "source_handle_uuid": "c7a138e0-dbc0-590c-bed2-c86f9e674cb5",
+          "source_node_uuid": "5adb998b-3240-47a8-b19b-63b6694aa76b",
+          "target_handle_uuid": "c949f526-c9d8-5e6f-9090-79d387168d25",
+          "target_node_uuid": "76ec0634-9277-4474-bfa6-b0ea0b4f8969",
+          "update_time": "2026-09-21T15:59:39.482635Z",
+          "uuid": "9e520f80-e71c-556b-b017-2097c848e306"
+        }
+      ],
+      "handle_templates": [
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "display_name": "ready",
+          "handle_key": "ready",
+          "io_type": "target",
+          "meta_data": {},
+          "required": false,
+          "type": "default",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "03596933-eb8d-57a1-b1f5-d3177878e8d3",
+          "workflow_node_template_uuid": "afb0e139-50a5-5e70-b704-d0f2b6af7953"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "qrcode",
+          "data_source": "executor",
+          "display_name": "qrcode",
+          "handle_key": "qrcode",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 11,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "037ab17d-d398-53dc-9dac-4a334a4634e4",
+          "workflow_node_template_uuid": "5214c0e9-2022-50d4-aff6-db078ee53914"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "crucible",
+          "data_source": "goal",
+          "display_name": "crucible",
+          "handle_key": "crucible",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": [
+                "dcda0f1e-a125-4bda-b137-20f86eaff5fc"
+              ],
+              "contract_order": 2,
+              "editor_control": "material_port",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "additionalProperties": false,
+                "default": null,
+                "properties": {
+                  "uuid": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "uuid"
+                ],
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "x-unilabos-material-lock": true
+              }
+            }
+          },
+          "required": false,
+          "type": "ResourceSlot",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "046b50e6-6781-5233-880f-a4288297c411",
+          "workflow_node_template_uuid": "31497cc5-9e0d-5f81-97fe-d05bc909d3e1"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "pallet_slot_types",
+          "data_source": "goal",
+          "display_name": "pallet_slot_types",
+          "handle_key": "pallet_slot_types",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 4,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": null,
+                "items": {
+                  "type": "integer"
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "array",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "064215d2-1536-5517-88a6-108434ca78c1",
+          "workflow_node_template_uuid": "5214c0e9-2022-50d4-aff6-db078ee53914"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "state",
+          "data_source": "executor",
+          "display_name": "state",
+          "handle_key": "state",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 11,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "121a2e51-3030-54eb-ad76-d681f6b2fbde",
+          "workflow_node_template_uuid": "31497cc5-9e0d-5f81-97fe-d05bc909d3e1"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "bead_source",
+          "data_source": "goal",
+          "display_name": "bead_source",
+          "handle_key": "bead_source",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 5,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": null,
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "13e7a2eb-62b2-5eca-b71c-69eb7d45ae7d",
+          "workflow_node_template_uuid": "5214c0e9-2022-50d4-aff6-db078ee53914"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "powder_weights",
+          "data_source": "goal",
+          "display_name": "powder_weights",
+          "handle_key": "powder_weights",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 5,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": null,
+                "items": {
+                  "type": "number"
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "array",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "14c68682-146c-5bde-a9de-0aca26b42e84",
+          "workflow_node_template_uuid": "afb0e139-50a5-5e70-b704-d0f2b6af7953"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "crucible",
+          "data_source": "goal",
+          "display_name": "crucible",
+          "handle_key": "crucible",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": [
+                "dcda0f1e-a125-4bda-b137-20f86eaff5fc"
+              ],
+              "contract_order": 6,
+              "editor_control": "material_port",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "additionalProperties": false,
+                "default": null,
+                "properties": {
+                  "uuid": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "uuid"
+                ],
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "x-unilabos-material-lock": true
+              }
+            }
+          },
+          "required": false,
+          "type": "ResourceSlot",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "15227d1e-0e45-5976-bcf5-361cdcc4c3e2",
+          "workflow_node_template_uuid": "5214c0e9-2022-50d4-aff6-db078ee53914"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "qrcode",
+          "data_source": "executor",
+          "display_name": "qrcode",
+          "handle_key": "qrcode",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 20,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "17dfff71-4e7e-5eb1-acab-630c88809742",
+          "workflow_node_template_uuid": "afb0e139-50a5-5e70-b704-d0f2b6af7953"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "crucible",
+          "data_source": "executor",
+          "display_name": "crucible",
+          "handle_key": "crucible",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 17,
+              "editor_control": "material_port",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "uuid": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "uuid"
+                ],
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "ResourceSlot",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "2090d7e5-d3f2-581c-854c-8cbe193e78ea",
+          "workflow_node_template_uuid": "31497cc5-9e0d-5f81-97fe-d05bc909d3e1"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "powder_4",
+          "data_source": "executor",
+          "display_name": "powder_4",
+          "handle_key": "powder_4",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": [
+                "cfaa1ede-c33e-4428-a811-ab593d5ca060"
+              ],
+              "contract_order": 22,
+              "editor_control": "material_port",
+              "implicit_passthrough": true,
+              "structural_role": null,
+              "value_schema": {
+                "additionalProperties": false,
+                "default": null,
+                "properties": {
+                  "uuid": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "uuid"
+                ],
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "ResourceSlot",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "237a55a0-6310-5e64-b573-9c18fcb56340",
+          "workflow_node_template_uuid": "31497cc5-9e0d-5f81-97fe-d05bc909d3e1"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "message",
+          "data_source": "executor",
+          "display_name": "message",
+          "handle_key": "message",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 19,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "2f077b99-3ee1-587e-b9c7-062b98dd2540",
+          "workflow_node_template_uuid": "afb0e139-50a5-5e70-b704-d0f2b6af7953"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "bead_bottle",
+          "data_source": "executor",
+          "display_name": "bead_bottle",
+          "handle_key": "bead_bottle",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": [
+                "c88b73ad-0379-4111-85e5-c432cea351b8"
+              ],
+              "contract_order": 23,
+              "editor_control": "material_port",
+              "implicit_passthrough": true,
+              "structural_role": null,
+              "value_schema": {
+                "additionalProperties": false,
+                "default": null,
+                "properties": {
+                  "uuid": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "uuid"
+                ],
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "ResourceSlot",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "300ae8d7-655b-5cf5-995e-05598870dbc4",
+          "workflow_node_template_uuid": "31497cc5-9e0d-5f81-97fe-d05bc909d3e1"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "task_id",
+          "data_source": "executor",
+          "display_name": "task_id",
+          "handle_key": "task_id",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 16,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "30853ef9-9b9d-5090-9f4f-43196b70b355",
+          "workflow_node_template_uuid": "afb0e139-50a5-5e70-b704-d0f2b6af7953"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "powder_2",
+          "data_source": "executor",
+          "display_name": "powder_2",
+          "handle_key": "powder_2",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": [
+                "cfaa1ede-c33e-4428-a811-ab593d5ca060"
+              ],
+              "contract_order": 20,
+              "editor_control": "material_port",
+              "implicit_passthrough": true,
+              "structural_role": null,
+              "value_schema": {
+                "additionalProperties": false,
+                "default": null,
+                "properties": {
+                  "uuid": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "uuid"
+                ],
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "ResourceSlot",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "3213a005-e104-558a-b515-f353d92eb7d0",
+          "workflow_node_template_uuid": "31497cc5-9e0d-5f81-97fe-d05bc909d3e1"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "powder_3",
+          "data_source": "goal",
+          "display_name": "powder_3",
+          "handle_key": "powder_3",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": [
+                "cfaa1ede-c33e-4428-a811-ab593d5ca060"
+              ],
+              "contract_order": 5,
+              "editor_control": "material_port",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "additionalProperties": false,
+                "default": null,
+                "properties": {
+                  "uuid": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "uuid"
+                ],
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "x-unilabos-material-lock": true
+              }
+            }
+          },
+          "required": false,
+          "type": "ResourceSlot",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "346c44a5-8326-5c61-a4a7-91572af18fb3",
+          "workflow_node_template_uuid": "31497cc5-9e0d-5f81-97fe-d05bc909d3e1"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "pallet_type",
+          "data_source": "goal",
+          "display_name": "pallet_type",
+          "handle_key": "pallet_type",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 8,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": 1,
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "37702a8d-da23-513f-9e77-fc49e18cc7ba",
+          "workflow_node_template_uuid": "afb0e139-50a5-5e70-b704-d0f2b6af7953"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "small_crucible",
+          "data_source": "executor",
+          "display_name": "small_crucible",
+          "handle_key": "small_crucible",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 25,
+              "editor_control": "material_port",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "uuid": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "uuid"
+                ],
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "ResourceSlot",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "4d969393-2180-5400-adfe-a11bdc162ed0",
+          "workflow_node_template_uuid": "afb0e139-50a5-5e70-b704-d0f2b6af7953"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "ledger_json",
+          "data_source": "executor",
+          "display_name": "ledger_json",
+          "handle_key": "ledger_json",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 23,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "504c2958-3a2e-5a7a-9479-0ea00c77fb74",
+          "workflow_node_template_uuid": "afb0e139-50a5-5e70-b704-d0f2b6af7953"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "post_id",
+          "data_source": "executor",
+          "display_name": "post_id",
+          "handle_key": "post_id",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 8,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "54cd8c5b-a2f9-5703-b411-44efce3fce8b",
+          "workflow_node_template_uuid": "5214c0e9-2022-50d4-aff6-db078ee53914"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "pallet_type",
+          "data_source": "goal",
+          "display_name": "pallet_type",
+          "handle_key": "pallet_type",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 3,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": 1,
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "57d6ed30-0adb-50e0-b020-e4ca46b17325",
+          "workflow_node_template_uuid": "5214c0e9-2022-50d4-aff6-db078ee53914"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "powder_names",
+          "data_source": "goal",
+          "display_name": "powder_names",
+          "handle_key": "powder_names",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 4,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": null,
+                "items": {
+                  "type": "string"
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "array",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "58f3e249-e05e-5c21-9494-1680f243a725",
+          "workflow_node_template_uuid": "afb0e139-50a5-5e70-b704-d0f2b6af7953"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "destination",
+          "data_source": "goal",
+          "display_name": "destination",
+          "handle_key": "destination",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 2,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": 1,
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "5e183170-f55a-5e8d-9e5c-4c5c371f4023",
+          "workflow_node_template_uuid": "5214c0e9-2022-50d4-aff6-db078ee53914"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "ledger_json",
+          "data_source": "executor",
+          "display_name": "ledger_json",
+          "handle_key": "ledger_json",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 16,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "64069fcb-da91-5d63-bd0e-ec30eacaf666",
+          "workflow_node_template_uuid": "31497cc5-9e0d-5f81-97fe-d05bc909d3e1"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "post_id",
+          "data_source": "executor",
+          "display_name": "post_id",
+          "handle_key": "post_id",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 17,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "64296437-0caa-512f-a57e-a49f966d3531",
+          "workflow_node_template_uuid": "afb0e139-50a5-5e70-b704-d0f2b6af7953"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "formula",
+          "data_source": "goal",
+          "display_name": "formula",
+          "handle_key": "formula",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 1,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": "Li6PS5Cl",
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "6635dee8-d008-5f3b-be55-e33895a1e0e4",
+          "workflow_node_template_uuid": "afb0e139-50a5-5e70-b704-d0f2b6af7953"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "powder_4",
+          "data_source": "goal",
+          "display_name": "powder_4",
+          "handle_key": "powder_4",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": [
+                "cfaa1ede-c33e-4428-a811-ab593d5ca060"
+              ],
+              "contract_order": 6,
+              "editor_control": "material_port",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "additionalProperties": false,
+                "default": null,
+                "properties": {
+                  "uuid": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "uuid"
+                ],
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "x-unilabos-material-lock": true
+              }
+            }
+          },
+          "required": false,
+          "type": "ResourceSlot",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "6936a9c8-59f3-5250-a204-946ec56f985b",
+          "workflow_node_template_uuid": "31497cc5-9e0d-5f81-97fe-d05bc909d3e1"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "small_crucible",
+          "data_source": "executor",
+          "display_name": "small_crucible",
+          "handle_key": "small_crucible",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 16,
+              "editor_control": "material_port",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "uuid": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "uuid"
+                ],
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "ResourceSlot",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "6a972bd1-e8f8-56e1-8b79-f6c01a3fb242",
+          "workflow_node_template_uuid": "5214c0e9-2022-50d4-aff6-db078ee53914"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "state",
+          "data_source": "executor",
+          "display_name": "state",
+          "handle_key": "state",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 18,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "6b6acb8e-6cb2-50d1-a103-69ced96801cd",
+          "workflow_node_template_uuid": "afb0e139-50a5-5e70-b704-d0f2b6af7953"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "qrcode",
+          "data_source": "executor",
+          "display_name": "qrcode",
+          "handle_key": "qrcode",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 13,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "70dfac57-b64d-521d-abaa-e0b9e9287052",
+          "workflow_node_template_uuid": "31497cc5-9e0d-5f81-97fe-d05bc909d3e1"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "lot_id",
+          "data_source": "executor",
+          "display_name": "lot_id",
+          "handle_key": "lot_id",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 14,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "71485276-7745-5240-a39b-58d065f7767d",
+          "workflow_node_template_uuid": "31497cc5-9e0d-5f81-97fe-d05bc909d3e1"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "post_id",
+          "data_source": "executor",
+          "display_name": "post_id",
+          "handle_key": "post_id",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 10,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "72302ad6-8d7e-5eba-be40-2e9a79998a8c",
+          "workflow_node_template_uuid": "31497cc5-9e0d-5f81-97fe-d05bc909d3e1"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "crucible",
+          "data_source": "executor",
+          "display_name": "crucible",
+          "handle_key": "crucible",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 15,
+              "editor_control": "material_port",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "uuid": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "uuid"
+                ],
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "ResourceSlot",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "73ee98a8-0df4-5133-8cfd-55603939d877",
+          "workflow_node_template_uuid": "5214c0e9-2022-50d4-aff6-db078ee53914"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "task_id",
+          "data_source": "goal",
+          "display_name": "task_id",
+          "handle_key": "task_id",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 0,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": "",
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "76614cac-96cc-52e1-94b0-5e436e10aa97",
+          "workflow_node_template_uuid": "5214c0e9-2022-50d4-aff6-db078ee53914"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "powder_tolerances",
+          "data_source": "goal",
+          "display_name": "powder_tolerances",
+          "handle_key": "powder_tolerances",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 6,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": null,
+                "items": {
+                  "type": "number"
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "array",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "767775d9-f6e5-5df7-8814-5d0ede389e64",
+          "workflow_node_template_uuid": "afb0e139-50a5-5e70-b704-d0f2b6af7953"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "small_cubics",
+          "data_source": "executor",
+          "display_name": "small_cubics",
+          "handle_key": "small_cubics",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 15,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            }
+          },
+          "required": false,
+          "type": "array",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "76f29c2c-d7b6-5f79-9af1-d4ec2afd8be4",
+          "workflow_node_template_uuid": "31497cc5-9e0d-5f81-97fe-d05bc909d3e1"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "lot_id",
+          "data_source": "executor",
+          "display_name": "lot_id",
+          "handle_key": "lot_id",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 21,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "7a75da11-c54e-5515-a6a7-e0e861d363fa",
+          "workflow_node_template_uuid": "afb0e139-50a5-5e70-b704-d0f2b6af7953"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "display_name": "ready",
+          "handle_key": "ready",
+          "io_type": "source",
+          "meta_data": {},
+          "required": false,
+          "type": "default",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "840f3f03-d1f0-5f48-9b52-9cbdb7623e38",
+          "workflow_node_template_uuid": "31497cc5-9e0d-5f81-97fe-d05bc909d3e1"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "state",
+          "data_source": "executor",
+          "display_name": "state",
+          "handle_key": "state",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 9,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "89951c97-5cb8-5872-b64d-9508246a163c",
+          "workflow_node_template_uuid": "5214c0e9-2022-50d4-aff6-db078ee53914"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "ledger_json",
+          "data_source": "executor",
+          "display_name": "ledger_json",
+          "handle_key": "ledger_json",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 14,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "8acb23fd-8bd3-5d7c-b42d-182241792fb1",
+          "workflow_node_template_uuid": "5214c0e9-2022-50d4-aff6-db078ee53914"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "display_name": "ready",
+          "handle_key": "ready",
+          "io_type": "target",
+          "meta_data": {},
+          "required": false,
+          "type": "default",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "8d4b9ae4-9e9c-5f5c-b836-82da90fd87d3",
+          "workflow_node_template_uuid": "31497cc5-9e0d-5f81-97fe-d05bc909d3e1"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "small_cubics",
+          "data_source": "executor",
+          "display_name": "small_cubics",
+          "handle_key": "small_cubics",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 22,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            }
+          },
+          "required": false,
+          "type": "array",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "8e864bfe-9d94-515e-9f77-1da634c6454b",
+          "workflow_node_template_uuid": "afb0e139-50a5-5e70-b704-d0f2b6af7953"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "has_bead_bottle",
+          "data_source": "goal",
+          "display_name": "has_bead_bottle",
+          "handle_key": "has_bead_bottle",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 11,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": true,
+                "type": "boolean"
+              }
+            }
+          },
+          "required": false,
+          "type": "boolean",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "91d35f4f-33cf-55a9-a791-823270fab6c2",
+          "workflow_node_template_uuid": "afb0e139-50a5-5e70-b704-d0f2b6af7953"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "powder_2",
+          "data_source": "goal",
+          "display_name": "powder_2",
+          "handle_key": "powder_2",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": [
+                "cfaa1ede-c33e-4428-a811-ab593d5ca060"
+              ],
+              "contract_order": 4,
+              "editor_control": "material_port",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "additionalProperties": false,
+                "default": null,
+                "properties": {
+                  "uuid": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "uuid"
+                ],
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "x-unilabos-material-lock": true
+              }
+            }
+          },
+          "required": false,
+          "type": "ResourceSlot",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "9345ac7a-bbc2-5269-9a54-fc4e199976ef",
+          "workflow_node_template_uuid": "31497cc5-9e0d-5f81-97fe-d05bc909d3e1"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "bead_bottle",
+          "data_source": "goal",
+          "display_name": "bead_bottle",
+          "handle_key": "bead_bottle",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": [
+                "c88b73ad-0379-4111-85e5-c432cea351b8"
+              ],
+              "contract_order": 7,
+              "editor_control": "material_port",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "additionalProperties": false,
+                "default": null,
+                "properties": {
+                  "uuid": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "uuid"
+                ],
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "x-unilabos-material-lock": true
+              }
+            }
+          },
+          "required": false,
+          "type": "ResourceSlot",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "9378e354-ad29-5e21-b33f-2280ba6b97a7",
+          "workflow_node_template_uuid": "31497cc5-9e0d-5f81-97fe-d05bc909d3e1"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "display_name": "ready",
+          "handle_key": "ready",
+          "io_type": "target",
+          "meta_data": {},
+          "required": false,
+          "type": "default",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "94fd8ed2-df91-50c1-8893-9c032e65d7d3",
+          "workflow_node_template_uuid": "5214c0e9-2022-50d4-aff6-db078ee53914"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "powder_1",
+          "data_source": "executor",
+          "display_name": "powder_1",
+          "handle_key": "powder_1",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": [
+                "cfaa1ede-c33e-4428-a811-ab593d5ca060"
+              ],
+              "contract_order": 19,
+              "editor_control": "material_port",
+              "implicit_passthrough": true,
+              "structural_role": null,
+              "value_schema": {
+                "additionalProperties": false,
+                "default": null,
+                "properties": {
+                  "uuid": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "uuid"
+                ],
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "ResourceSlot",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "a1108f8b-c2cb-54ab-a5cf-d68eb1e16809",
+          "workflow_node_template_uuid": "31497cc5-9e0d-5f81-97fe-d05bc909d3e1"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "n_ball_bead",
+          "data_source": "goal",
+          "display_name": "n_ball_bead",
+          "handle_key": "n_ball_bead",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 3,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": 80,
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "a8788582-8dbf-5e11-b27c-20c97bfcaf5f",
+          "workflow_node_template_uuid": "afb0e139-50a5-5e70-b704-d0f2b6af7953"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "powder_1",
+          "data_source": "goal",
+          "display_name": "powder_1",
+          "handle_key": "powder_1",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": [
+                "cfaa1ede-c33e-4428-a811-ab593d5ca060"
+              ],
+              "contract_order": 3,
+              "editor_control": "material_port",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "additionalProperties": false,
+                "default": null,
+                "properties": {
+                  "uuid": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "uuid"
+                ],
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "x-unilabos-material-lock": true
+              }
+            }
+          },
+          "required": false,
+          "type": "ResourceSlot",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "af6deb95-a91a-530b-b052-75ff5a55ee94",
+          "workflow_node_template_uuid": "31497cc5-9e0d-5f81-97fe-d05bc909d3e1"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "lot_id",
+          "data_source": "executor",
+          "display_name": "lot_id",
+          "handle_key": "lot_id",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 12,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "b38a75b8-3172-5237-940e-f017e648c6dc",
+          "workflow_node_template_uuid": "5214c0e9-2022-50d4-aff6-db078ee53914"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "powder_pre_adds",
+          "data_source": "goal",
+          "display_name": "powder_pre_adds",
+          "handle_key": "powder_pre_adds",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 7,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": null,
+                "items": {
+                  "type": "boolean"
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "array",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "c72db684-841c-54e2-8416-636e1f7c7ce8",
+          "workflow_node_template_uuid": "afb0e139-50a5-5e70-b704-d0f2b6af7953"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "task_id",
+          "data_source": "executor",
+          "display_name": "task_id",
+          "handle_key": "task_id",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 7,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "c7a138e0-dbc0-590c-bed2-c86f9e674cb5",
+          "workflow_node_template_uuid": "5214c0e9-2022-50d4-aff6-db078ee53914"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "recipe_name",
+          "data_source": "goal",
+          "display_name": "recipe_name",
+          "handle_key": "recipe_name",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 0,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": "YB-SIM-Li6PS5Cl",
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "c89b546f-b82d-5935-97ad-b1e7d2e9af35",
+          "workflow_node_template_uuid": "afb0e139-50a5-5e70-b704-d0f2b6af7953"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "task_id",
+          "data_source": "goal",
+          "display_name": "task_id",
+          "handle_key": "task_id",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 0,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": "",
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "c949f526-c9d8-5e6f-9090-79d387168d25",
+          "workflow_node_template_uuid": "31497cc5-9e0d-5f81-97fe-d05bc909d3e1"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "task_slot_nums",
+          "data_source": "goal",
+          "display_name": "task_slot_nums",
+          "handle_key": "task_slot_nums",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 10,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": null,
+                "items": {
+                  "type": "integer"
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "array",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "c9705a58-46b0-5d92-9e82-948f67d2317e",
+          "workflow_node_template_uuid": "afb0e139-50a5-5e70-b704-d0f2b6af7953"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "fetch_cubic_source",
+          "data_source": "goal",
+          "display_name": "fetch_cubic_source",
+          "handle_key": "fetch_cubic_source",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 13,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": 1,
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "cb3a5282-0672-5373-822f-c8665820339d",
+          "workflow_node_template_uuid": "afb0e139-50a5-5e70-b704-d0f2b6af7953"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "synthesis_mass",
+          "data_source": "goal",
+          "display_name": "synthesis_mass",
+          "handle_key": "synthesis_mass",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 2,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": 3.86,
+                "type": "number"
+              }
+            }
+          },
+          "required": false,
+          "type": "number",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "d0912d39-31ed-5b3f-8e8f-7f55601ab7db",
+          "workflow_node_template_uuid": "afb0e139-50a5-5e70-b704-d0f2b6af7953"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "small_cubics",
+          "data_source": "executor",
+          "display_name": "small_cubics",
+          "handle_key": "small_cubics",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 13,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            }
+          },
+          "required": false,
+          "type": "array",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "d2787ae3-c359-5680-bd15-7ee24641849b",
+          "workflow_node_template_uuid": "5214c0e9-2022-50d4-aff6-db078ee53914"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "real_weights_json",
+          "data_source": "goal",
+          "display_name": "real_weights_json",
+          "handle_key": "real_weights_json",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 1,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": "",
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "d3c71afa-18b7-5edc-8b08-4e1e56576f17",
+          "workflow_node_template_uuid": "31497cc5-9e0d-5f81-97fe-d05bc909d3e1"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "pallet_slot_types",
+          "data_source": "goal",
+          "display_name": "pallet_slot_types",
+          "handle_key": "pallet_slot_types",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 15,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": null,
+                "items": {
+                  "type": "integer"
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "array",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "d4412821-8c70-5f07-8ecd-7b012c987ff4",
+          "workflow_node_template_uuid": "afb0e139-50a5-5e70-b704-d0f2b6af7953"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "powder_3",
+          "data_source": "executor",
+          "display_name": "powder_3",
+          "handle_key": "powder_3",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": [
+                "cfaa1ede-c33e-4428-a811-ab593d5ca060"
+              ],
+              "contract_order": 21,
+              "editor_control": "material_port",
+              "implicit_passthrough": true,
+              "structural_role": null,
+              "value_schema": {
+                "additionalProperties": false,
+                "default": null,
+                "properties": {
+                  "uuid": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "uuid"
+                ],
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "ResourceSlot",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "d620b0ba-aee9-5532-9ded-91d541758228",
+          "workflow_node_template_uuid": "31497cc5-9e0d-5f81-97fe-d05bc909d3e1"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "display_name": "ready",
+          "handle_key": "ready",
+          "io_type": "source",
+          "meta_data": {},
+          "required": false,
+          "type": "default",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "deae34f1-b00f-5e6c-9083-ed51f0986da7",
+          "workflow_node_template_uuid": "afb0e139-50a5-5e70-b704-d0f2b6af7953"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "cubic_type",
+          "data_source": "goal",
+          "display_name": "cubic_type",
+          "handle_key": "cubic_type",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 9,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": 1,
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "defaeaea-ac1d-5468-b6e4-c1899443964f",
+          "workflow_node_template_uuid": "afb0e139-50a5-5e70-b704-d0f2b6af7953"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "crucible",
+          "data_source": "executor",
+          "display_name": "crucible",
+          "handle_key": "crucible",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 24,
+              "editor_control": "material_port",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "uuid": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "uuid"
+                ],
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "ResourceSlot",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "e46ec909-589c-5975-be3e-a1dfed19618d",
+          "workflow_node_template_uuid": "afb0e139-50a5-5e70-b704-d0f2b6af7953"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "fetch_cubic_source",
+          "data_source": "goal",
+          "display_name": "fetch_cubic_source",
+          "handle_key": "fetch_cubic_source",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 1,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": null,
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "e6c97181-f9ef-546b-bb36-f394193b2865",
+          "workflow_node_template_uuid": "5214c0e9-2022-50d4-aff6-db078ee53914"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "small_crucible",
+          "data_source": "executor",
+          "display_name": "small_crucible",
+          "handle_key": "small_crucible",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 18,
+              "editor_control": "material_port",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "uuid": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "uuid"
+                ],
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "ResourceSlot",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "e90b8367-2513-5856-ac37-4a34173d3500",
+          "workflow_node_template_uuid": "31497cc5-9e0d-5f81-97fe-d05bc909d3e1"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "bead_count",
+          "data_source": "goal",
+          "display_name": "bead_count",
+          "handle_key": "bead_count",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 12,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": 80,
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "f017baa7-0c35-5309-8de9-c3722c3f903c",
+          "workflow_node_template_uuid": "afb0e139-50a5-5e70-b704-d0f2b6af7953"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "powder_rack_positions",
+          "data_source": "goal",
+          "display_name": "powder_rack_positions",
+          "handle_key": "powder_rack_positions",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 14,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": null,
+                "items": {
+                  "type": "integer"
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "array",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "f12b3c9a-e96b-53ae-91aa-f8e1dca91f49",
+          "workflow_node_template_uuid": "afb0e139-50a5-5e70-b704-d0f2b6af7953"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "display_name": "ready",
+          "handle_key": "ready",
+          "io_type": "source",
+          "meta_data": {},
+          "required": false,
+          "type": "default",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "f170466d-b9cf-5382-a755-a9ff2719ccb3",
+          "workflow_node_template_uuid": "5214c0e9-2022-50d4-aff6-db078ee53914"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "message",
+          "data_source": "executor",
+          "display_name": "message",
+          "handle_key": "message",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 12,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "f39b7593-2b7c-5a7a-9b64-8a508ebbecb0",
+          "workflow_node_template_uuid": "31497cc5-9e0d-5f81-97fe-d05bc909d3e1"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "task_id",
+          "data_source": "executor",
+          "display_name": "task_id",
+          "handle_key": "task_id",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 9,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "f3ffb8b6-ce4b-53d7-8132-ed09ae71ae59",
+          "workflow_node_template_uuid": "31497cc5-9e0d-5f81-97fe-d05bc909d3e1"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "powder_rack_positions",
+          "data_source": "goal",
+          "display_name": "powder_rack_positions",
+          "handle_key": "powder_rack_positions",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 8,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": null,
+                "items": {
+                  "type": "integer"
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "array",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "fb3244ae-a968-56e6-aeea-5598d59fd3ac",
+          "workflow_node_template_uuid": "31497cc5-9e0d-5f81-97fe-d05bc909d3e1"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "message",
+          "data_source": "executor",
+          "display_name": "message",
+          "handle_key": "message",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 10,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "fbe984e1-fcd3-5540-af6d-47f6790b356d",
+          "workflow_node_template_uuid": "5214c0e9-2022-50d4-aff6-db078ee53914"
+        }
+      ],
+      "node_templates": [
+        {
+          "class": "yb_sse_devices.devices.yb_synthesis_atomic_station.device:YBSynthesisAtomicStation",
+          "create_time": "1970-01-01T00:00:00Z",
+          "description": "内部扫码、称粉和加珠（PLC CMD_SAMPLE 连续动作）",
+          "display_name": "dose_recipe",
+          "feedback": {},
+          "goal": {
+            "bead_bottle": "bead_bottle",
+            "crucible": "crucible",
+            "powder_1": "powder_1",
+            "powder_2": "powder_2",
+            "powder_3": "powder_3",
+            "powder_4": "powder_4",
+            "powder_rack_positions": "powder_rack_positions",
+            "real_weights_json": "real_weights_json",
+            "task_id": "task_id"
+          },
+          "goal_default": {
+            "bead_bottle": null,
+            "crucible": null,
+            "powder_1": null,
+            "powder_2": null,
+            "powder_3": null,
+            "powder_4": null,
+            "powder_rack_positions": null,
+            "real_weights_json": "",
+            "task_id": ""
+          },
+          "meta_data": {
+            "unilab": {
+              "action_contract_schema": {
+                "description": "内部扫码、称粉和加珠（PLC CMD_SAMPLE 连续动作）",
+                "properties": {
+                  "feedback": {},
+                  "goal": {
+                    "_unilabos_placeholder_info": {
+                      "bead_bottle": "unilabos_resources",
+                      "crucible": "unilabos_resources",
+                      "powder_1": "unilabos_resources",
+                      "powder_2": "unilabos_resources",
+                      "powder_3": "unilabos_resources",
+                      "powder_4": "unilabos_resources"
+                    },
+                    "additionalProperties": false,
+                    "properties": {
+                      "bead_bottle": {
+                        "additionalProperties": false,
+                        "default": null,
+                        "properties": {
+                          "uuid": {
+                            "format": "uuid",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "uuid"
+                        ],
+                        "type": [
+                          "object",
+                          "null"
+                        ],
+                        "x-unilabos-material-lock": true
+                      },
+                      "crucible": {
+                        "additionalProperties": false,
+                        "default": null,
+                        "properties": {
+                          "uuid": {
+                            "format": "uuid",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "uuid"
+                        ],
+                        "type": [
+                          "object",
+                          "null"
+                        ],
+                        "x-unilabos-material-lock": true
+                      },
+                      "powder_1": {
+                        "additionalProperties": false,
+                        "default": null,
+                        "properties": {
+                          "uuid": {
+                            "format": "uuid",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "uuid"
+                        ],
+                        "type": [
+                          "object",
+                          "null"
+                        ],
+                        "x-unilabos-material-lock": true
+                      },
+                      "powder_2": {
+                        "additionalProperties": false,
+                        "default": null,
+                        "properties": {
+                          "uuid": {
+                            "format": "uuid",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "uuid"
+                        ],
+                        "type": [
+                          "object",
+                          "null"
+                        ],
+                        "x-unilabos-material-lock": true
+                      },
+                      "powder_3": {
+                        "additionalProperties": false,
+                        "default": null,
+                        "properties": {
+                          "uuid": {
+                            "format": "uuid",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "uuid"
+                        ],
+                        "type": [
+                          "object",
+                          "null"
+                        ],
+                        "x-unilabos-material-lock": true
+                      },
+                      "powder_4": {
+                        "additionalProperties": false,
+                        "default": null,
+                        "properties": {
+                          "uuid": {
+                            "format": "uuid",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "uuid"
+                        ],
+                        "type": [
+                          "object",
+                          "null"
+                        ],
+                        "x-unilabos-material-lock": true
+                      },
+                      "powder_rack_positions": {
+                        "default": null,
+                        "items": {
+                          "type": "integer"
+                        },
+                        "type": [
+                          "array",
+                          "null"
+                        ]
+                      },
+                      "real_weights_json": {
+                        "default": "",
+                        "type": "string"
+                      },
+                      "task_id": {
+                        "default": "",
+                        "type": "string"
+                      }
+                    },
+                    "required": [],
+                    "type": "object"
+                  },
+                  "result": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "crucible": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "uuid": {
+                            "format": "uuid",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "uuid"
+                        ],
+                        "type": [
+                          "object",
+                          "null"
+                        ]
+                      },
+                      "ledger_json": {
+                        "type": "string"
+                      },
+                      "lot_id": {
+                        "type": "string"
+                      },
+                      "message": {
+                        "type": "string"
+                      },
+                      "post_id": {
+                        "type": "string"
+                      },
+                      "qrcode": {
+                        "type": "string"
+                      },
+                      "small_crucible": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "uuid": {
+                            "format": "uuid",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "uuid"
+                        ],
+                        "type": [
+                          "object",
+                          "null"
+                        ]
+                      },
+                      "small_cubics": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "task_id": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "task_id",
+                      "post_id",
+                      "state",
+                      "message",
+                      "qrcode",
+                      "lot_id",
+                      "small_cubics",
+                      "ledger_json",
+                      "crucible",
+                      "small_crucible"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "goal"
+                ],
+                "title": "dose_recipe参数",
+                "type": "object",
+                "x-unilabos-action-contract": {
+                  "input_order": [
+                    "task_id",
+                    "real_weights_json",
+                    "crucible",
+                    "powder_1",
+                    "powder_2",
+                    "powder_3",
+                    "powder_4",
+                    "bead_bottle",
+                    "powder_rack_positions"
+                  ],
+                  "output_order": [
+                    "task_id",
+                    "post_id",
+                    "state",
+                    "message",
+                    "qrcode",
+                    "lot_id",
+                    "small_cubics",
+                    "ledger_json",
+                    "crucible",
+                    "small_crucible"
+                  ],
+                  "resource_template_symbols": {
+                    "goal": {
+                      "bead_bottle": [
+                        "yb_sse_devices.resources.synthesis_bead_bottle.resource:SynthesisBeadBottle"
+                      ],
+                      "crucible": [
+                        "yb_sse_devices.resources.synthesis_crucible.resource:SynthesisCrucible"
+                      ],
+                      "powder_1": [
+                        "yb_sse_devices.resources.synthesis_powder.resource:SynthesisPowder"
+                      ],
+                      "powder_2": [
+                        "yb_sse_devices.resources.synthesis_powder.resource:SynthesisPowder"
+                      ],
+                      "powder_3": [
+                        "yb_sse_devices.resources.synthesis_powder.resource:SynthesisPowder"
+                      ],
+                      "powder_4": [
+                        "yb_sse_devices.resources.synthesis_powder.resource:SynthesisPowder"
+                      ]
+                    },
+                    "result": {}
+                  },
+                  "version": 2
+                }
+              },
+              "contract_kind": "typed",
+              "resource_template": {
+                "display_name": "yb_synthesis_atomic_station",
+                "name": "community.yb_sse_devices.yb_synthesis_atomic_station",
+                "uuid": "e4cf23b6-d482-5de4-8e04-f38d9c87a061"
+              }
+            }
+          },
+          "name": "dose_recipe",
+          "node_type": "ILab",
+          "resource_template_uuid": "e4cf23b6-d482-5de4-8e04-f38d9c87a061",
+          "result": {},
+          "schema": "{\"_unilabos_placeholder_info\":{\"bead_bottle\":\"unilabos_resources\",\"crucible\":\"unilabos_resources\",\"powder_1\":\"unilabos_resources\",\"powder_2\":\"unilabos_resources\",\"powder_3\":\"unilabos_resources\",\"powder_4\":\"unilabos_resources\"},\"additionalProperties\":false,\"properties\":{\"bead_bottle\":{\"additionalProperties\":false,\"default\":null,\"properties\":{\"uuid\":{\"format\":\"uuid\",\"type\":\"string\"}},\"required\":[\"uuid\"],\"type\":[\"object\",\"null\"],\"x-unilabos-material-lock\":true},\"crucible\":{\"additionalProperties\":false,\"default\":null,\"properties\":{\"uuid\":{\"format\":\"uuid\",\"type\":\"string\"}},\"required\":[\"uuid\"],\"type\":[\"object\",\"null\"],\"x-unilabos-material-lock\":true},\"powder_1\":{\"additionalProperties\":false,\"default\":null,\"properties\":{\"uuid\":{\"format\":\"uuid\",\"type\":\"string\"}},\"required\":[\"uuid\"],\"type\":[\"object\",\"null\"],\"x-unilabos-material-lock\":true},\"powder_2\":{\"additionalProperties\":false,\"default\":null,\"properties\":{\"uuid\":{\"format\":\"uuid\",\"type\":\"string\"}},\"required\":[\"uuid\"],\"type\":[\"object\",\"null\"],\"x-unilabos-material-lock\":true},\"powder_3\":{\"additionalProperties\":false,\"default\":null,\"properties\":{\"uuid\":{\"format\":\"uuid\",\"type\":\"string\"}},\"required\":[\"uuid\"],\"type\":[\"object\",\"null\"],\"x-unilabos-material-lock\":true},\"powder_4\":{\"additionalProperties\":false,\"default\":null,\"properties\":{\"uuid\":{\"format\":\"uuid\",\"type\":\"string\"}},\"required\":[\"uuid\"],\"type\":[\"object\",\"null\"],\"x-unilabos-material-lock\":true},\"powder_rack_positions\":{\"default\":null,\"items\":{\"type\":\"integer\"},\"type\":[\"array\",\"null\"]},\"real_weights_json\":{\"default\":\"\",\"type\":\"string\"},\"task_id\":{\"default\":\"\",\"type\":\"string\"}},\"required\":[],\"type\":\"object\"}",
+          "type": "UniLabJsonCommand",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "31497cc5-9e0d-5f81-97fe-d05bc909d3e1"
+        },
+        {
+          "class": "yb_sse_devices.devices.yb_synthesis_atomic_station.device:YBSynthesisAtomicStation",
+          "create_time": "1970-01-01T00:00:00Z",
+          "description": "取大坩埚并完成方舱关门握手",
+          "display_name": "load_big_crucible",
+          "feedback": {},
+          "goal": {
+            "bead_source": "bead_source",
+            "crucible": "crucible",
+            "destination": "destination",
+            "fetch_cubic_source": "fetch_cubic_source",
+            "pallet_slot_types": "pallet_slot_types",
+            "pallet_type": "pallet_type",
+            "task_id": "task_id"
+          },
+          "goal_default": {
+            "bead_source": null,
+            "crucible": null,
+            "destination": 1,
+            "fetch_cubic_source": null,
+            "pallet_slot_types": null,
+            "pallet_type": 1,
+            "task_id": ""
+          },
+          "meta_data": {
+            "unilab": {
+              "action_contract_schema": {
+                "description": "取大坩埚并完成方舱关门握手",
+                "properties": {
+                  "feedback": {},
+                  "goal": {
+                    "_unilabos_placeholder_info": {
+                      "crucible": "unilabos_resources"
+                    },
+                    "additionalProperties": false,
+                    "properties": {
+                      "bead_source": {
+                        "default": null,
+                        "type": [
+                          "integer",
+                          "null"
+                        ]
+                      },
+                      "crucible": {
+                        "additionalProperties": false,
+                        "default": null,
+                        "properties": {
+                          "uuid": {
+                            "format": "uuid",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "uuid"
+                        ],
+                        "type": [
+                          "object",
+                          "null"
+                        ],
+                        "x-unilabos-material-lock": true
+                      },
+                      "destination": {
+                        "default": 1,
+                        "type": "integer"
+                      },
+                      "fetch_cubic_source": {
+                        "default": null,
+                        "type": [
+                          "integer",
+                          "null"
+                        ]
+                      },
+                      "pallet_slot_types": {
+                        "default": null,
+                        "items": {
+                          "type": "integer"
+                        },
+                        "type": [
+                          "array",
+                          "null"
+                        ]
+                      },
+                      "pallet_type": {
+                        "default": 1,
+                        "type": "integer"
+                      },
+                      "task_id": {
+                        "default": "",
+                        "type": "string"
+                      }
+                    },
+                    "required": [],
+                    "type": "object"
+                  },
+                  "result": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "crucible": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "uuid": {
+                            "format": "uuid",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "uuid"
+                        ],
+                        "type": [
+                          "object",
+                          "null"
+                        ]
+                      },
+                      "ledger_json": {
+                        "type": "string"
+                      },
+                      "lot_id": {
+                        "type": "string"
+                      },
+                      "message": {
+                        "type": "string"
+                      },
+                      "post_id": {
+                        "type": "string"
+                      },
+                      "qrcode": {
+                        "type": "string"
+                      },
+                      "small_crucible": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "uuid": {
+                            "format": "uuid",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "uuid"
+                        ],
+                        "type": [
+                          "object",
+                          "null"
+                        ]
+                      },
+                      "small_cubics": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "task_id": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "task_id",
+                      "post_id",
+                      "state",
+                      "message",
+                      "qrcode",
+                      "lot_id",
+                      "small_cubics",
+                      "ledger_json",
+                      "crucible",
+                      "small_crucible"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "goal"
+                ],
+                "title": "load_big_crucible参数",
+                "type": "object",
+                "x-unilabos-action-contract": {
+                  "input_order": [
+                    "task_id",
+                    "fetch_cubic_source",
+                    "destination",
+                    "pallet_type",
+                    "pallet_slot_types",
+                    "bead_source",
+                    "crucible"
+                  ],
+                  "output_order": [
+                    "task_id",
+                    "post_id",
+                    "state",
+                    "message",
+                    "qrcode",
+                    "lot_id",
+                    "small_cubics",
+                    "ledger_json",
+                    "crucible",
+                    "small_crucible"
+                  ],
+                  "resource_template_symbols": {
+                    "goal": {
+                      "crucible": [
+                        "yb_sse_devices.resources.synthesis_crucible.resource:SynthesisCrucible"
+                      ]
+                    },
+                    "result": {}
+                  },
+                  "version": 2
+                }
+              },
+              "contract_kind": "typed",
+              "resource_template": {
+                "display_name": "yb_synthesis_atomic_station",
+                "name": "community.yb_sse_devices.yb_synthesis_atomic_station",
+                "uuid": "e4cf23b6-d482-5de4-8e04-f38d9c87a061"
+              }
+            }
+          },
+          "name": "load_big_crucible",
+          "node_type": "ILab",
+          "resource_template_uuid": "e4cf23b6-d482-5de4-8e04-f38d9c87a061",
+          "result": {},
+          "schema": "{\"_unilabos_placeholder_info\":{\"crucible\":\"unilabos_resources\"},\"additionalProperties\":false,\"properties\":{\"bead_source\":{\"default\":null,\"type\":[\"integer\",\"null\"]},\"crucible\":{\"additionalProperties\":false,\"default\":null,\"properties\":{\"uuid\":{\"format\":\"uuid\",\"type\":\"string\"}},\"required\":[\"uuid\"],\"type\":[\"object\",\"null\"],\"x-unilabos-material-lock\":true},\"destination\":{\"default\":1,\"type\":\"integer\"},\"fetch_cubic_source\":{\"default\":null,\"type\":[\"integer\",\"null\"]},\"pallet_slot_types\":{\"default\":null,\"items\":{\"type\":\"integer\"},\"type\":[\"array\",\"null\"]},\"pallet_type\":{\"default\":1,\"type\":\"integer\"},\"task_id\":{\"default\":\"\",\"type\":\"string\"}},\"required\":[],\"type\":\"object\"}",
+          "type": "UniLabJsonCommand",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "5214c0e9-2022-50d4-aff6-db078ee53914"
+        },
+        {
+          "class": "yb_sse_devices.devices.yb_synthesis_atomic_station.device:YBSynthesisAtomicStation",
+          "create_time": "1970-01-01T00:00:00Z",
+          "description": "创建合成批次并建立物料初始账；真实 PLC 由 OS 本地建账",
+          "display_name": "create_batch",
+          "feedback": {},
+          "goal": {
+            "bead_count": "bead_count",
+            "cubic_type": "cubic_type",
+            "fetch_cubic_source": "fetch_cubic_source",
+            "formula": "formula",
+            "has_bead_bottle": "has_bead_bottle",
+            "n_ball_bead": "n_ball_bead",
+            "pallet_slot_types": "pallet_slot_types",
+            "pallet_type": "pallet_type",
+            "powder_names": "powder_names",
+            "powder_pre_adds": "powder_pre_adds",
+            "powder_rack_positions": "powder_rack_positions",
+            "powder_tolerances": "powder_tolerances",
+            "powder_weights": "powder_weights",
+            "recipe_name": "recipe_name",
+            "synthesis_mass": "synthesis_mass",
+            "task_slot_nums": "task_slot_nums"
+          },
+          "goal_default": {
+            "bead_count": 80,
+            "cubic_type": 1,
+            "fetch_cubic_source": 1,
+            "formula": "Li6PS5Cl",
+            "has_bead_bottle": true,
+            "n_ball_bead": 80,
+            "pallet_slot_types": null,
+            "pallet_type": 1,
+            "powder_names": null,
+            "powder_pre_adds": null,
+            "powder_rack_positions": null,
+            "powder_tolerances": null,
+            "powder_weights": null,
+            "recipe_name": "YB-SIM-Li6PS5Cl",
+            "synthesis_mass": 3.86,
+            "task_slot_nums": null
+          },
+          "meta_data": {
+            "unilab": {
+              "action_contract_schema": {
+                "description": "创建合成批次并建立物料初始账；真实 PLC 由 OS 本地建账",
+                "properties": {
+                  "feedback": {},
+                  "goal": {
+                    "_unilabos_placeholder_info": {},
+                    "additionalProperties": false,
+                    "properties": {
+                      "bead_count": {
+                        "default": 80,
+                        "type": "integer"
+                      },
+                      "cubic_type": {
+                        "default": 1,
+                        "type": "integer"
+                      },
+                      "fetch_cubic_source": {
+                        "default": 1,
+                        "type": "integer"
+                      },
+                      "formula": {
+                        "default": "Li6PS5Cl",
+                        "type": "string"
+                      },
+                      "has_bead_bottle": {
+                        "default": true,
+                        "type": "boolean"
+                      },
+                      "n_ball_bead": {
+                        "default": 80,
+                        "type": "integer"
+                      },
+                      "pallet_slot_types": {
+                        "default": null,
+                        "items": {
+                          "type": "integer"
+                        },
+                        "type": [
+                          "array",
+                          "null"
+                        ]
+                      },
+                      "pallet_type": {
+                        "default": 1,
+                        "type": "integer"
+                      },
+                      "powder_names": {
+                        "default": null,
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": [
+                          "array",
+                          "null"
+                        ]
+                      },
+                      "powder_pre_adds": {
+                        "default": null,
+                        "items": {
+                          "type": "boolean"
+                        },
+                        "type": [
+                          "array",
+                          "null"
+                        ]
+                      },
+                      "powder_rack_positions": {
+                        "default": null,
+                        "items": {
+                          "type": "integer"
+                        },
+                        "type": [
+                          "array",
+                          "null"
+                        ]
+                      },
+                      "powder_tolerances": {
+                        "default": null,
+                        "items": {
+                          "type": "number"
+                        },
+                        "type": [
+                          "array",
+                          "null"
+                        ]
+                      },
+                      "powder_weights": {
+                        "default": null,
+                        "items": {
+                          "type": "number"
+                        },
+                        "type": [
+                          "array",
+                          "null"
+                        ]
+                      },
+                      "recipe_name": {
+                        "default": "YB-SIM-Li6PS5Cl",
+                        "type": "string"
+                      },
+                      "synthesis_mass": {
+                        "default": 3.86,
+                        "type": "number"
+                      },
+                      "task_slot_nums": {
+                        "default": null,
+                        "items": {
+                          "type": "integer"
+                        },
+                        "type": [
+                          "array",
+                          "null"
+                        ]
+                      }
+                    },
+                    "required": [],
+                    "type": "object"
+                  },
+                  "result": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "crucible": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "uuid": {
+                            "format": "uuid",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "uuid"
+                        ],
+                        "type": [
+                          "object",
+                          "null"
+                        ]
+                      },
+                      "ledger_json": {
+                        "type": "string"
+                      },
+                      "lot_id": {
+                        "type": "string"
+                      },
+                      "message": {
+                        "type": "string"
+                      },
+                      "post_id": {
+                        "type": "string"
+                      },
+                      "qrcode": {
+                        "type": "string"
+                      },
+                      "small_crucible": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "uuid": {
+                            "format": "uuid",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "uuid"
+                        ],
+                        "type": [
+                          "object",
+                          "null"
+                        ]
+                      },
+                      "small_cubics": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "task_id": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "task_id",
+                      "post_id",
+                      "state",
+                      "message",
+                      "qrcode",
+                      "lot_id",
+                      "small_cubics",
+                      "ledger_json",
+                      "crucible",
+                      "small_crucible"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "goal"
+                ],
+                "title": "create_batch参数",
+                "type": "object",
+                "x-unilabos-action-contract": {
+                  "input_order": [
+                    "recipe_name",
+                    "formula",
+                    "synthesis_mass",
+                    "n_ball_bead",
+                    "powder_names",
+                    "powder_weights",
+                    "powder_tolerances",
+                    "powder_pre_adds",
+                    "pallet_type",
+                    "cubic_type",
+                    "task_slot_nums",
+                    "has_bead_bottle",
+                    "bead_count",
+                    "fetch_cubic_source",
+                    "powder_rack_positions",
+                    "pallet_slot_types"
+                  ],
+                  "output_order": [
+                    "task_id",
+                    "post_id",
+                    "state",
+                    "message",
+                    "qrcode",
+                    "lot_id",
+                    "small_cubics",
+                    "ledger_json",
+                    "crucible",
+                    "small_crucible"
+                  ],
+                  "resource_template_symbols": {
+                    "goal": {},
+                    "result": {}
+                  },
+                  "version": 2
+                }
+              },
+              "contract_kind": "typed",
+              "resource_template": {
+                "display_name": "yb_synthesis_atomic_station",
+                "name": "community.yb_sse_devices.yb_synthesis_atomic_station",
+                "uuid": "e4cf23b6-d482-5de4-8e04-f38d9c87a061"
+              }
+            }
+          },
+          "name": "create_batch",
+          "node_type": "ILab",
+          "resource_template_uuid": "e4cf23b6-d482-5de4-8e04-f38d9c87a061",
+          "result": {},
+          "schema": "{\"_unilabos_placeholder_info\":{},\"additionalProperties\":false,\"properties\":{\"bead_count\":{\"default\":80,\"type\":\"integer\"},\"cubic_type\":{\"default\":1,\"type\":\"integer\"},\"fetch_cubic_source\":{\"default\":1,\"type\":\"integer\"},\"formula\":{\"default\":\"Li6PS5Cl\",\"type\":\"string\"},\"has_bead_bottle\":{\"default\":true,\"type\":\"boolean\"},\"n_ball_bead\":{\"default\":80,\"type\":\"integer\"},\"pallet_slot_types\":{\"default\":null,\"items\":{\"type\":\"integer\"},\"type\":[\"array\",\"null\"]},\"pallet_type\":{\"default\":1,\"type\":\"integer\"},\"powder_names\":{\"default\":null,\"items\":{\"type\":\"string\"},\"type\":[\"array\",\"null\"]},\"powder_pre_adds\":{\"default\":null,\"items\":{\"type\":\"boolean\"},\"type\":[\"array\",\"null\"]},\"powder_rack_positions\":{\"default\":null,\"items\":{\"type\":\"integer\"},\"type\":[\"array\",\"null\"]},\"powder_tolerances\":{\"default\":null,\"items\":{\"type\":\"number\"},\"type\":[\"array\",\"null\"]},\"powder_weights\":{\"default\":null,\"items\":{\"type\":\"number\"},\"type\":[\"array\",\"null\"]},\"recipe_name\":{\"default\":\"YB-SIM-Li6PS5Cl\",\"type\":\"string\"},\"synthesis_mass\":{\"default\":3.86,\"type\":\"number\"},\"task_slot_nums\":{\"default\":null,\"items\":{\"type\":\"integer\"},\"type\":[\"array\",\"null\"]}},\"required\":[],\"type\":\"object\"}",
+          "type": "UniLabJsonCommand",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "afb0e139-50a5-5e70-b704-d0f2b6af7953"
+        }
+      ],
+      "nodes": [
+        {
+          "action_name": "load_big_crucible",
+          "action_type": "UniLabJsonCommand",
+          "create_time": "2026-09-21T15:59:39.482635Z",
+          "description": "取大坩埚并完成方舱关门握手",
+          "disabled": false,
+          "execution_policy": {},
+          "material_uuid": null,
+          "meta_data": {
+            "unilab": {
+              "authoring_device_symbol": "station",
+              "authoring_result_name": "loaded",
+              "authoring_source_order": 1,
+              "executor_binding": {
+                "device_id": "yb_synthesis_atomic_station_01",
+                "mode": "fixed"
+              },
+              "input_bindings": {
+                "064215d2-1536-5517-88a6-108434ca78c1": {
+                  "parameter": "pallet_slot_types"
+                },
+                "13e7a2eb-62b2-5eca-b71c-69eb7d45ae7d": {
+                  "parameter": "bead_source"
+                },
+                "57d6ed30-0adb-50e0-b020-e4ca46b17325": {
+                  "parameter": "pallet_type"
+                },
+                "e6c97181-f9ef-546b-bb36-f394193b2865": {
+                  "parameter": "fetch_cubic_source"
+                }
+              }
+            }
+          },
+          "minimized": false,
+          "name": "load_big_crucible",
+          "param": {},
+          "pose": {},
+          "status": "idle",
+          "type": "ILab",
+          "update_time": "2026-09-21T15:59:39.482635Z",
+          "uuid": "5adb998b-3240-47a8-b19b-63b6694aa76b",
+          "workflow_node_template_uuid": "5214c0e9-2022-50d4-aff6-db078ee53914",
+          "workflow_uuid": "2b618ad2-cb04-4ce0-8f0f-4155497740b2"
+        },
+        {
+          "action_name": "dose_recipe",
+          "action_type": "UniLabJsonCommand",
+          "create_time": "2026-09-21T15:59:39.482635Z",
+          "description": "内部扫码、称粉和加珠（PLC CMD_SAMPLE 连续动作）",
+          "disabled": false,
+          "execution_policy": {},
+          "manual_confirmation": {
+            "timeout_seconds": 3600
+          },
+          "material_uuid": null,
+          "meta_data": {
+            "unilab": {
+              "authoring_device_symbol": "station",
+              "authoring_result_name": "dosed",
+              "authoring_source_order": 2,
+              "executor_binding": {
+                "device_id": "yb_synthesis_atomic_station_01",
+                "mode": "fixed"
+              },
+              "input_bindings": {
+                "fb3244ae-a968-56e6-aeea-5598d59fd3ac": {
+                  "parameter": "powder_rack_positions"
+                }
+              }
+            }
+          },
+          "minimized": false,
+          "name": "dose_recipe",
+          "param": {},
+          "pose": {},
+          "status": "idle",
+          "type": "manual_confirm",
+          "update_time": "2026-09-21T15:59:39.482635Z",
+          "uuid": "76ec0634-9277-4474-bfa6-b0ea0b4f8969",
+          "workflow_node_template_uuid": "31497cc5-9e0d-5f81-97fe-d05bc909d3e1",
+          "workflow_uuid": "2b618ad2-cb04-4ce0-8f0f-4155497740b2"
+        },
+        {
+          "action_name": "create_batch",
+          "action_type": "UniLabJsonCommand",
+          "create_time": "2026-09-21T15:59:39.482635Z",
+          "description": "创建合成批次并建立物料初始账；真实 PLC 由 OS 本地建账",
+          "disabled": false,
+          "execution_policy": {},
+          "material_uuid": null,
+          "meta_data": {
+            "unilab": {
+              "authoring_device_symbol": "station",
+              "authoring_result_name": "created",
+              "authoring_source_order": 0,
+              "executor_binding": {
+                "device_id": "yb_synthesis_atomic_station_01",
+                "mode": "fixed"
+              },
+              "input_bindings": {
+                "14c68682-146c-5bde-a9de-0aca26b42e84": {
+                  "parameter": "powder_weights"
+                },
+                "37702a8d-da23-513f-9e77-fc49e18cc7ba": {
+                  "parameter": "pallet_type"
+                },
+                "58f3e249-e05e-5c21-9494-1680f243a725": {
+                  "parameter": "powder_names"
+                },
+                "6635dee8-d008-5f3b-be55-e33895a1e0e4": {
+                  "parameter": "formula"
+                },
+                "767775d9-f6e5-5df7-8814-5d0ede389e64": {
+                  "parameter": "powder_tolerances"
+                },
+                "91d35f4f-33cf-55a9-a791-823270fab6c2": {
+                  "parameter": "has_bead_bottle"
+                },
+                "a8788582-8dbf-5e11-b27c-20c97bfcaf5f": {
+                  "parameter": "n_ball_bead"
+                },
+                "c72db684-841c-54e2-8416-636e1f7c7ce8": {
+                  "parameter": "powder_pre_adds"
+                },
+                "c89b546f-b82d-5935-97ad-b1e7d2e9af35": {
+                  "parameter": "recipe_name"
+                },
+                "c9705a58-46b0-5d92-9e82-948f67d2317e": {
+                  "parameter": "task_slot_nums"
+                },
+                "cb3a5282-0672-5373-822f-c8665820339d": {
+                  "parameter": "fetch_cubic_source"
+                },
+                "d0912d39-31ed-5b3f-8e8f-7f55601ab7db": {
+                  "parameter": "synthesis_mass"
+                },
+                "d4412821-8c70-5f07-8ecd-7b012c987ff4": {
+                  "parameter": "pallet_slot_types"
+                },
+                "defaeaea-ac1d-5468-b6e4-c1899443964f": {
+                  "parameter": "cubic_type"
+                },
+                "f017baa7-0c35-5309-8de9-c3722c3f903c": {
+                  "parameter": "bead_count"
+                },
+                "f12b3c9a-e96b-53ae-91aa-f8e1dca91f49": {
+                  "parameter": "powder_rack_positions"
+                }
+              }
+            }
+          },
+          "minimized": false,
+          "name": "create_batch",
+          "param": {},
+          "pose": {},
+          "status": "idle",
+          "type": "ILab",
+          "update_time": "2026-09-21T15:59:39.482635Z",
+          "uuid": "ab618ad2-cb04-4ce0-8f0f-4155497740b2",
+          "workflow_node_template_uuid": "afb0e139-50a5-5e70-b704-d0f2b6af7953",
+          "workflow_uuid": "2b618ad2-cb04-4ce0-8f0f-4155497740b2"
+        }
+      ],
+      "workflow": {
+        "create_time": "2026-09-21T15:59:35.640103Z",
+        "description": "由旧 JSON 工作流转换；保留料架2上坩埚、OS人工确认标记和PLC命令3加粉加珠的顺序。",
+        "meta_data": {
+          "unilab": {
+            "authoring_function_name": "synthesis_powder_bead_rack2",
+            "authoring_result_record_name": "LegacyTaskResult",
+            "input_contract": {
+              "parameters": [
+                {
+                  "default": "YB-SIM-Li6PS5Cl",
+                  "name": "recipe_name",
+                  "required": false,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "default": "Li6PS5Cl",
+                  "name": "formula",
+                  "required": false,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "default": 3.86,
+                  "name": "synthesis_mass",
+                  "required": false,
+                  "schema": {
+                    "type": "number"
+                  }
+                },
+                {
+                  "default": 80,
+                  "name": "n_ball_bead",
+                  "required": false,
+                  "schema": {
+                    "type": "integer"
+                  }
+                },
+                {
+                  "default": [
+                    "Li2S",
+                    "LiBr",
+                    "LiCl",
+                    "P2S5"
+                  ],
+                  "name": "powder_names",
+                  "required": false,
+                  "schema": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  }
+                },
+                {
+                  "default": [
+                    0.9,
+                    0.87,
+                    1.2,
+                    0.88
+                  ],
+                  "name": "powder_weights",
+                  "required": false,
+                  "schema": {
+                    "items": {
+                      "type": "number"
+                    },
+                    "type": "array"
+                  }
+                },
+                {
+                  "default": [
+                    0.0007,
+                    0.0005,
+                    0.001,
+                    0.0005
+                  ],
+                  "name": "powder_tolerances",
+                  "required": false,
+                  "schema": {
+                    "items": {
+                      "type": "number"
+                    },
+                    "type": "array"
+                  }
+                },
+                {
+                  "default": [
+                    false,
+                    true,
+                    false,
+                    false
+                  ],
+                  "name": "powder_pre_adds",
+                  "required": false,
+                  "schema": {
+                    "items": {
+                      "type": "boolean"
+                    },
+                    "type": "array"
+                  }
+                },
+                {
+                  "default": 1,
+                  "name": "pallet_type",
+                  "required": false,
+                  "schema": {
+                    "type": "integer"
+                  }
+                },
+                {
+                  "default": 1,
+                  "name": "cubic_type",
+                  "required": false,
+                  "schema": {
+                    "type": "integer"
+                  }
+                },
+                {
+                  "default": [
+                    1
+                  ],
+                  "name": "task_slot_nums",
+                  "required": false,
+                  "schema": {
+                    "items": {
+                      "type": "integer"
+                    },
+                    "type": "array"
+                  }
+                },
+                {
+                  "default": true,
+                  "name": "has_bead_bottle",
+                  "required": false,
+                  "schema": {
+                    "type": "boolean"
+                  }
+                },
+                {
+                  "default": 80,
+                  "name": "bead_count",
+                  "required": false,
+                  "schema": {
+                    "type": "integer"
+                  }
+                },
+                {
+                  "default": 1,
+                  "name": "fetch_cubic_source",
+                  "required": false,
+                  "schema": {
+                    "type": "integer"
+                  }
+                },
+                {
+                  "default": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "name": "pallet_slot_types",
+                  "required": false,
+                  "schema": {
+                    "items": {
+                      "type": "integer"
+                    },
+                    "type": "array"
+                  }
+                },
+                {
+                  "default": null,
+                  "name": "bead_source",
+                  "required": false,
+                  "schema": {
+                    "anyOf": [
+                      {
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "default": null,
+                  "name": "powder_rack_positions",
+                  "required": false,
+                  "schema": {
+                    "anyOf": [
+                      {
+                        "items": {
+                          "type": "integer"
+                        },
+                        "type": "array"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "version": 1
+            },
+            "output_bindings": {
+              "task_id": {
+                "kind": "node_output",
+                "source_handle_uuid": "f3ffb8b6-ce4b-53d7-8132-ed09ae71ae59",
+                "workflow_node_uuid": "76ec0634-9277-4474-bfa6-b0ea0b4f8969"
+              }
+            },
+            "output_contract": {
+              "outputs": [
+                {
+                  "implicit": false,
+                  "name": "task_id",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "version": 1
+            },
+            "source_bootstrap": {
+              "kind": "editable_package_manifest",
+              "package_id": "yb_sse_devices",
+              "relative_path": "workflows/synthesis_powder_bead_rack2.py",
+              "source_uri": "package://yb_sse_devices/workflows/synthesis_powder_bead_rack2.py"
+            }
+          }
+        },
+        "name": "合成工站 加粉加珠流程 料架2",
+        "revision": 4,
+        "tags": [],
+        "update_time": "2026-09-21T15:59:39.457955Z",
+        "uuid": "2b618ad2-cb04-4ce0-8f0f-4155497740b2",
+        "workflow_type": "normal"
+      }
+    },
+    "input_contract": {
+      "parameters": [
+        {
+          "default": "YB-SIM-Li6PS5Cl",
+          "name": "recipe_name",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "default": "Li6PS5Cl",
+          "name": "formula",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "default": 3.86,
+          "name": "synthesis_mass",
+          "required": false,
+          "schema": {
+            "type": "number"
+          }
+        },
+        {
+          "default": 80,
+          "name": "n_ball_bead",
+          "required": false,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "default": [
+            "Li2S",
+            "LiBr",
+            "LiCl",
+            "P2S5"
+          ],
+          "name": "powder_names",
+          "required": false,
+          "schema": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        {
+          "default": [
+            0.9,
+            0.87,
+            1.2,
+            0.88
+          ],
+          "name": "powder_weights",
+          "required": false,
+          "schema": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array"
+          }
+        },
+        {
+          "default": [
+            0.0007,
+            0.0005,
+            0.001,
+            0.0005
+          ],
+          "name": "powder_tolerances",
+          "required": false,
+          "schema": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array"
+          }
+        },
+        {
+          "default": [
+            false,
+            true,
+            false,
+            false
+          ],
+          "name": "powder_pre_adds",
+          "required": false,
+          "schema": {
+            "items": {
+              "type": "boolean"
+            },
+            "type": "array"
+          }
+        },
+        {
+          "default": 1,
+          "name": "pallet_type",
+          "required": false,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "default": 1,
+          "name": "cubic_type",
+          "required": false,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "default": [
+            1
+          ],
+          "name": "task_slot_nums",
+          "required": false,
+          "schema": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array"
+          }
+        },
+        {
+          "default": true,
+          "name": "has_bead_bottle",
+          "required": false,
+          "schema": {
+            "type": "boolean"
+          }
+        },
+        {
+          "default": 80,
+          "name": "bead_count",
+          "required": false,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "default": 1,
+          "name": "fetch_cubic_source",
+          "required": false,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "default": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "name": "pallet_slot_types",
+          "required": false,
+          "schema": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array"
+          }
+        },
+        {
+          "default": null,
+          "name": "bead_source",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        {
+          "default": null,
+          "name": "powder_rack_positions",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      ],
+      "version": 1
+    },
+    "meta_data": {},
+    "name": "合成工站 加粉加珠流程 料架2",
+    "node_count": 3,
+    "node_template_uuid": "60b69c78-5e5f-4e6a-a11a-414a57b3b8f1",
+    "output_contract": {
+      "outputs": [
+        {
+          "implicit": false,
+          "name": "task_id",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "version": 1
+    },
+    "source_hash": "sha256:cba32db484f6fed5f5937a2fd1a093b9976b4e0cb01f95d88169c5c1b99a0289",
+    "tags": [],
+    "update_time": "2026-09-21T15:59:47.027987Z",
+    "uuid": "8901ae5b-1f87-4644-ac9b-2c05a51eb037",
+    "version": 3,
+    "workflow_revision": 4,
+    "workflow_uuid": "2b618ad2-cb04-4ce0-8f0f-4155497740b2"
+  },
+  "source_draft_hash": "sha256:17a798c90e007b948b66477d500d6967d0262f5db3688c2fd88ca8c4d0ee7ebd"
+}

@@ -11,8 +11,9 @@ import json
 import threading
 import time
 from typing import Annotated, Any, TypedDict
+from uuid import uuid4
 
-from unilabos.registry.annotations import AllowedResourceTemplates
+from unilabos.registry.annotations import AllowedResourceTemplates, JSONValue
 from unilabos.registry.decorators import action, device, not_action, topic_config
 from unilabos.registry.placeholder_type import ResourceSlot
 
@@ -20,7 +21,12 @@ from yb_sse_devices.resources.synthesis_bead_bottle.resource import SynthesisBea
 from yb_sse_devices.resources.synthesis_crucible.resource import SynthesisCrucible
 from yb_sse_devices.resources.synthesis_powder.resource import SynthesisPowder
 from yb_sse_devices.devices.yb_synthesis_modbus_station.device import YBSynthesisModbusStation
-from yb_sse_devices.common.synthesis_protocol import materials_from_columns, resolve_task_slots_input
+from yb_sse_devices.common.synthesis_protocol import (
+    materials_from_columns,
+    pallet_slot_count,
+    resolve_task_slots_input,
+)
+from yb_sse_devices.devices.yb_synthesis_modbus_station.modbus import cubic_source_to_plc
 
 
 class AtomicResult(TypedDict):
@@ -36,6 +42,22 @@ class AtomicResult(TypedDict):
     # PLC 完成反馈后的库位审计。字段保持可选，兼容直接调用设备动作的旧接口。
     crucible: ResourceSlot | None
     small_crucible: ResourceSlot | None
+
+
+class DoseRecipeResult(TypedDict):
+    """称粉动作的完整 PLC 反馈结果。"""
+
+    task_id: str
+    post_id: str
+    state: str
+    message: str
+    qrcode: str
+    lot_id: str
+    small_cubics: list[str]
+    ledger_json: str
+    crucible: ResourceSlot | None
+    small_crucible: ResourceSlot | None
+    sampling_results: list[dict[str, JSONValue]]
 
 
 class LegacyTaskActionResult(TypedDict):
@@ -140,6 +162,8 @@ class YBSynthesisAtomicStation:
         self._post_id = ""
         self._task_slots: list[dict[str, Any]] = []
         self._materials: list[dict[str, Any]] = []
+        self._local_batch = False
+        self._powder_rack_positions: list[int] = []
         self._bead_count = 0
         self._confirmed_weights: dict[str, float] = {}
         self._recipe_confirmed = False
@@ -222,10 +246,12 @@ class YBSynthesisAtomicStation:
             last = predicate()
             if last:
                 return last
-            if self.station.simulation:
-                # Raw PLC handshakes must not advance the separate TASK/POST
-                # business clock; doing so can auto-create a POST before the
-                # explicit scan-and-bottle boundary.
+            # Raw PLC handshakes must not advance the separate TASK/POST
+            # business clock; doing so can auto-create a POST before the
+            # explicit scan-and-bottle boundary.  Advance only transports
+            # that explicitly expose a deterministic clock (including the
+            # direct-PLC test seam); a real Modbus socket is polled by sleep.
+            if callable(getattr(self.station.controller.transport, "advance", None)):
                 self.station.controller.advance(self.simulation_step)
             else:
                 time.sleep(self.simulation_step)
@@ -238,6 +264,53 @@ class YBSynthesisAtomicStation:
         if self._task_id and value != self._task_id:
             raise RuntimeError("原子动作不能交错执行多个 TASK")
         return value
+
+    def _direct_plc_mode(self) -> bool:
+        """Return whether the nested station has only the PLC contract.
+
+        Recipe/TASK/POST actions are a separate business API.  A production
+        Modbus graph deliberately has no business simulator, so the atomic
+        layer must keep the task ledger locally and use the direct PLC
+        commands instead of manufacturing business registers.
+        """
+
+        return self._local_batch or (
+            not self.station.simulation and self.station.business_state is None
+        )
+
+    @staticmethod
+    def _validate_direct_batch(
+        materials: list[dict[str, Any]],
+        slots: list[dict[str, Any]],
+        powder_rack_positions: list[int] | None,
+        pallet_type: int,
+        pallet_slot_types: list[int] | None,
+        has_bead_bottle: bool,
+        bead_count: int,
+        cubic_type: int,
+    ) -> None:
+        if powder_rack_positions is None:
+            raise ValueError("真实 PLC 模式必须显式提供 powder_rack_positions")
+        if len(powder_rack_positions) != len(materials):
+            raise ValueError("powder_rack_positions 必须与 powder_names 一一对应")
+        if any(
+            not isinstance(value, int) or not 0 <= value <= 0xFFFF
+            for value in powder_rack_positions
+        ):
+            raise ValueError("powder_rack_positions 必须是 0..65535 的整数")
+        if not slots:
+            raise ValueError("至少需要一个 task_slot_nums")
+        pallet_slot_count(int(pallet_type))
+        if pallet_slot_types is None or len(pallet_slot_types) != 6:
+            raise ValueError("真实 PLC 模式必须显式提供 6 个 pallet_slot_types")
+        if any(not isinstance(value, int) or not 0 <= value <= 0xFFFF for value in pallet_slot_types):
+            raise ValueError("pallet_slot_types 必须是 0..65535 的整数")
+        if not isinstance(cubic_type, int) or not 0 <= cubic_type <= 0xFFFF:
+            raise ValueError("cubic_type 必须是无符号 16 位整数")
+        if not isinstance(bead_count, int) or not 0 <= bead_count <= 0xFFFF:
+            raise ValueError("bead_count 必须是无符号 16 位整数")
+        if has_bead_bottle and bead_count <= 0:
+            raise ValueError("has_bead_bottle=True 时 bead_count 必须大于 0")
 
     def _require_post(self, post_id: str = "") -> str:
         value = str(post_id or self._post_id).strip()
@@ -377,7 +450,7 @@ class YBSynthesisAtomicStation:
                 "旧流程声共振已结束",
             )
 
-    @action(description="创建并启动合成 TASK，同时建立物料初始账")
+    @action(description="创建合成批次并建立物料初始账；真实 PLC 由 OS 本地建账")
     def create_batch(
         self,
         recipe_name: str = "YB-SIM-Li6PS5Cl",
@@ -394,6 +467,8 @@ class YBSynthesisAtomicStation:
         has_bead_bottle: bool = True,
         bead_count: int = 80,
         fetch_cubic_source: int = 1,
+        powder_rack_positions: list[int] | None = None,
+        pallet_slot_types: list[int] | None = None,
     ) -> AtomicResult:
         with self._lock:
             if self._task_id and self._batch_terminal:
@@ -404,6 +479,8 @@ class YBSynthesisAtomicStation:
                 self._post_id = ""
                 self._task_slots = []
                 self._materials = []
+                self._local_batch = False
+                self._powder_rack_positions = []
                 self._bead_count = 0
                 self._confirmed_weights = {}
                 self._recipe_confirmed = False
@@ -418,6 +495,7 @@ class YBSynthesisAtomicStation:
                 self._sinter_started = False
             if self._task_id:
                 raise RuntimeError("已有活动 TASK，不能交错创建第二个批次")
+            local_batch = self._direct_plc_mode()
             materials = materials_from_columns(
                 powder_names, powder_weights, powder_tolerances, powder_pre_adds
             )
@@ -428,46 +506,64 @@ class YBSynthesisAtomicStation:
             slots = [{"slot_num": int(item["slot_num"]), "recipe_name": str(recipe_name)} for item in slots]
             if fetch_cubic_source not in {0, 1}:
                 raise ValueError("fetch_cubic_source 必须是 0（方舱）或 1（料架2）")
-            recipe_response = self.station.upload_recipe(
-                recipe_name, formula, synthesis_mass, n_ball_bead,
-                powder_names=[str(item["name"]) for item in materials],
-                powder_weights=[float(item["weight"]) for item in materials],
-                powder_tolerances=[float(item["tolerance"]) for item in materials],
-                powder_pre_adds=[bool(item["pre_add"]) for item in materials],
-            )
-            if not self._ok(recipe_response):
-                # Recipe names are persistent PLC records.  Re-running a
-                # completed batch with the same recipe is valid, and the PLC
-                # reports the existing-name condition as result=4.  Reuse the
-                # existing recipe; all other upload failures remain fatal.
-                try:
-                    duplicate_recipe = int(recipe_response.get("result", -1)) == 4
-                except (AttributeError, TypeError, ValueError):
-                    duplicate_recipe = False
-                if not duplicate_recipe:
-                    self._require_ok(recipe_response, "上传配方")
-            created = self._require_ok(
-                self.station.create_task(
-                    pallet_type=pallet_type,
-                    cubic_type=cubic_type,
-                    task_slot_nums=[int(item["slot_num"]) for item in slots],
-                    task_recipe_names=[str(item["recipe_name"]) for item in slots],
-                    has_bead_bottle=has_bead_bottle,
-                    bead_count=bead_count,
-                ),
-                "创建 TASK",
-            )
-            task_id = str(created.get("task_id") or (created.get("data") or {}).get("task_id") or "")
-            if not task_id:
-                raise RuntimeError(f"创建 TASK 未返回 task_id: {created}")
-            self._require_ok(self.station.start_task(task_id), "启动 TASK")
+            if local_batch:
+                self._validate_direct_batch(
+                    materials, slots, powder_rack_positions,
+                    pallet_type, pallet_slot_types,
+                    has_bead_bottle, bead_count, cubic_type,
+                )
+                if fetch_cubic_source != 1:
+                    raise ValueError("当前直接批次仅支持料架2来源；方舱关门需独立确认流程")
+                # The real PLC IO table contains command/status registers but
+                # no recipe/TASK business API.  Keep this identity entirely
+                # on the OS side for tracing and resource accounting.
+                task_id = f"OS-TASK-{uuid4().hex[:12].upper()}"
+            else:
+                recipe_response = self.station.upload_recipe(
+                    recipe_name, formula, synthesis_mass, n_ball_bead,
+                    powder_names=[str(item["name"]) for item in materials],
+                    powder_weights=[float(item["weight"]) for item in materials],
+                    powder_tolerances=[float(item["tolerance"]) for item in materials],
+                    powder_pre_adds=[bool(item["pre_add"]) for item in materials],
+                )
+                if not self._ok(recipe_response):
+                    # Recipe names are persistent PLC records.  Re-running a
+                    # completed batch with the same recipe is valid, and the
+                    # PLC reports the existing-name condition as result=4.
+                    try:
+                        duplicate_recipe = int(recipe_response.get("result", -1)) == 4
+                    except (AttributeError, TypeError, ValueError):
+                        duplicate_recipe = False
+                    if not duplicate_recipe:
+                        self._require_ok(recipe_response, "上传配方")
+                created = self._require_ok(
+                    self.station.create_task(
+                        pallet_type=pallet_type,
+                        cubic_type=cubic_type,
+                        task_slot_nums=[int(item["slot_num"]) for item in slots],
+                        task_recipe_names=[str(item["recipe_name"]) for item in slots],
+                        has_bead_bottle=has_bead_bottle,
+                        bead_count=bead_count,
+                    ),
+                    "创建 TASK",
+                )
+                task_id = str(created.get("task_id") or (created.get("data") or {}).get("task_id") or "")
+                if not task_id:
+                    raise RuntimeError(f"创建 TASK 未返回 task_id: {created}")
+                self._require_ok(self.station.start_task(task_id), "启动 TASK")
             self._task_id = task_id
+            self._local_batch = local_batch
+            self._powder_rack_positions = list(powder_rack_positions or [])
             self._task_slots = slots
             self._materials = materials
             self._bead_count = int(bead_count) if has_bead_bottle else 0
-            self._big_crucible_id = str(getattr(self.station, "simulation_crucible_id", "CRU-SIM-001"))
+            self._big_crucible_id = (
+                f"crucible:{task_id}" if local_batch
+                else str(getattr(self.station, "simulation_crucible_id", "CRU-SIM-001"))
+            )
             source = "cabin" if fetch_cubic_source == 0 else "crucible_rack_2"
-            self._ledger.put(self._big_crucible_id, kind="big_crucible", location=source, task_id=task_id, cubic_type=cubic_type)
+            self._ledger.put(self._big_crucible_id, kind="big_crucible", location=source, task_id=task_id, cubic_type=cubic_type,
+                             recipe_name=recipe_name, formula=formula, synthesis_mass=synthesis_mass)
             for index, material in enumerate(materials, start=1):
                 self._ledger.put(
                     f"powder:{task_id}:{index}:{material['name']}",
@@ -476,13 +572,22 @@ class YBSynthesisAtomicStation:
                 )
             if has_bead_bottle:
                 self._ledger.put(f"beads:{task_id}", kind="ball_beads", location="bead_bottle", quantity=int(bead_count))
-            return self._result("READY", "TASK 已创建并启动")
+            return self._result(
+                "READY",
+                "上位机批次已创建（PLC 直接模式）"
+                if self._direct_plc_mode()
+                else "TASK 已创建并启动",
+            )
 
-    @action(description="取大坩埚并完成方舱关门握手")
+    @action(description="取大坩埚（PLC命令7含取盖/放盖）并完成方舱关门握手")
     def load_big_crucible(
         self,
         task_id: str = "",
         fetch_cubic_source: int | None = None,
+        destination: int = 1,
+        pallet_type: int = 1,
+        pallet_slot_types: list[int] | None = None,
+        bead_source: int | None = None,
         crucible: Annotated[
             ResourceSlot | None, AllowedResourceTemplates(SynthesisCrucible)
         ] = None,
@@ -492,19 +597,60 @@ class YBSynthesisAtomicStation:
             source = fetch_cubic_source
             if source is None:
                 source = 0 if self._ledger.items[self._big_crucible_id]["location"] == "cabin" else 1
-            self._require_ok(self.station.upload_cubic(resolved, int(source)), "上坩埚")
-            if int(source) == 0:
-                self._require_ok(self.station.close_cabin_outer_door(resolved), "关闭方舱外门")
-            self._wait(
-                lambda: int((self.station.query_upload_cubic_status(resolved).get("data") or {}).get("fetch_cubic_state") or 0) == 2,
-                "上坩埚完成",
-            )
+            if int(source) not in {0, 1}:
+                raise ValueError("fetch_cubic_source 必须是 0（方舱）或 1（料架2）")
+            if self._direct_plc_mode():
+                if pallet_slot_types is None or len(pallet_slot_types) != 6:
+                    raise ValueError("真实 PLC 模式必须显式提供 6 个 pallet_slot_types")
+                resolved_bead_source = (
+                    int(bead_source)
+                    if bead_source is not None
+                    else (cubic_source_to_plc(int(source)) if self._bead_count else 0)
+                )
+                self._require_ok(
+                    self.station.fetch_cubic_from_package(
+                        source=int(source),
+                        destination=int(destination),
+                        pallet_type=int(pallet_type),
+                        slot_numbers=list(pallet_slot_types),
+                        bead_source=resolved_bead_source,
+                    ),
+                    "PLC 命令7上坩埚",
+                )
+                if int(source) == 0:
+                    # The cabin-door handshake is a raw PLC command when no
+                    # business TASK ID is supplied.
+                    self._require_ok(
+                        self.station.close_cabin_outer_door(),
+                        "关闭方舱外门",
+                    )
+                self._wait(
+                    lambda: self._plc_operation_complete("upper_pallet", "上坩埚"),
+                    "上坩埚完成",
+                )
+            else:
+                self._require_ok(self.station.upload_cubic(resolved, int(source)), "上坩埚")
+                if int(source) == 0:
+                    self._require_ok(self.station.close_cabin_outer_door(resolved), "关闭方舱外门")
+                self._wait(
+                    lambda: int((self.station.query_upload_cubic_status(resolved).get("data") or {}).get("fetch_cubic_state") or 0) == 2,
+                    "上坩埚完成",
+                )
             expected = "cabin" if int(source) == 0 else "crucible_rack_2"
             self._ledger.move(self._big_crucible_id, "synthesis_chamber", expected=expected)
             values: dict[str, Any] = {}
             if crucible is not None:
                 values["crucible"] = crucible
             return self._result("LOADED", "大坩埚已到合成位", **values)
+
+    def _plc_operation_complete(self, status_key: str, operation: str) -> bool:
+        """Poll one direct PLC status register and fail on the PLC fault code."""
+
+        snapshot = self.station.controller.status()
+        code = int(snapshot.get(status_key, 0) or 0)
+        if code == 3:
+            raise RuntimeError(f"PLC{operation}报告故障状态")
+        return code == 2
 
     def _parse_real_weights(self, real_weights_json: str) -> dict[str, float]:
         if not real_weights_json.strip():
@@ -515,18 +661,19 @@ class YBSynthesisAtomicStation:
         return {str(key): float(value) for key, value in raw.items()}
 
     def _confirm_recipe_impl(self, resolved: str, weights: dict[str, float]) -> None:
-        for slot in self._task_slots:
-            for material in self._materials:
-                if material.get("pre_add"):
-                    self._require_ok(
-                        self.station.confirm_recipe(
-                            resolved,
-                            int(slot["slot_num"]),
-                            str(material["name"]),
-                            float(weights.get(str(material["name"]), material["weight"])),
-                        ),
-                        "确认预加料",
-                    )
+        if not self._direct_plc_mode():
+            for slot in self._task_slots:
+                for material in self._materials:
+                    if material.get("pre_add"):
+                        self._require_ok(
+                            self.station.confirm_recipe(
+                                resolved,
+                                int(slot["slot_num"]),
+                                str(material["name"]),
+                                float(weights.get(str(material["name"]), material["weight"])),
+                            ),
+                            "确认预加料",
+                        )
         self._confirmed_weights = dict(weights)
         self._recipe_confirmed = True
 
@@ -569,8 +716,34 @@ class YBSynthesisAtomicStation:
         bead_bottle: Annotated[
             ResourceSlot | None, AllowedResourceTemplates(SynthesisBeadBottle)
         ] = None,
-    ) -> AtomicResult:
+        powder_rack_positions: list[int] | None = None,
+        crucible_return_positions: list[int] | None = None,
+        crucible_return_location: str = "synthesis_crucible_rack_01",
+    ) -> DoseRecipeResult:
+        """执行 PLC 命令3的完整复合动作。
+
+        命令3内部负责天平开门、放入坩埚、关门称重、称重完成后再次开门
+        取出坩埚、关门，并按 ``crucible_return_positions`` 放回目标位置；
+        OS 不另发一个“天平开盖”命令，避免把 PLC 内部步骤拆成错误的外部动作。
+        """
         resolved = self._require_task(task_id)
+        direct_mode = self._direct_plc_mode()
+        if crucible_return_positions is None:
+            if direct_mode:
+                raise ValueError(
+                    "真实 PLC 模式必须显式提供 crucible_return_positions；"
+                    "这是命令3的放球磨罐位置，不能用取料槽位猜测"
+                )
+            resolved_return_positions = [int(slot["slot_num"]) for slot in self._task_slots]
+        else:
+            resolved_return_positions = [int(value) for value in crucible_return_positions]
+        if len(resolved_return_positions) != len(self._task_slots):
+            raise ValueError("crucible_return_positions 必须与 task_slot_nums 一一对应")
+        if any(not 0 <= value <= 0xFFFF for value in resolved_return_positions):
+            raise ValueError("crucible_return_positions 必须是 0..65535 的整数")
+        resolved_return_location = str(crucible_return_location).strip()
+        if not resolved_return_location:
+            raise ValueError("crucible_return_location 不能为空")
         weights = self._parse_real_weights(real_weights_json)
         if not self._recipe_confirmed:
             self._confirm_recipe_impl(resolved, weights)
@@ -578,16 +751,43 @@ class YBSynthesisAtomicStation:
             # A direct caller may still provide the actual weights at this
             # boundary; use them without sending a duplicate confirmation.
             self._confirmed_weights.update(weights)
-        self._require_ok(self.station.start_recipt(resolved), "启动加样")
+        if not direct_mode:
+            self._require_ok(self.station.start_recipt(resolved), "启动加样")
         sampling_results: list[dict[str, Any]] = []
-        for slot in self._task_slots:
-            names = [str(item["name"]) for item in self._materials]
+        for slot, return_position in zip(self._task_slots, resolved_return_positions):
+            active_materials = [
+                item for item in self._materials if not bool(item.get("pre_add"))
+            ]
+            names = [str(item["name"]) for item in active_materials]
+            if not names:
+                raise ValueError("没有需要由 PLC 命令3执行的非预加粉料")
+            if powder_rack_positions is None:
+                if self._direct_plc_mode():
+                    all_rack_positions = list(self._powder_rack_positions)
+                    if not all_rack_positions:
+                        raise ValueError(
+                            "真实 PLC 模式必须显式提供 powder_rack_positions"
+                        )
+                else:
+                    all_rack_positions = list(range(1, len(self._materials) + 1))
+            else:
+                all_rack_positions = [int(value) for value in powder_rack_positions]
+            if len(all_rack_positions) != len(self._materials):
+                raise ValueError(
+                    "powder_rack_positions 必须与 powder_names 一一对应"
+                )
+            active_indices = [
+                index for index, item in enumerate(self._materials)
+                if not bool(item.get("pre_add"))
+            ]
+            resolved_rack_positions = [all_rack_positions[index] for index in active_indices]
             sample = self.station.sample(
                 task_id=resolved,
                 slot_num=int(slot["slot_num"]),
-                rack_positions=list(range(1, len(names) + 1)),
-                masses=[float(item["weight"]) for item in self._materials],
-                tolerances=[float(item["tolerance"]) for item in self._materials],
+                destination_slot=int(return_position),
+                rack_positions=resolved_rack_positions,
+                masses=[float(item["weight"]) for item in active_materials],
+                tolerances=[float(item["tolerance"]) for item in active_materials],
                 cubic_type=int(self._ledger.items[self._big_crucible_id].get("cubic_type", 1)),
                 # CMD_SAMPLE is the confirmed PLC composite: internal scan,
                 # powder dosing and ball-bead loading happen in this one
@@ -614,15 +814,18 @@ class YBSynthesisAtomicStation:
             self._ledger.move(bead_id, self._big_crucible_id, expected="bead_bottle")
         self._ledger.update(
             self._big_crucible_id,
+            location=resolved_return_location,
             contents="recipe_powder_and_ball_beads",
             synthesis_state="dosed",
+            plc_return_positions=resolved_return_positions,
+            balance_door_cycle_completed=True,
         )
         values: dict[str, Any] = {"sampling_results": sampling_results}
         if crucible is not None:
             values["crucible"] = crucible
         return self._result("DOSED", "内部扫码、称粉和加珠已完成", **values)
 
-    @action(description="内部扫码、称粉和加珠（PLC CMD_SAMPLE 连续动作）")
+    @action(description="内部扫码、天平开关门、称粉、取回并放回坩埚（PLC CMD_SAMPLE 连续动作）")
     def dose_recipe(
         self,
         task_id: str = "",
@@ -645,13 +848,19 @@ class YBSynthesisAtomicStation:
         bead_bottle: Annotated[
             ResourceSlot | None, AllowedResourceTemplates(SynthesisBeadBottle)
         ] = None,
-    ) -> AtomicResult:
+        powder_rack_positions: list[int] | None = None,
+        crucible_return_positions: list[int] | None = None,
+        crucible_return_location: str = "synthesis_crucible_rack_01",
+    ) -> DoseRecipeResult:
         del powder_1, powder_2, powder_3, powder_4, bead_bottle
         with self._lock:
             return self._dose_recipe_impl(
                 task_id=task_id,
                 real_weights_json=real_weights_json,
                 crucible=crucible,
+                powder_rack_positions=powder_rack_positions,
+                crucible_return_positions=crucible_return_positions,
+                crucible_return_location=crucible_return_location,
             )
 
     def _start_resonance_impl(self, resolved: str) -> None:
@@ -675,7 +884,22 @@ class YBSynthesisAtomicStation:
         )
         self._require_ok(self.station.fetch_acoustic_resonance(resolved), "记录声共振下料")
         self._require_ok(self.station.finish_acoustic_resonance(resolved), "结束声共振")
-        self._ledger.move(self._big_crucible_id, "bottle_station", expected="synthesis_chamber")
+        current_location = str(
+            self._ledger.items[self._big_crucible_id].get("location") or ""
+        )
+        if current_location not in {
+            "synthesis_chamber",
+            "synthesis_crucible_rack_01",
+        }:
+            raise RuntimeError(
+                f"声共振取料位置不支持: {current_location!r}；"
+                "应为合成位或命令3指定的回料架"
+            )
+        self._ledger.move(
+            self._big_crucible_id,
+            "bottle_station",
+            expected=current_location,
+        )
         self._ledger.update(self._big_crucible_id, synthesis_state="resonated")
         self._resonance_started = False
 
@@ -1042,6 +1266,7 @@ class YBSynthesisAtomicStation:
         source_site: str = "synthesis_crucible_rack_01-0",
         task_id: str = "",
         slot_num: int = 1,
+        destination_slot: int | None = None,
         rack_positions: list[int] | None = None,
         masses: list[float] | None = None,
         tolerances: list[float] | None = None,
@@ -1059,6 +1284,7 @@ class YBSynthesisAtomicStation:
             source_site=source_site,
             task_id=task_id,
             slot_num=slot_num,
+            destination_slot=destination_slot,
             rack_positions=rack_positions,
             masses=masses,
             tolerances=tolerances,

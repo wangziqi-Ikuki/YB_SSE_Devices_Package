@@ -5,6 +5,10 @@ import json
 import pytest
 
 from yb_sse_devices import YBSynthesisAtomicStation
+from yb_sse_devices.devices.yb_synthesis_modbus_station.controller import (
+    SynthesisDirectController,
+)
+from yb_sse_devices.simulation.modbus_transport import SynthesisSimulationTransport
 
 
 @pytest.fixture()
@@ -131,3 +135,106 @@ def test_split_atomic_workflow_boundaries_preserve_protocol_and_ledger(
         "UNLOADED",
     ]
     assert _record(station, unloaded["small_cubics"][0])["location"] == "stock_buffer"
+
+
+def test_direct_plc_chain_keeps_os_task_local_and_uses_command7_then_command3() -> None:
+    """Exercise the production branch against a Modbus-only dry transport."""
+
+    station = YBSynthesisAtomicStation(
+        config={"simulation": False, "business_simulation": False},
+        action_timeout=3,
+        simulation_step=0.01,
+    )
+    transport = SynthesisSimulationTransport(
+        handshake_delay=0.01, crucible_id="CRU-DIRECT"
+    )
+    station.station.controller = SynthesisDirectController(
+        transport, unit_id=1, plc_units=True
+    )
+    try:
+        created = station.create_batch(
+            task_slot_nums=[1],
+            pallet_slot_types=[1, 0, 0, 0, 0, 0],
+            powder_rack_positions=[21, 22, 23, 24],
+        )
+        assert created["task_id"].startswith("OS-TASK-")
+
+        loaded = station.load_big_crucible(
+            created["task_id"], pallet_slot_types=[1, 0, 0, 0, 0, 0]
+        )
+        assert transport.writes[0][1][:4] == (7, 2, 1, 1)
+        assert transport.writes[0][1][10] == 2  # rack2 bead-bottle wire source
+
+        dosed = station.dose_recipe(
+            loaded["task_id"],
+            powder_rack_positions=[21, 22, 23, 24],
+            crucible_return_positions=[12],
+        )
+        assert transport.last_command[0] == 3
+        assert transport.last_command[1:3] == (1, 12)
+        assert dosed["sampling_results"][0]["material_count"] == 3
+        assert dosed["sampling_results"][0]["weights"] == [0.9, 1.2, 0.88]
+        assert '"location": "synthesis_crucible_rack_01"' in dosed["ledger_json"]
+    finally:
+        station.close()
+
+
+def test_direct_target_chain_returns_six_slot_alumina_without_beads() -> None:
+    """The requested rack-2 -> rack-1, two-powder target stays PLC-only."""
+
+    station = YBSynthesisAtomicStation(
+        config={"simulation": False, "business_simulation": False},
+        action_timeout=3,
+        simulation_step=0.01,
+    )
+    transport = SynthesisSimulationTransport(
+        handshake_delay=0.01, crucible_id="CRU-TARGET"
+    )
+    station.station.controller = SynthesisDirectController(
+        transport, unit_id=1, plc_units=True
+    )
+    try:
+        created = station.create_batch(
+            recipe_name="YB-LiCl-P2S5-2G",
+            formula="LiCl-P2S5",
+            synthesis_mass=4.0,
+            n_ball_bead=0,
+            powder_names=["LiCl", "P2S5"],
+            powder_weights=[2.0, 2.0],
+            powder_tolerances=[0.0007, 0.0007],
+            powder_pre_adds=[False, False],
+            pallet_type=3,
+            cubic_type=1,
+            task_slot_nums=[3, 4],
+            has_bead_bottle=False,
+            bead_count=0,
+            fetch_cubic_source=1,
+            pallet_slot_types=[0, 0, 1, 1, 0, 0],
+            powder_rack_positions=[31, 32],
+        )
+        loaded = station.load_big_crucible(
+            created["task_id"],
+            fetch_cubic_source=1,
+            pallet_type=3,
+            pallet_slot_types=[0, 0, 1, 1, 0, 0],
+            bead_source=0,
+        )
+        assert transport.writes[0][1] == (7, 2, 1, 3, 0, 0, 1, 1, 0, 0, 0)
+
+        dosed = station.dose_recipe(
+            loaded["task_id"],
+            powder_rack_positions=[31, 32],
+            crucible_return_positions=[3, 4],
+        )
+        assert transport.last_command[0] == 3
+        assert transport.last_command[1:3] == (4, 4)
+        assert transport.last_command[80] == 0
+        assert dosed["sampling_results"][-1]["material_count"] == 2
+        assert dosed["sampling_results"][-1]["weights"] == [2.0, 2.0]
+        assert '"location": "synthesis_crucible_rack_01"' in dosed["ledger_json"]
+        assert all(
+            record["kind"] != "ball_beads"
+            for record in json.loads(dosed["ledger_json"])
+        )
+    finally:
+        station.close()

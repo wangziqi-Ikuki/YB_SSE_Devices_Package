@@ -16,6 +16,6 @@ Their current, auto-loaded Python counterparts are:
 - `workflows/synthesis_powder_bead_rack2.py`
 - `workflows/synthesis_mixing.py`
 
-The conversions retain the original workflow UUIDs and action order. Legacy standalone manual-confirmation nodes are represented by the current OS manual-confirmation wrapper on the following action, with the same 3600-second timeout.
+The conversions retain the original workflow UUIDs. Legacy standalone manual-confirmation nodes are represented by the current OS manual-confirmation wrapper on the following action, with the same 3600-second timeout. The rack-2 Python workflow follows the currently confirmed station sequence: the manual gate opens first so an operator can place the tray and crucible on rack 2; approval then dispatches the PLC command-7 upper-tray action, followed by command 3 sampling. The legacy rack-2 JSON remains unchanged as the historical reference export.
 
 Use `load_legacy_workflow()` to read an export for migration or compatibility tooling. The automated tests validate graph integrity, action availability, package inclusion, and execution of the action sequence against the in-process synthesis-station simulator. Manual-confirmation nodes are preserved and validated as gates, while the automated simulator test treats approval as granted.

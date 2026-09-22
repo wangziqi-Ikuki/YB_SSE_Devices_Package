@@ -61,6 +61,7 @@ class CodecTests(unittest.TestCase):
     def test_sampling_payload_matches_cpp_offsets(self) -> None:
         payload = encode_sampling_command(
             slot=4,
+            destination_slot=12,
             from_outside=False,
             rack_positions=[21],
             masses=[0.9],
@@ -70,7 +71,7 @@ class CodecTests(unittest.TestCase):
         )
         self.assertEqual(len(payload), 81)
         self.assertEqual(payload[0], int(SynthesisCommand.SAMPLE))
-        self.assertEqual(payload[1:3], (4, 4))
+        self.assertEqual(payload[1:3], (4, 12))
         self.assertEqual(payload[3], 21)
         self.assertAlmostEqual(decode_float32(payload[4:6]), 0.9, places=5)
         self.assertAlmostEqual(decode_float32(payload[6:8]), 0.0007, places=6)

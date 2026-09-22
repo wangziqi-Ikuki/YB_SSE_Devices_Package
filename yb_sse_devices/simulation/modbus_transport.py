@@ -553,13 +553,20 @@ class SynthesisSimulationTransport:
             raise ValueError("CMD_SAMPLE payload must contain 81 registers")
         if self._active_operation is not None:
             raise SimulationError("上一条 PLC 动作尚未完成，设备动作互斥")
-        slot = int(payload[2])
+        # CMD_SAMPLE stores the independent PLC positions as
+        # ``取球磨罐位置`` (40002) and ``放球磨罐位置`` (40003).  The simulator
+        # uses the source position as the task identity for rack-fed runs;
+        # for an outside/manual source (99), the destination is the useful
+        # task slot instead.
+        source_position = int(payload[1])
+        destination_position = int(payload[2])
+        slot = destination_position if source_position == 99 else source_position
         if slot <= 0:
             raise ValueError("CMD_SAMPLE slot must be positive")
         cubic_type = int(payload[79])
         names = self.material_names
         targets: dict[str, float] = {}
-        for index in range(10):
+        for index in range(15):
             start = 3 + index * 5
             rack_position = int(payload[start])
             if rack_position == 0:

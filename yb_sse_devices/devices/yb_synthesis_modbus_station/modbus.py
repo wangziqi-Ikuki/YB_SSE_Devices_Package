@@ -600,8 +600,8 @@ class SynthesisModbusClient:
         return SynthesisStatusSnapshot.from_registers(values)
 
     def read_sampling_results(self, material_count: int) -> SamplingResults:
-        if not isinstance(material_count, int) or not 0 <= material_count <= 10:
-            raise ValueError("material_count must be in the range 0..10")
+        if not isinstance(material_count, int) or not 0 <= material_count <= 15:
+            raise ValueError("material_count must be in the range 0..15")
         values = self.transport.read_holding_registers(
             self.register_map.sampling_result_address,
             self.register_map.sampling_result_count,
@@ -642,18 +642,23 @@ class SynthesisModbusClient:
 def encode_sampling_command(
     *,
     slot: int,
+    destination_slot: int | None = None,
     from_outside: bool,
     rack_positions: Sequence[int],
     masses: Sequence[float],
     tolerances: Sequence[float],
     cubic_type: int,
     bead_count: int,
-    max_materials: int = 10,
+    max_materials: int = 15,
 ) -> tuple[int, ...]:
     """Build the 81-register payload used by the Qt ``CMD_SAMPLE`` path."""
 
     if not isinstance(slot, int) or not 0 <= slot <= 0xFFFF:
         raise ValueError("slot must be an unsigned 16-bit integer")
+    if destination_slot is not None and (
+        not isinstance(destination_slot, int) or not 0 <= destination_slot <= 0xFFFF
+    ):
+        raise ValueError("destination_slot must be an unsigned 16-bit integer")
     if not 0 <= len(rack_positions) <= max_materials:
         raise ValueError(f"at most {max_materials} materials are supported")
     if not (len(rack_positions) == len(masses) == len(tolerances)):
@@ -666,7 +671,11 @@ def encode_sampling_command(
     payload = [0] * 81
     payload[0] = int(SynthesisCommand.SAMPLE)
     payload[1] = 99 if from_outside else slot
-    payload[2] = slot
+    # CMD_SAMPLE has independent ``取球磨罐位置`` and ``放球磨罐位置``
+    # registers.  Older callers used the same slot for both, so None keeps
+    # that compatibility while direct OS workflows can state the return
+    # position explicitly.
+    payload[2] = slot if destination_slot is None else destination_slot
     for index, (rack, mass, tolerance) in enumerate(
         zip(rack_positions, masses, tolerances)
     ):

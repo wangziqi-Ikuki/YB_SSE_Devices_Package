@@ -36,10 +36,15 @@ class SynthesisDirectController:
         *,
         unit_id: int = 1,
         material_names: Sequence[str] | None = None,
+        plc_units: bool = False,
     ) -> None:
         self.transport = transport
         self.client = SynthesisModbusClient(transport, unit_id=unit_id)
         self.material_names = tuple(str(name).strip() for name in (material_names or ()))
+        # The OS-facing recipe uses grams and absolute gram tolerances.  The
+        # Qt/PLC command-3 payload uses milligrams and a relative tolerance;
+        # simulation transports intentionally keep the OS units unchanged.
+        self.plc_units = bool(plc_units)
         self._last_material_count = 0
         self._last_task_id = ""
 
@@ -92,6 +97,7 @@ class SynthesisDirectController:
         *,
         task_id: str = "",
         slot_num: int,
+        destination_slot: int | None = None,
         rack_positions: Sequence[int],
         masses: Sequence[float],
         tolerances: Sequence[float],
@@ -120,12 +126,25 @@ class SynthesisDirectController:
             raise ValueError("material_names 必须与 rack_positions 一一对应")
         if any(not name for name in names):
             raise ValueError("material_names 不能包含空名称")
+        payload_masses = [float(value) for value in masses]
+        payload_tolerances = [float(value) for value in tolerances]
+        if self.plc_units:
+            if any(value <= 0 for value in payload_masses):
+                raise ValueError("PLC 加样重量必须大于 0 g")
+            payload_masses = [value * 1000.0 for value in payload_masses]
+            payload_tolerances = [
+                tolerance / mass
+                for tolerance, mass in zip(payload_tolerances, masses)
+            ]
         payload = encode_sampling_command(
             slot=int(slot_num),
+            destination_slot=(
+                None if destination_slot is None else int(destination_slot)
+            ),
             from_outside=bool(from_outside),
             rack_positions=rack_positions,
-            masses=masses,
-            tolerances=tolerances,
+            masses=payload_masses,
+            tolerances=payload_tolerances,
             cubic_type=int(cubic_type),
             bead_count=int(bead_count),
         )
@@ -182,7 +201,7 @@ class SynthesisDirectController:
         results: dict[str, int] = {}
         for index, value in enumerate(result.weights):
             name = names[index] if index < len(names) else f"material_{index + 1}"
-            weights[name] = value
+            weights[name] = value / 1000.0 if self.plc_units else value
         for index, value in enumerate(result.results):
             name = names[index] if index < len(names) else f"material_{index + 1}"
             results[name] = value
@@ -311,7 +330,13 @@ class SynthesisDirectController:
                 saw_running = True
             if status.sampling == 2 and (saw_running or previous_status != 2):
                 accepted["status"] = asdict(status)
-                accepted["result"] = self.sampling_result()
+                sampling_result = self.sampling_result()
+                result_codes = [int(value) for value in sampling_result["results"].values()]
+                if any(code != 1 for code in result_codes):
+                    raise RuntimeError(
+                        f"PLC 称粉结果异常: result_codes={result_codes}"
+                    )
+                accepted["result"] = sampling_result
                 return accepted
             if status.sampling == 3:
                 raise RuntimeError("PLC 称粉任务失败")

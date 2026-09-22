@@ -110,12 +110,13 @@ commands:
     write_range: {start: 40001, count: 81}
     payload:
       "40001": 3
-      "40002": "slot number; 99 means take crucible from outside"
-      "40003": "slot number"
+      "40002": "取球磨罐位置；99 means take crucible from outside"
+      "40003": "放球磨罐位置；称重后 PLC 从天平取出并放回此位置"
       materials:
         start: 40004
         count_written_by_qt: 10
         count_listed_by_io: 15
+        count_supported_by_package: 15
         stride: 5
         fields:
           - rack_position
@@ -123,11 +124,14 @@ commands:
           - mass_float_high_word
           - tolerance_float_low_word
           - tolerance_float_high_word
+        units:
+          mass: mg (the OS recipe is converted from g)
+          tolerance: relative_fraction (absolute g tolerance divided by target g)
       "40080": "crucible type (IO: 1..5)"
       "40081": bead_count
     precondition:
       - internal_robot_scan_and_crucible_binding must succeed before dosing is allowed
-      - actual PLC gate is not exposed as a separate PC command in the source
+      - PLC internally opens/closes the balance door before and after weighing; no separate OS command is sent
   4:
     name: send_firing
     description: send furnace or Joule-heating recipe
@@ -390,7 +394,7 @@ unresolved:
   - item: scan_failure_reporting
     detail: No dedicated PC-visible scan error register was found; failure may surface as task 40102=3, timeout, or an invalid/empty QR result.
   - item: material_count
-    detail: IO lists 15 material/weight/result slots; Qt client writes only 10 groups because MAX_UPDOWNMATERIAL_COUNT=10 (MAX_SAMPLING_MATERIAL_COUNT=15 is unused).
+    detail: IO lists 15 material/weight/result slots; the legacy Qt client writes only 10 groups because MAX_UPDOWNMATERIAL_COUNT=10, while the direct package encoder and result reader support all 15 IO groups.
   - item: d_address_mapping
     detail: Workbook D/R labels, 4xxxx HoldingRegister offsets, Unit ID and function codes should be confirmed against a PLC trace.
   - item: qr_format

@@ -6,6 +6,8 @@ workflows:
     source: yb_sse_devices/workflows/start_batch.py
   - workflow_uuid: 72cb4f07-9a92-46eb-ae2a-79d08e2c3b67
     source: yb_sse_devices/experiment_operations/synthesis_sampling.py
+  - workflow_uuid: 871ecc8b-9e7c-4e09-8637-3c8c0df42927
+    source: yb_sse_devices/experiment_operations/synthesis_load_tray.py
   - workflow_uuid: f7c79ca5-1ed4-4d2a-9571-a8bbf9786c44
     source: yb_sse_devices/workflows/synthesis_atomic_single.py
   - workflow_uuid: 7e5dabc1-8795-5009-85fe-c9a4c4f0c1e3

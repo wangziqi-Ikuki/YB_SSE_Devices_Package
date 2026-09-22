@@ -1,0 +1,1157 @@
+{
+  "contract": {
+    "boundary_mapping": {
+      "target_mappings": {
+        "33baeaf3-e099-585e-9e88-e97c2cd20dc7": [
+          {
+            "workflow_node_uuid": "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52",
+            "target_handle_uuid": "1a3f70eb-3c84-5b49-8d83-c850cba239fd"
+          }
+        ],
+        "790cfdea-3550-5680-a4c0-1ca5c8d00c60": [
+          {
+            "workflow_node_uuid": "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52",
+            "target_handle_uuid": "dea6ce38-a171-5c1c-9169-b98e5213de09"
+          }
+        ],
+        "b909fd7a-77f3-5bcf-9996-aeabfb623a90": [
+          {
+            "workflow_node_uuid": "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52",
+            "target_handle_uuid": "550bb14d-006a-5230-b4a9-5ecdfc6782e6"
+          }
+        ],
+        "eee457e5-bff0-5ec3-9a22-937e68f5ee25": [
+          {
+            "workflow_node_uuid": "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52",
+            "target_handle_uuid": "8ce327eb-1b9b-5fe9-819b-09ecb45bf331"
+          }
+        ],
+        "02429aa8-7a7b-55c2-9a81-426b58e6f79b": [
+          {
+            "workflow_node_uuid": "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52",
+            "target_handle_uuid": "9a66097a-725c-52b1-babf-e2a58c9bc047"
+          }
+        ],
+        "e9d2a7d5-b2b3-5324-8d60-ee6a94cfafc6": [
+          {
+            "workflow_node_uuid": "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52",
+            "target_handle_uuid": "73b53b33-57d7-5178-ac16-fd78399e78cb"
+          }
+        ]
+      },
+      "source_mappings": {
+        "e6011fa8-04d2-5002-8b6f-8f2ef31e9f66": {
+          "kind": "node_output",
+          "workflow_node_uuid": "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52",
+          "source_handle_uuid": "ad7b52f3-452c-55fb-8e28-e4b24228ca7f"
+        },
+        "401aa851-613b-516b-9180-44970c1c8cca": {
+          "kind": "node_output",
+          "workflow_node_uuid": "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52",
+          "source_handle_uuid": "1a4737ff-d827-5f3a-b58b-edaf09e1f302"
+        },
+        "734322a6-f4ef-5073-a70a-5da2b8fb15ee": {
+          "kind": "node_output",
+          "workflow_node_uuid": "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52",
+          "source_handle_uuid": "fffd46a8-013c-5179-8f9d-254548cf55c0"
+        }
+      },
+      "structural_mappings": {
+        "entry_targets": [],
+        "completion_sources": []
+      }
+    },
+    "contract_digest": "sha256:7bd91cbbd1bac4799d2ca0c8254308980a85df45840ab42f44e2a7cb21b54f39",
+    "create_time": "2026-09-22T06:33:52.220Z",
+    "description": "人工确认托盘和坩埚已放在料架2后，执行 PLC 命令7将托盘和坩埚搬运到料架1；实验操作只负责上托盘，不执行加样。",
+    "edge_count": 0,
+    "executor_binding_mapping": {
+      "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52": "executor_1"
+    },
+    "executor_requirements": [
+      {
+        "key": "executor_1",
+        "display_name": "执行设备 1",
+        "resource_template_uuid": "c5470661-3397-5ee7-9b3b-78e52826851c",
+        "required": true
+      }
+    ],
+    "graph_snapshot": {
+      "workflow": {
+        "uuid": "871ecc8b-9e7c-4e09-8637-3c8c0df42927",
+        "name": "YB 合成工站上托盘",
+        "description": "人工确认托盘和坩埚已放在料架2后，执行 PLC 命令7将托盘和坩埚搬运到料架1；实验操作只负责上托盘，不执行加样。",
+        "workflow_type": "experiment_operation",
+        "meta_data": {
+          "unilab": {
+            "authoring_root_fields": [
+              "workflow_type"
+            ],
+            "authoring_function_name": "synthesis_load_tray",
+            "authoring_result_record_name": "SynthesisLoadTrayResult",
+            "input_contract": {
+              "version": 1,
+              "parameters": [
+                {
+                  "name": "task_id",
+                  "schema": {
+                    "type": "string"
+                  },
+                  "required": true
+                },
+                {
+                  "name": "fetch_cubic_source",
+                  "schema": {
+                    "type": "integer"
+                  },
+                  "required": false,
+                  "default": 1
+                },
+                {
+                  "name": "destination",
+                  "schema": {
+                    "type": "integer"
+                  },
+                  "required": false,
+                  "default": 1
+                },
+                {
+                  "name": "pallet_type",
+                  "schema": {
+                    "type": "integer"
+                  },
+                  "required": false,
+                  "default": 3
+                },
+                {
+                  "name": "pallet_slot_types",
+                  "schema": {
+                    "anyOf": [
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        }
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "required": false,
+                  "default": null
+                },
+                {
+                  "name": "bead_source",
+                  "schema": {
+                    "anyOf": [
+                      {
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "required": false,
+                  "default": null
+                }
+              ]
+            },
+            "output_contract": {
+              "version": 1,
+              "outputs": [
+                {
+                  "name": "task_id",
+                  "schema": {
+                    "type": "string"
+                  },
+                  "implicit": false
+                },
+                {
+                  "name": "state",
+                  "schema": {
+                    "type": "string"
+                  },
+                  "implicit": false
+                },
+                {
+                  "name": "message",
+                  "schema": {
+                    "type": "string"
+                  },
+                  "implicit": false
+                }
+              ]
+            },
+            "output_bindings": {
+              "task_id": {
+                "kind": "node_output",
+                "workflow_node_uuid": "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52",
+                "source_handle_uuid": "ad7b52f3-452c-55fb-8e28-e4b24228ca7f"
+              },
+              "state": {
+                "kind": "node_output",
+                "workflow_node_uuid": "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52",
+                "source_handle_uuid": "1a4737ff-d827-5f3a-b58b-edaf09e1f302"
+              },
+              "message": {
+                "kind": "node_output",
+                "workflow_node_uuid": "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52",
+                "source_handle_uuid": "fffd46a8-013c-5179-8f9d-254548cf55c0"
+              }
+            }
+          }
+        },
+        "revision": 2,
+        "create_time": "2026-09-22T06:33:52.217Z",
+        "update_time": "2026-09-22T06:33:52.217Z",
+        "tags": []
+      },
+      "nodes": [
+        {
+          "uuid": "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52",
+          "workflow_node_template_uuid": "e0debecc-0d95-5b78-a53c-696cbedb3c63",
+          "parent_uuid": null,
+          "material_uuid": null,
+          "name": "load_big_crucible",
+          "type": "manual_confirm",
+          "icon": null,
+          "pose": {},
+          "param": {},
+          "footer": null,
+          "action_name": "load_big_crucible",
+          "action_type": "UniLabJsonCommand",
+          "execution_policy": {},
+          "disabled": false,
+          "minimized": false,
+          "script": null,
+          "description": "取大坩埚（PLC命令7含取盖/放盖）并完成方舱关门握手",
+          "meta_data": {
+            "unilab": {
+              "input_bindings": {
+                "1a3f70eb-3c84-5b49-8d83-c850cba239fd": {
+                  "parameter": "task_id"
+                },
+                "dea6ce38-a171-5c1c-9169-b98e5213de09": {
+                  "parameter": "fetch_cubic_source"
+                },
+                "550bb14d-006a-5230-b4a9-5ecdfc6782e6": {
+                  "parameter": "destination"
+                },
+                "8ce327eb-1b9b-5fe9-819b-09ecb45bf331": {
+                  "parameter": "pallet_type"
+                },
+                "9a66097a-725c-52b1-babf-e2a58c9bc047": {
+                  "parameter": "pallet_slot_types"
+                },
+                "73b53b33-57d7-5178-ac16-fd78399e78cb": {
+                  "parameter": "bead_source"
+                }
+              },
+              "authoring_result_name": "loaded",
+              "authoring_device_symbol": "yb_synthesis_station",
+              "executor_binding": {
+                "mode": "fixed",
+                "device_id": "yb_synthesis_atomic_station_01"
+              },
+              "authoring_source_order": 0
+            }
+          },
+          "manual_confirmation": {
+            "timeout_seconds": 3600
+          }
+        }
+      ],
+      "edges": [],
+      "node_templates": [
+        {
+          "class": "yb_sse_devices.devices.yb_synthesis_atomic_station.device:YBSynthesisAtomicStation",
+          "create_time": "1970-01-01T00:00:00Z",
+          "description": "取大坩埚（PLC命令7含取盖/放盖）并完成方舱关门握手",
+          "display_name": "load_big_crucible",
+          "feedback": {},
+          "goal": {
+            "bead_source": "bead_source",
+            "crucible": "crucible",
+            "destination": "destination",
+            "fetch_cubic_source": "fetch_cubic_source",
+            "pallet_slot_types": "pallet_slot_types",
+            "pallet_type": "pallet_type",
+            "task_id": "task_id"
+          },
+          "goal_default": {
+            "bead_source": null,
+            "crucible": null,
+            "destination": 1,
+            "fetch_cubic_source": null,
+            "pallet_slot_types": null,
+            "pallet_type": 1,
+            "task_id": ""
+          },
+          "meta_data": {
+            "unilab": {
+              "action_contract_schema": {
+                "description": "取大坩埚（PLC命令7含取盖/放盖）并完成方舱关门握手",
+                "properties": {
+                  "feedback": {},
+                  "goal": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "bead_source": {
+                        "default": null,
+                        "type": [
+                          "integer",
+                          "null"
+                        ]
+                      },
+                      "crucible": {
+                        "additionalProperties": false,
+                        "default": null,
+                        "properties": {
+                          "uuid": {
+                            "format": "uuid",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "uuid"
+                        ],
+                        "type": [
+                          "object",
+                          "null"
+                        ],
+                        "x-unilabos-material-lock": true
+                      },
+                      "destination": {
+                        "default": 1,
+                        "type": "integer"
+                      },
+                      "fetch_cubic_source": {
+                        "default": null,
+                        "type": [
+                          "integer",
+                          "null"
+                        ]
+                      },
+                      "pallet_slot_types": {
+                        "default": null,
+                        "items": {
+                          "type": "integer"
+                        },
+                        "type": [
+                          "array",
+                          "null"
+                        ]
+                      },
+                      "pallet_type": {
+                        "default": 1,
+                        "type": "integer"
+                      },
+                      "task_id": {
+                        "default": "",
+                        "type": "string"
+                      }
+                    },
+                    "required": [],
+                    "type": "object"
+                  },
+                  "result": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "crucible": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "uuid": {
+                            "format": "uuid",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "uuid"
+                        ],
+                        "type": [
+                          "object",
+                          "null"
+                        ]
+                      },
+                      "ledger_json": {
+                        "type": "string"
+                      },
+                      "lot_id": {
+                        "type": "string"
+                      },
+                      "message": {
+                        "type": "string"
+                      },
+                      "post_id": {
+                        "type": "string"
+                      },
+                      "qrcode": {
+                        "type": "string"
+                      },
+                      "small_crucible": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "uuid": {
+                            "format": "uuid",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "uuid"
+                        ],
+                        "type": [
+                          "object",
+                          "null"
+                        ]
+                      },
+                      "small_cubics": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "task_id": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "task_id",
+                      "post_id",
+                      "state",
+                      "message",
+                      "qrcode",
+                      "lot_id",
+                      "small_cubics",
+                      "ledger_json",
+                      "crucible",
+                      "small_crucible"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "goal"
+                ],
+                "title": "load_big_crucible参数",
+                "type": "object",
+                "x-unilabos-action-contract": {
+                  "input_order": [
+                    "task_id",
+                    "fetch_cubic_source",
+                    "destination",
+                    "pallet_type",
+                    "pallet_slot_types",
+                    "bead_source",
+                    "crucible"
+                  ],
+                  "output_order": [
+                    "task_id",
+                    "post_id",
+                    "state",
+                    "message",
+                    "qrcode",
+                    "lot_id",
+                    "small_cubics",
+                    "ledger_json",
+                    "crucible",
+                    "small_crucible"
+                  ],
+                  "resource_template_symbols": {
+                    "goal": {
+                      "crucible": [
+                        "yb_sse_devices.resources.synthesis_crucible.resource:SynthesisCrucible"
+                      ]
+                    },
+                    "result": {}
+                  },
+                  "version": 2
+                }
+              },
+              "contract_kind": "typed",
+              "resource_template": {
+                "display_name": "yb_synthesis_atomic_station",
+                "name": "yb_synthesis_atomic_station",
+                "uuid": "c5470661-3397-5ee7-9b3b-78e52826851c"
+              }
+            }
+          },
+          "name": "load_big_crucible",
+          "node_type": "ILab",
+          "resource_template_uuid": "c5470661-3397-5ee7-9b3b-78e52826851c",
+          "result": {},
+          "schema": "{\"additionalProperties\":false,\"properties\":{\"bead_source\":{\"default\":null,\"type\":[\"integer\",\"null\"]},\"crucible\":{\"additionalProperties\":false,\"default\":null,\"properties\":{\"uuid\":{\"format\":\"uuid\",\"type\":\"string\"}},\"required\":[\"uuid\"],\"type\":[\"object\",\"null\"],\"x-unilabos-material-lock\":true},\"destination\":{\"default\":1,\"type\":\"integer\"},\"fetch_cubic_source\":{\"default\":null,\"type\":[\"integer\",\"null\"]},\"pallet_slot_types\":{\"default\":null,\"items\":{\"type\":\"integer\"},\"type\":[\"array\",\"null\"]},\"pallet_type\":{\"default\":1,\"type\":\"integer\"},\"task_id\":{\"default\":\"\",\"type\":\"string\"}},\"required\":[],\"type\":\"object\"}",
+          "type": "UniLabJsonCommand",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "e0debecc-0d95-5b78-a53c-696cbedb3c63"
+        }
+      ],
+      "handle_templates": [
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": null,
+          "data_source": null,
+          "description": null,
+          "display_name": "ready",
+          "handle_key": "ready",
+          "io_type": "source",
+          "meta_data": {},
+          "required": false,
+          "type": "default",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "04d3a0b0-03c0-5f74-b655-0fdc7b31ec0f",
+          "workflow_node_template_uuid": "e0debecc-0d95-5b78-a53c-696cbedb3c63"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "task_id",
+          "data_source": "goal",
+          "description": null,
+          "display_name": "task_id",
+          "handle_key": "task_id",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 0,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": "",
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "1a3f70eb-3c84-5b49-8d83-c850cba239fd",
+          "workflow_node_template_uuid": "e0debecc-0d95-5b78-a53c-696cbedb3c63"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "state",
+          "data_source": "executor",
+          "description": null,
+          "display_name": "state",
+          "handle_key": "state",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 9,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "1a4737ff-d827-5f3a-b58b-edaf09e1f302",
+          "workflow_node_template_uuid": "e0debecc-0d95-5b78-a53c-696cbedb3c63"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": null,
+          "data_source": null,
+          "description": null,
+          "display_name": "ready",
+          "handle_key": "ready",
+          "io_type": "target",
+          "meta_data": {},
+          "required": false,
+          "type": "default",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "3e8c610e-b1d0-5160-827a-0a41994f8229",
+          "workflow_node_template_uuid": "e0debecc-0d95-5b78-a53c-696cbedb3c63"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "destination",
+          "data_source": "goal",
+          "description": null,
+          "display_name": "destination",
+          "handle_key": "destination",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 2,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": 1,
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "550bb14d-006a-5230-b4a9-5ecdfc6782e6",
+          "workflow_node_template_uuid": "e0debecc-0d95-5b78-a53c-696cbedb3c63"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "crucible",
+          "data_source": "executor",
+          "description": null,
+          "display_name": "crucible",
+          "handle_key": "crucible",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 15,
+              "editor_control": "material_port",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "uuid": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "uuid"
+                ],
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "ResourceSlot",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "61390d31-1adc-5292-8a16-31e75947bbae",
+          "workflow_node_template_uuid": "e0debecc-0d95-5b78-a53c-696cbedb3c63"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "bead_source",
+          "data_source": "goal",
+          "description": null,
+          "display_name": "bead_source",
+          "handle_key": "bead_source",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 5,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": null,
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "73b53b33-57d7-5178-ac16-fd78399e78cb",
+          "workflow_node_template_uuid": "e0debecc-0d95-5b78-a53c-696cbedb3c63"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "crucible",
+          "data_source": "goal",
+          "description": null,
+          "display_name": "crucible",
+          "handle_key": "crucible",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": [
+                "dec9a108-7d7e-5fe7-b7a7-00be3a5bd122"
+              ],
+              "contract_order": 6,
+              "editor_control": "material_port",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "additionalProperties": false,
+                "default": null,
+                "properties": {
+                  "uuid": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "uuid"
+                ],
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "x-unilabos-material-lock": true
+              }
+            }
+          },
+          "required": false,
+          "type": "ResourceSlot",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "84c6a7c5-806c-5d8b-958e-2dacb76911c0",
+          "workflow_node_template_uuid": "e0debecc-0d95-5b78-a53c-696cbedb3c63"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "pallet_type",
+          "data_source": "goal",
+          "description": null,
+          "display_name": "pallet_type",
+          "handle_key": "pallet_type",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 3,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": 1,
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "8ce327eb-1b9b-5fe9-819b-09ecb45bf331",
+          "workflow_node_template_uuid": "e0debecc-0d95-5b78-a53c-696cbedb3c63"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "pallet_slot_types",
+          "data_source": "goal",
+          "description": null,
+          "display_name": "pallet_slot_types",
+          "handle_key": "pallet_slot_types",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 4,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": null,
+                "items": {
+                  "type": "integer"
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "array",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "9a66097a-725c-52b1-babf-e2a58c9bc047",
+          "workflow_node_template_uuid": "e0debecc-0d95-5b78-a53c-696cbedb3c63"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "task_id",
+          "data_source": "executor",
+          "description": null,
+          "display_name": "task_id",
+          "handle_key": "task_id",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 7,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "ad7b52f3-452c-55fb-8e28-e4b24228ca7f",
+          "workflow_node_template_uuid": "e0debecc-0d95-5b78-a53c-696cbedb3c63"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "lot_id",
+          "data_source": "executor",
+          "description": null,
+          "display_name": "lot_id",
+          "handle_key": "lot_id",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 12,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "b31e65e0-2bef-53e8-99eb-34a2fcf59554",
+          "workflow_node_template_uuid": "e0debecc-0d95-5b78-a53c-696cbedb3c63"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "ledger_json",
+          "data_source": "executor",
+          "description": null,
+          "display_name": "ledger_json",
+          "handle_key": "ledger_json",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 14,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "c0bddd19-2a32-5512-9a60-f191a0d9f536",
+          "workflow_node_template_uuid": "e0debecc-0d95-5b78-a53c-696cbedb3c63"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "post_id",
+          "data_source": "executor",
+          "description": null,
+          "display_name": "post_id",
+          "handle_key": "post_id",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 8,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "ccff35f1-af35-5dd7-8e6b-100844ba4f19",
+          "workflow_node_template_uuid": "e0debecc-0d95-5b78-a53c-696cbedb3c63"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "qrcode",
+          "data_source": "executor",
+          "description": null,
+          "display_name": "qrcode",
+          "handle_key": "qrcode",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 11,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "d53624d6-2c32-5442-85ae-416c3b5448fd",
+          "workflow_node_template_uuid": "e0debecc-0d95-5b78-a53c-696cbedb3c63"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "small_cubics",
+          "data_source": "executor",
+          "description": null,
+          "display_name": "small_cubics",
+          "handle_key": "small_cubics",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 13,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            }
+          },
+          "required": false,
+          "type": "array",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "d662cbc9-50be-578c-8c40-de3d93d91c48",
+          "workflow_node_template_uuid": "e0debecc-0d95-5b78-a53c-696cbedb3c63"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "fetch_cubic_source",
+          "data_source": "goal",
+          "description": null,
+          "display_name": "fetch_cubic_source",
+          "handle_key": "fetch_cubic_source",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 1,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": null,
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "dea6ce38-a171-5c1c-9169-b98e5213de09",
+          "workflow_node_template_uuid": "e0debecc-0d95-5b78-a53c-696cbedb3c63"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "small_crucible",
+          "data_source": "executor",
+          "description": null,
+          "display_name": "small_crucible",
+          "handle_key": "small_crucible",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 16,
+              "editor_control": "material_port",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "uuid": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "uuid"
+                ],
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "ResourceSlot",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "fecc3d75-ca87-5b24-b8c7-36afb17e7248",
+          "workflow_node_template_uuid": "e0debecc-0d95-5b78-a53c-696cbedb3c63"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "message",
+          "data_source": "executor",
+          "description": null,
+          "display_name": "message",
+          "handle_key": "message",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 10,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "fffd46a8-013c-5179-8f9d-254548cf55c0",
+          "workflow_node_template_uuid": "e0debecc-0d95-5b78-a53c-696cbedb3c63"
+        }
+      ]
+    },
+    "input_contract": {
+      "version": 1,
+      "parameters": [
+        {
+          "name": "task_id",
+          "schema": {
+            "type": "string"
+          },
+          "required": true
+        },
+        {
+          "name": "fetch_cubic_source",
+          "schema": {
+            "type": "integer"
+          },
+          "required": false,
+          "default": 1
+        },
+        {
+          "name": "destination",
+          "schema": {
+            "type": "integer"
+          },
+          "required": false,
+          "default": 1
+        },
+        {
+          "name": "pallet_type",
+          "schema": {
+            "type": "integer"
+          },
+          "required": false,
+          "default": 3
+        },
+        {
+          "name": "pallet_slot_types",
+          "schema": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "required": false,
+          "default": null
+        },
+        {
+          "name": "bead_source",
+          "schema": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "required": false,
+          "default": null
+        }
+      ]
+    },
+    "meta_data": {},
+    "name": "YB 合成工站上托盘",
+    "node_count": 1,
+    "node_template_uuid": "6e2b1bb1-3547-400f-b4f7-3e03c20719ec",
+    "output_contract": {
+      "version": 1,
+      "outputs": [
+        {
+          "name": "task_id",
+          "schema": {
+            "type": "string"
+          },
+          "implicit": false
+        },
+        {
+          "name": "state",
+          "schema": {
+            "type": "string"
+          },
+          "implicit": false
+        },
+        {
+          "name": "message",
+          "schema": {
+            "type": "string"
+          },
+          "implicit": false
+        }
+      ]
+    },
+    "source_hash": "sha256:2cd6e84ed47979d668baa6a378aa052841a22eb660af44ac05ca030e7073b5a0",
+    "tags": [],
+    "update_time": "2026-09-22T06:33:52.220Z",
+    "uuid": "247df6a4-d044-4450-9f84-b4f941b1c6e8",
+    "version": 2,
+    "workflow_revision": 2,
+    "workflow_uuid": "871ecc8b-9e7c-4e09-8637-3c8c0df42927"
+  },
+  "source_draft_hash": "sha256:c03a2375430620bd1e63f0c3e0274d5961a03e1f7714f902d914fe198d8f83f7"
+}

@@ -301,6 +301,7 @@ class YBSynthesisModbusStation:
             transport,
             unit_id=self.unit_id,
             material_names=self.material_names,
+            plc_units=not self.simulation,
         )
 
     @property
@@ -912,6 +913,7 @@ class YBSynthesisModbusStation:
         self,
         task_id: str = "",
         slot_num: int = 1,
+        destination_slot: int | None = None,
         rack_positions: list[int] | None = None,
         masses: list[float] | None = None,
         tolerances: list[float] | None = None,
@@ -927,6 +929,7 @@ class YBSynthesisModbusStation:
         response = self.controller.start_sampling(
             task_id=task_id,
             slot_num=slot_num,
+            destination_slot=destination_slot,
             rack_positions=resolved_rack_positions,
             masses=resolved_masses,
             tolerances=resolved_tolerances,
@@ -954,6 +957,7 @@ class YBSynthesisModbusStation:
         self,
         task_id: str = "",
         slot_num: int = 1,
+        destination_slot: int | None = None,
         rack_positions: list[int] | None = None,
         masses: list[float] | None = None,
         tolerances: list[float] | None = None,
@@ -972,6 +976,7 @@ class YBSynthesisModbusStation:
         response = self.controller.run_sampling(
             task_id=task_id,
             slot_num=slot_num,
+            destination_slot=destination_slot,
             rack_positions=resolved_rack_positions,
             masses=resolved_masses,
             tolerances=resolved_tolerances,
@@ -1010,6 +1015,7 @@ class YBSynthesisModbusStation:
         source_site: str,
         task_id: str = "",
         slot_num: int = 1,
+        destination_slot: int | None = None,
         rack_positions: list[int] | None = None,
         masses: list[float] | None = None,
         tolerances: list[float] | None = None,
@@ -1030,6 +1036,7 @@ class YBSynthesisModbusStation:
         result = self.sample(
             task_id=task_id,
             slot_num=slot_num,
+            destination_slot=destination_slot,
             rack_positions=rack_positions,
             masses=masses,
             tolerances=tolerances,
