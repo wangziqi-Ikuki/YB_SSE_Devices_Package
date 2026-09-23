@@ -39,9 +39,7 @@ YB_SSE_Devices_Package/
 │   │   ├── synthesis_load_tray.py       # 上托盘实验操作（含人工确认）
 │   │   └── synthesis_sampling.py        # 称粉实验操作
 │   ├── workflows/                       # 完整业务工作流
-│   │   ├── synthesis_atomic_single.py   # 原子动作完整合成流程
-│   │   ├── synthesis_batch.py           # 调用称粉实验操作的批次流程
-│   │   └── start_batch.py               # 电导工站流程
+│   │   └── synthesis_powder_bead_rack2.py  # 料架2-加粉加珠声共振流程
 │   ├── workflow_publications/           # OS 生成的不可变 publication/contract
 │   ├── simulation/                      # PLC 状态机、Modbus-Sim 和扫码仿真
 │   └── workflow_publications.json       # 合同索引

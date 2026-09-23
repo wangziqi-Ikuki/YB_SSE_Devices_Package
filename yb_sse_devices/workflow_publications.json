@@ -1,18 +1,6 @@
 {
   "publications": [
     {
-      "contract_uuid": "2ca0970e-7f54-491e-b8ff-8fd6c7fd4183",
-      "version": 1,
-      "workflow_revision": 2,
-      "workflow_uuid": "00cdaee3-7c63-4c77-875d-3d7093d0e5e3"
-    },
-    {
-      "contract_uuid": "a6b90350-e210-416b-b7e2-0c6c834edb9d",
-      "version": 2,
-      "workflow_revision": 3,
-      "workflow_uuid": "00cdaee3-7c63-4c77-875d-3d7093d0e5e3"
-    },
-    {
       "contract_uuid": "6ccafa0f-de07-419f-b72e-c8e5c5563524",
       "version": 1,
       "workflow_revision": 2,
@@ -79,18 +67,6 @@
       "workflow_uuid": "2b618ad2-cb04-4ce0-8f0f-4155497740b2"
     },
     {
-      "contract_uuid": "be8cff69-be60-4c6b-b7ab-1f61c5bbd0f8",
-      "version": 1,
-      "workflow_revision": 2,
-      "workflow_uuid": "3c8f1a62-9b74-4e2d-a5c1-7d0e8f4b2196"
-    },
-    {
-      "contract_uuid": "f1589024-8c58-4d59-88e7-f01573bfa358",
-      "version": 2,
-      "workflow_revision": 3,
-      "workflow_uuid": "3c8f1a62-9b74-4e2d-a5c1-7d0e8f4b2196"
-    },
-    {
       "contract_uuid": "91f8d0cd-004a-4188-a929-08ae0c47119b",
       "version": 1,
       "workflow_revision": 2,
@@ -115,24 +91,6 @@
       "workflow_uuid": "72cb4f07-9a92-46eb-ae2a-79d08e2c3b67"
     },
     {
-      "contract_uuid": "273983a9-16a5-463d-af80-f51ed0555a8b",
-      "version": 1,
-      "workflow_revision": 2,
-      "workflow_uuid": "7e5dabc1-8795-5009-85fe-c9a4c4f0c1e3"
-    },
-    {
-      "contract_uuid": "aade0bb7-aedd-4ca2-aecf-488c5e29c583",
-      "version": 2,
-      "workflow_revision": 3,
-      "workflow_uuid": "7e5dabc1-8795-5009-85fe-c9a4c4f0c1e3"
-    },
-    {
-      "contract_uuid": "fe12301c-5a64-442d-b70c-44f8b6733856",
-      "version": 3,
-      "workflow_revision": 4,
-      "workflow_uuid": "7e5dabc1-8795-5009-85fe-c9a4c4f0c1e3"
-    },
-    {
       "contract_uuid": "247df6a4-d044-4450-9f84-b4f941b1c6e8",
       "version": 2,
       "workflow_revision": 2,
@@ -149,54 +107,6 @@
       "version": 4,
       "workflow_revision": 4,
       "workflow_uuid": "871ecc8b-9e7c-4e09-8637-3c8c0df42927"
-    },
-    {
-      "contract_uuid": "f9b2d049-d415-4c84-81e2-e39714156251",
-      "version": 1,
-      "workflow_revision": 2,
-      "workflow_uuid": "bbf54bc0-4119-48be-a7b7-29d84a6a45a9"
-    },
-    {
-      "contract_uuid": "f35b68d0-4984-4c04-a5a8-ca9668bc6b01",
-      "version": 2,
-      "workflow_revision": 3,
-      "workflow_uuid": "bbf54bc0-4119-48be-a7b7-29d84a6a45a9"
-    },
-    {
-      "contract_uuid": "36663ee8-5038-42ac-8040-1ccc7be68313",
-      "version": 1,
-      "workflow_revision": 2,
-      "workflow_uuid": "f7c79ca5-1ed4-4d2a-9571-a8bbf9786c44"
-    },
-    {
-      "contract_uuid": "63c1f42f-7ad4-445d-88e1-169b90846eed",
-      "version": 2,
-      "workflow_revision": 3,
-      "workflow_uuid": "f7c79ca5-1ed4-4d2a-9571-a8bbf9786c44"
-    },
-    {
-      "contract_uuid": "30b2214c-78ba-436f-9de4-6e1e07c9134c",
-      "version": 3,
-      "workflow_revision": 4,
-      "workflow_uuid": "f7c79ca5-1ed4-4d2a-9571-a8bbf9786c44"
-    },
-    {
-      "contract_uuid": "88c4021d-df8a-44ef-a8f1-8f88206cfc85",
-      "version": 4,
-      "workflow_revision": 5,
-      "workflow_uuid": "f7c79ca5-1ed4-4d2a-9571-a8bbf9786c44"
-    },
-    {
-      "contract_uuid": "c84639f3-7c8f-42fc-8b70-46d27e31ac26",
-      "version": 5,
-      "workflow_revision": 6,
-      "workflow_uuid": "f7c79ca5-1ed4-4d2a-9571-a8bbf9786c44"
-    },
-    {
-      "contract_uuid": "a486698a-6232-4cf8-82ff-d6cd7b756c28",
-      "version": 6,
-      "workflow_revision": 7,
-      "workflow_uuid": "f7c79ca5-1ed4-4d2a-9571-a8bbf9786c44"
     }
   ],
   "storage": "workflow_publications",
