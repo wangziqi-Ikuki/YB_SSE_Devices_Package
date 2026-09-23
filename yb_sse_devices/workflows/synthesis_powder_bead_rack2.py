@@ -1,6 +1,6 @@
 """Converted legacy workflow: powder and bead loading from rack 2."""
 
-from typing import TypedDict
+from typing import Literal, TypedDict
 
 from unilabos.registry.annotations import JSONValue
 from unilabos.workflow.authoring import device, workflow
@@ -35,60 +35,33 @@ station: YBSynthesisAtomicStation = device("yb_synthesis_atomic_station_01")
 )
 def synthesis_powder_bead_rack2(
     *,
-    recipe_name: str = "YB-LiCl-P2S5-2G",
-    formula: str = "LiCl-P2S5",
-    synthesis_mass: float = 4.0,
-    n_ball_bead: int = 0,
-    # Lists are workflow inputs.  ``None`` keeps the contract optional and
-    # avoids sharing mutable defaults between OS invocations.
-    powder_names: list[str] | None = None,
-    powder_weights: list[float] | None = None,
-    powder_tolerances: list[float] | None = None,
-    powder_pre_adds: list[bool] | None = None,
-    pallet_type: int = 3,
-    cubic_type: int = 1,
-    task_slot_nums: list[int] | None = None,
+    # Operator-facing values are package-owned labels.  The device action
+    # resolves them to PLC integer codes; no PLC register fields are exposed
+    # in this workflow contract.
+    recipe_name: Literal["YB-LiCl-P2S5-2G", "YB-SIM-Li6PS5Cl"] = "YB-LiCl-P2S5-2G",
+    pallet_type: Literal["4 槽位托盘", "5 槽位托盘", "6 槽位托盘"] = "6 槽位托盘",
+    cubic_type: Literal[
+        "Al2O3 30*30",
+        "Al2O3 35*40",
+        "Al2O3 40*40",
+        "ZrO2 40*35",
+        "ZrO2 40*46",
+    ] = "Al2O3 30*30",
+    task_slot_nums: list[int],
     has_bead_bottle: bool = False,
     bead_count: int = 0,
-    fetch_cubic_source: int = 1,
-    # PLC command 7 has six tray-slot type fields.  These are explicit PLC
-    # payload values, separate from the OS TASK slot numbers above.
-    pallet_slot_types: list[int] | None = None,
-    # None derives the PLC wire source from fetch_cubic_source when a bead
-    # bottle is present; pass an integer only for a confirmed special setup.
-    bead_source: int | None = None,
-    # PLC command 7 destination (40003).  ``1`` is the rack-1 destination
-    # used by the current station, while remaining an editable input.
-    crucible_destination: int = 1,
-    # Physical powder-rack positions are deliberately required for a real
-    # run.  The PLC project/HANDOFF does not confirm their numbering yet.
-    powder_rack_positions: list[int] | None = None,
-    # 命令3会在天平称重完成后开门取回坩埚，再用此字段写入“放球磨罐位置”。
-    # 真实 PLC 必须在确认现场位置映射后显式传入；None 会让直接模式拒绝动作。
-    crucible_return_positions: list[int] | None = None,
-    crucible_return_location: str = "synthesis_crucible_rack_01",
-    # Optional actual-weight confirmation payload.  CMD3 still performs the
-    # physical weighing; this JSON is only the OS-side confirmation record.
-    real_weights_json: str = "",
 ) -> LegacyTaskResult:
     # unilab:node_uuid=ab618ad2-cb04-4ce0-8f0f-4155497740b2
     created = station.create_batch(
         recipe_name=recipe_name,
-        formula=formula,
-        synthesis_mass=synthesis_mass,
-        n_ball_bead=n_ball_bead,
-        powder_names=powder_names,
-        powder_weights=powder_weights,
-        powder_tolerances=powder_tolerances,
-        powder_pre_adds=powder_pre_adds,
         pallet_type=pallet_type,
         cubic_type=cubic_type,
         task_slot_nums=task_slot_nums,
         has_bead_bottle=has_bead_bottle,
         bead_count=bead_count,
-        fetch_cubic_source=fetch_cubic_source,
-        powder_rack_positions=powder_rack_positions,
-        pallet_slot_types=pallet_slot_types,
+        # The workflow is specifically the rack-2 route.  These are station
+        # implementation details rather than operator inputs.
+        fetch_cubic_source=1,
     )
 
     # 上托盘实验操作内部带人工确认：操作员先将托盘和坩埚放到料架2，
@@ -96,11 +69,7 @@ def synthesis_powder_bead_rack2(
     # unilab:node_uuid=4c1a8f6e-0d55-4e67-9f0c-5eb22ab87f7c
     loaded = synthesis_load_tray(
         task_id=created.task_id,
-        fetch_cubic_source=fetch_cubic_source,
-        destination=crucible_destination,
         pallet_type=pallet_type,
-        pallet_slot_types=pallet_slot_types,
-        bead_source=bead_source,
     )
 
     # 命令7完成后紧接命令3（威纶通“加样流程启动”）；命令3内部负责
@@ -108,10 +77,6 @@ def synthesis_powder_bead_rack2(
     # unilab:node_uuid=76ec0634-9277-4474-bfa6-b0ea0b4f8969
     dosed = station.dose_recipe(
         task_id=loaded.task_id,
-        real_weights_json=real_weights_json,
-        powder_rack_positions=powder_rack_positions,
-        crucible_return_positions=crucible_return_positions,
-        crucible_return_location=crucible_return_location,
     )
     return {
         "task_id": dosed.task_id,

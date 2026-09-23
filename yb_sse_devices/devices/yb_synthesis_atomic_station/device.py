@@ -26,6 +26,12 @@ from yb_sse_devices.common.synthesis_protocol import (
     pallet_slot_count,
     resolve_task_slots_input,
 )
+from yb_sse_devices.common.synthesis_catalog import (
+    cubic_type_code,
+    default_recipe_inputs,
+    derive_pallet_slot_types,
+    pallet_type_code,
+)
 from yb_sse_devices.devices.yb_synthesis_modbus_station.modbus import cubic_source_to_plc
 
 
@@ -156,6 +162,16 @@ class YBSynthesisAtomicStation:
         self.station = YBSynthesisModbusStation(
             device_id=f"{self.device_id}_plc", config=resolved
         )
+        # These are installation-specific PLC numbers.  They may be supplied
+        # by an approved deployment configuration, but are intentionally not
+        # exposed as workflow inputs.  Ignore absent values so an unconfirmed
+        # real deployment still fails closed at batch/dose validation.
+        self._configured_powder_rack_positions = self._configured_positions(
+            resolved.get("powder_rack_positions")
+        )
+        self._configured_crucible_return_positions = self._configured_positions(
+            resolved.get("crucible_return_positions")
+        )
         self._lock = threading.RLock()
         self._ledger = _Ledger()
         self._task_id = ""
@@ -164,6 +180,11 @@ class YBSynthesisAtomicStation:
         self._materials: list[dict[str, Any]] = []
         self._local_batch = False
         self._powder_rack_positions: list[int] = []
+        self._crucible_return_positions: list[int] = []
+        self._pallet_type = 1
+        self._cubic_type = 1
+        self._fetch_cubic_source = 1
+        self._recipe_name = ""
         self._bead_count = 0
         self._confirmed_weights: dict[str, float] = {}
         self._recipe_confirmed = False
@@ -181,6 +202,14 @@ class YBSynthesisAtomicStation:
         self._sinter_started = False
         self._state = "IDLE"
         self._closed = False
+
+    @staticmethod
+    def _configured_positions(value: Any) -> list[int]:
+        if not isinstance(value, (list, tuple)):
+            return []
+        if any(isinstance(item, bool) or not isinstance(item, int) for item in value):
+            return []
+        return [int(item) for item in value]
 
     @not_action
     def close(self) -> None:
@@ -454,15 +483,18 @@ class YBSynthesisAtomicStation:
     def create_batch(
         self,
         recipe_name: str = "YB-SIM-Li6PS5Cl",
-        formula: str = "Li6PS5Cl",
-        synthesis_mass: float = 3.86,
-        n_ball_bead: int = 80,
+        formula: str | None = None,
+        synthesis_mass: float | None = None,
+        n_ball_bead: int | None = None,
         powder_names: list[str] | None = None,
         powder_weights: list[float] | None = None,
         powder_tolerances: list[float] | None = None,
         powder_pre_adds: list[bool] | None = None,
-        pallet_type: int = 1,
-        cubic_type: int = 1,
+        # The registry's workflow-v1 schema accepts one scalar type here;
+        # legacy callers may still pass integers at runtime and the catalog
+        # resolver accepts both integer and label values.
+        pallet_type: str = "1",
+        cubic_type: str = "1",
         task_slot_nums: list[int] | None = None,
         has_bead_bottle: bool = True,
         bead_count: int = 80,
@@ -471,6 +503,31 @@ class YBSynthesisAtomicStation:
         pallet_slot_types: list[int] | None = None,
     ) -> AtomicResult:
         with self._lock:
+            # Resolve operator-facing catalog labels inside the device package
+            # so the workflow never needs to expose PLC integer fields.
+            recipe_defaults = default_recipe_inputs(recipe_name)
+            formula = (
+                recipe_defaults["formula"] if formula is None else str(formula)
+            )
+            synthesis_mass = (
+                recipe_defaults["synthesis_mass"]
+                if synthesis_mass is None
+                else float(synthesis_mass)
+            )
+            n_ball_bead = (
+                recipe_defaults["n_ball_bead"]
+                if n_ball_bead is None
+                else int(n_ball_bead)
+            )
+            resolved_pallet_type = pallet_type_code(pallet_type)
+            resolved_cubic_type = cubic_type_code(cubic_type)
+            # ``None`` powder columns mean "use the selected package recipe".
+            # Explicit columns remain supported for legacy atomic workflows.
+            if not powder_names:
+                powder_names = recipe_defaults["powder_names"]
+                powder_weights = recipe_defaults["powder_weights"]
+                powder_tolerances = recipe_defaults["powder_tolerances"]
+                powder_pre_adds = recipe_defaults["powder_pre_adds"]
             if self._task_id and self._batch_terminal:
                 # A completed batch can remain queryable for
                 # ``store_fired_material``.  Starting another batch must not
@@ -481,6 +538,11 @@ class YBSynthesisAtomicStation:
                 self._materials = []
                 self._local_batch = False
                 self._powder_rack_positions = []
+                self._crucible_return_positions = []
+                self._pallet_type = 1
+                self._cubic_type = 1
+                self._fetch_cubic_source = 1
+                self._recipe_name = ""
                 self._bead_count = 0
                 self._confirmed_weights = {}
                 self._recipe_confirmed = False
@@ -496,6 +558,8 @@ class YBSynthesisAtomicStation:
             if self._task_id:
                 raise RuntimeError("已有活动 TASK，不能交错创建第二个批次")
             local_batch = self._direct_plc_mode()
+            if powder_rack_positions is None and self._configured_powder_rack_positions:
+                powder_rack_positions = list(self._configured_powder_rack_positions)
             materials = materials_from_columns(
                 powder_names, powder_weights, powder_tolerances, powder_pre_adds
             )
@@ -504,13 +568,19 @@ class YBSynthesisAtomicStation:
                 [str(recipe_name)] * max(1, len(task_slot_nums or [1])),
             )
             slots = [{"slot_num": int(item["slot_num"]), "recipe_name": str(recipe_name)} for item in slots]
+            if pallet_slot_types is None:
+                pallet_slot_types = derive_pallet_slot_types(
+                    pallet_type,
+                    cubic_type,
+                    [int(item["slot_num"]) for item in slots],
+                )
             if fetch_cubic_source not in {0, 1}:
                 raise ValueError("fetch_cubic_source 必须是 0（方舱）或 1（料架2）")
             if local_batch:
                 self._validate_direct_batch(
                     materials, slots, powder_rack_positions,
-                    pallet_type, pallet_slot_types,
-                    has_bead_bottle, bead_count, cubic_type,
+                    resolved_pallet_type, pallet_slot_types,
+                    has_bead_bottle, bead_count, resolved_cubic_type,
                 )
                 if fetch_cubic_source != 1:
                     raise ValueError("当前直接批次仅支持料架2来源；方舱关门需独立确认流程")
@@ -538,8 +608,8 @@ class YBSynthesisAtomicStation:
                         self._require_ok(recipe_response, "上传配方")
                 created = self._require_ok(
                     self.station.create_task(
-                        pallet_type=pallet_type,
-                        cubic_type=cubic_type,
+                        pallet_type=resolved_pallet_type,
+                        cubic_type=resolved_cubic_type,
                         task_slot_nums=[int(item["slot_num"]) for item in slots],
                         task_recipe_names=[str(item["recipe_name"]) for item in slots],
                         has_bead_bottle=has_bead_bottle,
@@ -554,15 +624,23 @@ class YBSynthesisAtomicStation:
             self._task_id = task_id
             self._local_batch = local_batch
             self._powder_rack_positions = list(powder_rack_positions or [])
+            self._crucible_return_positions = []
+            self._pallet_type = resolved_pallet_type
+            self._cubic_type = resolved_cubic_type
+            self._fetch_cubic_source = int(fetch_cubic_source)
+            self._recipe_name = str(recipe_name)
             self._task_slots = slots
             self._materials = materials
-            self._bead_count = int(bead_count) if has_bead_bottle else 0
+            effective_bead_count = int(bead_count)
+            if effective_bead_count == 0 and has_bead_bottle and n_ball_bead:
+                effective_bead_count = int(n_ball_bead)
+            self._bead_count = effective_bead_count if has_bead_bottle else 0
             self._big_crucible_id = (
                 f"crucible:{task_id}" if local_batch
                 else str(getattr(self.station, "simulation_crucible_id", "CRU-SIM-001"))
             )
             source = "cabin" if fetch_cubic_source == 0 else "crucible_rack_2"
-            self._ledger.put(self._big_crucible_id, kind="big_crucible", location=source, task_id=task_id, cubic_type=cubic_type,
+            self._ledger.put(self._big_crucible_id, kind="big_crucible", location=source, task_id=task_id, cubic_type=resolved_cubic_type,
                              recipe_name=recipe_name, formula=formula, synthesis_mass=synthesis_mass)
             for index, material in enumerate(materials, start=1):
                 self._ledger.put(
@@ -570,8 +648,8 @@ class YBSynthesisAtomicStation:
                     kind="powder", location="powder_store", material=str(material["name"]),
                     quantity=float(material["weight"]), pre_add=bool(material["pre_add"]),
                 )
-            if has_bead_bottle:
-                self._ledger.put(f"beads:{task_id}", kind="ball_beads", location="bead_bottle", quantity=int(bead_count))
+            if has_bead_bottle and effective_bead_count > 0:
+                self._ledger.put(f"beads:{task_id}", kind="ball_beads", location="bead_bottle", quantity=effective_bead_count)
             return self._result(
                 "READY",
                 "上位机批次已创建（PLC 直接模式）"
@@ -585,7 +663,7 @@ class YBSynthesisAtomicStation:
         task_id: str = "",
         fetch_cubic_source: int | None = None,
         destination: int = 1,
-        pallet_type: int = 1,
+        pallet_type: str | None = None,
         pallet_slot_types: list[int] | None = None,
         bead_source: int | None = None,
         crucible: Annotated[
@@ -599,9 +677,16 @@ class YBSynthesisAtomicStation:
                 source = 0 if self._ledger.items[self._big_crucible_id]["location"] == "cabin" else 1
             if int(source) not in {0, 1}:
                 raise ValueError("fetch_cubic_source 必须是 0（方舱）或 1（料架2）")
+            resolved_pallet_type = self._pallet_type if pallet_type is None else pallet_type_code(pallet_type)
+            if pallet_slot_types is None:
+                pallet_slot_types = derive_pallet_slot_types(
+                    resolved_pallet_type,
+                    self._cubic_type,
+                    [int(item["slot_num"]) for item in self._task_slots],
+                )
             if self._direct_plc_mode():
-                if pallet_slot_types is None or len(pallet_slot_types) != 6:
-                    raise ValueError("真实 PLC 模式必须显式提供 6 个 pallet_slot_types")
+                if len(pallet_slot_types) != 6:
+                    raise ValueError("pallet_slot_types 必须是 6 个槽位类型")
                 resolved_bead_source = (
                     int(bead_source)
                     if bead_source is not None
@@ -611,7 +696,7 @@ class YBSynthesisAtomicStation:
                     self.station.fetch_cubic_from_package(
                         source=int(source),
                         destination=int(destination),
-                        pallet_type=int(pallet_type),
+                        pallet_type=int(resolved_pallet_type),
                         slot_numbers=list(pallet_slot_types),
                         bead_source=resolved_bead_source,
                     ),
@@ -729,14 +814,24 @@ class YBSynthesisAtomicStation:
         resolved = self._require_task(task_id)
         direct_mode = self._direct_plc_mode()
         if crucible_return_positions is None:
-            if direct_mode:
+            if self._crucible_return_positions:
+                resolved_return_positions = list(self._crucible_return_positions)
+            elif self._configured_crucible_return_positions:
+                resolved_return_positions = list(self._configured_crucible_return_positions)
+            elif direct_mode:
                 raise ValueError(
-                    "真实 PLC 模式必须显式提供 crucible_return_positions；"
-                    "这是命令3的放球磨罐位置，不能用取料槽位猜测"
+                    "真实 PLC 模式未配置 crucible_return_positions；"
+                    "这是命令3的放回位置，不能用任务槽位猜测"
                 )
-            resolved_return_positions = [int(slot["slot_num"]) for slot in self._task_slots]
+            else:
+                resolved_return_positions = [int(slot["slot_num"]) for slot in self._task_slots]
         else:
             resolved_return_positions = [int(value) for value in crucible_return_positions]
+            # Explicit values are retained only for backwards-compatible
+            # direct callers.  The operator workflow never exposes this PLC
+            # mapping; a real deployment must provide it through station
+            # configuration once the installation is confirmed.
+            self._crucible_return_positions = list(resolved_return_positions)
         if len(resolved_return_positions) != len(self._task_slots):
             raise ValueError("crucible_return_positions 必须与 task_slot_nums 一一对应")
         if any(not 0 <= value <= 0xFFFF for value in resolved_return_positions):
