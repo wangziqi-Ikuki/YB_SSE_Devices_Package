@@ -13,7 +13,7 @@ Add ``--log-file /tmp/yb-modbus-sim.jsonl`` to retain a structured trace of
 every request/response.  ``--verbose`` mirrors the same JSON records to stdout.
 
 The production device package never starts this server automatically.  It is
-an integration-test PLC endpoint for ``deployment/graphs/integration.json``.
+an integration-test PLC endpoint for ``deployment/graphs/local-sim.json``.
 """
 
 from __future__ import annotations

@@ -1,1 +1,0 @@
-"""Canonical device implementation package."""

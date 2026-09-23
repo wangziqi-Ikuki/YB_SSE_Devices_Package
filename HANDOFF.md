@@ -74,7 +74,7 @@ PLC 工程内部结构支持 15 个加样槽位、4 个马弗炉槽位、6 组�
 
 生产图：
 
-`deployment/graphs/production-atomic.json`
+`deployment/graphs/real-plc.json`
 
 当前设置意图是：
 
@@ -144,7 +144,7 @@ mamba run -n unilab pytest -q tests/test_legacy_workflows.py
 
 真实 PLC 联调前，应先确认：
 
-1. OS 实际加载 `production-atomic.json`；
+1. OS 实际加载 `real-plc.json`；
 2. PLC 的 Modbus TCP 端口和 Unit ID；
 3. PLC 处于允许远程自动运行的状态；
 4. 门、光栅、急停、机器人和设备互锁均已满足；

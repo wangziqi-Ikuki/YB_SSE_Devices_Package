@@ -767,6 +767,55 @@ class YBSynthesisAtomicStation:
 
         return self.station.run_acoustic_unload(timeout=timeout)
 
+    @action(
+        node_type=NodeType.MANUAL_CONFIRM,
+        displayname="确认后放入焦耳热并加热",
+        description=(
+            "操作员确认声共振已经下料，并且小坩埚已人工加料完成后，"
+            "机械臂把小坩埚放入焦耳热，按所选载体和加热模式加热。"
+        ),
+    )
+    def run_joule_heating(
+        self,
+        carrier_type: str = "椭圆石墨舟",
+        heating_mode: str = "恒温",
+        pickup_positions: list[int] | None = None,
+        constant_temperature: int = 0,
+        constant_hold_minutes: int = 0,
+        slope_segments: str = "[]",
+        timeout: float = 14400.0,
+    ) -> PlcCommandResult:
+        """Confirm, then run PLC command 4 until Joule heating finishes."""
+
+        return self.station.run_joule_heating(
+            carrier_type=carrier_type,
+            heating_mode=heating_mode,
+            pickup_positions=pickup_positions,
+            constant_temperature=constant_temperature,
+            constant_hold_minutes=constant_hold_minutes,
+            slope_segments=slope_segments,
+            timeout=timeout,
+        )
+
+    @action(
+        node_type=NodeType.MANUAL_CONFIRM,
+        displayname="等待一分钟后焦耳热下料",
+        description="加热完成后，操作员等待一分钟再确认，然后从焦耳热取出小坩埚。",
+    )
+    def unload_joule_heating(
+        self,
+        carrier_type: str = "椭圆石墨舟",
+        pickup_positions: list[int] | None = None,
+        timeout: float = 600.0,
+    ) -> PlcCommandResult:
+        """Confirm after one minute, then run PLC command 5."""
+
+        return self.station.unload_joule_heating(
+            carrier_type=carrier_type,
+            pickup_positions=pickup_positions,
+            timeout=timeout,
+        )
+
     @action(description="取大坩埚（PLC命令7含取盖/放盖）并完成方舱关门握手")
     def load_big_crucible(
         self,

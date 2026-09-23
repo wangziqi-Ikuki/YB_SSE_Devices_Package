@@ -8,3 +8,5 @@ workflows:
     source: yb_sse_devices/experiment_operations/synthesis_load_tray.py
   - workflow_uuid: 2b618ad2-cb04-4ce0-8f0f-4155497740b2
     source: yb_sse_devices/workflows/synthesis_powder_bead_rack2.py
+  - workflow_uuid: 8c4e1b70-6a2d-4f58-9c31-7d0a6e5b91f2
+    source: yb_sse_devices/workflows/joule_heating.py

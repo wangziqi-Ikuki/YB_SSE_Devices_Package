@@ -1,9 +1,9 @@
 {
   "metadata": {
-    "purpose": "simulation",
+    "purpose": "integration",
     "owner": "yb-sse-lab",
     "version": "0.1.0",
-    "notes": "设备包内确定性 PLC 仿真；不访问真实 PLC。"
+    "notes": "联调图：连接隔离的 Modbus 仿真器或测试 PLC，不使用生产地址。"
   },
   "nodes": [
     {
@@ -32,7 +32,7 @@
     },
     {
       "id": "yb_synthesis_atomic_station_01",
-      "name": "YB 合成工站（Modbus 原子动作仿真）",
+      "name": "YB 合成工站（Modbus 原子动作）",
       "type": "device",
       "class": "community.yb_sse_devices.yb_synthesis_atomic_station",
       "parent": null,
@@ -42,17 +42,21 @@
         "z": 0.0
       },
       "config": {
-        "simulation": true,
-        "business_simulation_auto_advance": false,
+        "simulation": false,
+        "business_simulation": true,
         "simulation_crucible_id": "CRU-SIM-001",
-        "simulation_dosing_duration": 0.2,
+        "simulation_dosing_duration": 1.0,
         "simulation_handshake_delay": 0.1,
-        "business_firing_duration": 0.5,
+        "simulation_failure_plan": {},
+        "simulation_handshake_history_limit": 100,
+        "ip": "127.0.0.1",
+        "port": 5020,
         "action_timeout": 15.0,
         "simulation_step": 0.1
       },
       "data": {
-        "status": "offline"
+        "status": "offline",
+        "commissioning_required": true
       }
     },
     {
@@ -791,28 +795,6 @@
       "data": {
         "lifecycle_state": "available",
         "cubic_type": 1
-      }
-    },
-    {
-      "id": "conductivity_station_01",
-      "name": "电导率自动化测试工站（进程内仿真）",
-      "type": "device",
-      "class": "community.yb_sse_devices.conductivity_station",
-      "parent": null,
-      "position": {
-        "x": 180.0,
-        "y": 0.0,
-        "z": 0.0
-      },
-      "config": {
-        "ip": "127.0.0.1",
-        "port": 0,
-        "use_mock": true,
-        "occupancy_poll_interval": 0
-      },
-      "data": {
-        "status": "offline",
-        "commissioning_required": false
       }
     }
   ],

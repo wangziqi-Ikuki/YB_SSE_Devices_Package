@@ -7,6 +7,7 @@ this module only exposes stable actions to Uni-Lab OS.
 
 from __future__ import annotations
 
+import json
 import time
 from collections.abc import Mapping
 from itertools import count
@@ -1435,6 +1436,203 @@ class YBSynthesisModbusStation:
             "success": code == 2,
             "message": "PLC 命令9已完成，声共振托盘已取出",
             "command": "fetch_acoustic_resonance",
+            "status_code": code,
+            "status_name": self._status_name(code),
+        }
+
+    _JOULE_CARRIERS = {
+        "椭圆石墨舟": 0,
+        "圆形石墨舟": 1,
+        "石墨板": 2,
+    }
+    _JOULE_MODES = {"恒温": 1, "斜率多段": 2}
+
+    @classmethod
+    def _joule_firing_kwargs(
+        cls,
+        *,
+        carrier_type: str,
+        heating_mode: str,
+        pickup_position: int,
+        constant_temperature: int,
+        constant_hold_minutes: int,
+        slope_segments: str,
+    ) -> dict[str, Any]:
+        """Build command-4 Joule fields. Hold times enter as minutes."""
+
+        carrier = cls._joule_carrier_code(carrier_type)
+        try:
+            mode = cls._JOULE_MODES[str(heating_mode)]
+        except KeyError as exc:
+            raise ValueError("加热模式必须是恒温或斜率多段") from exc
+        position = 0 if carrier_type == "石墨板" else int(pickup_position)
+        if carrier_type != "石墨板" and not 1 <= position <= 9:
+            raise ValueError("小坩埚待机位必须是 1–9")
+        if mode == 1:
+            temperature = int(constant_temperature)
+            minutes = int(constant_hold_minutes)
+            if not 1 <= temperature <= 0xFFFF:
+                raise ValueError("恒温温度必须是 1–65535 ℃")
+            if not 1 <= minutes <= 1092:
+                raise ValueError("保温时间必须在 1–1092 分钟，下发前会换算成秒")
+            return {
+                "position": 5,
+                "joule_position": position,
+                "joule_mode": mode,
+                "joule_carrier_type": carrier,
+                "joule_constant_temperature": temperature,
+                "joule_constant_hold_time": minutes * 60,
+            }
+        segments = cls._parse_slope_segments(slope_segments)
+        return {
+            "position": 5,
+            "joule_position": position,
+            "joule_mode": mode,
+            "joule_carrier_type": carrier,
+            "joule_slope_temperatures": [item[0] for item in segments],
+            "joule_slope_speeds": [item[1] for item in segments],
+            "joule_slope_hold_times": [item[2] * 60 for item in segments],
+        }
+
+    @staticmethod
+    def _parse_slope_segments(raw: str) -> list[tuple[int, int, int]]:
+        try:
+            payload = json.loads(raw or "[]")
+        except json.JSONDecodeError as exc:
+            raise ValueError("斜率段必须是 JSON 数组") from exc
+        if not isinstance(payload, list) or not 1 <= len(payload) <= 5:
+            raise ValueError("斜率多段必须填写 1–5 段")
+        segments: list[tuple[int, int, int]] = []
+        for item in payload:
+            if not isinstance(item, dict):
+                raise ValueError("每一段都要包含温度、升温速率和保温时间")
+            temperature = int(item.get("temperature", 0))
+            rate = int(item.get("rate", 0))
+            minutes = int(item.get("hold_minutes", 0))
+            if not 1 <= temperature <= 0xFFFF:
+                raise ValueError("目标温度必须是 1–65535 ℃")
+            if not 1 <= rate <= 0xFFFF:
+                raise ValueError("升温速率必须是 1–65535 ℃/s")
+            if not 1 <= minutes <= 1092:
+                raise ValueError("保温时间必须在 1–1092 分钟，下发前会换算成秒")
+            segments.append((temperature, rate, minutes))
+        return segments
+
+    @classmethod
+    def _joule_carrier_code(cls, carrier_type: str) -> int:
+        try:
+            return cls._JOULE_CARRIERS[str(carrier_type)]
+        except KeyError as exc:
+            raise ValueError("载体类型必须是椭圆石墨舟、圆形石墨舟或石墨板") from exc
+
+    @classmethod
+    def _standby_positions(cls, carrier_type: str, pickup_positions: list[int] | None) -> list[int]:
+        """Graphite plates are placed by hand, so they have no robot pickup slot."""
+
+        if carrier_type == "石墨板":
+            return [0]
+        positions = [int(value) for value in (pickup_positions or [])]
+        if not positions or len(set(positions)) != len(positions) or any(value < 1 or value > 9 for value in positions):
+            raise ValueError("请勾选 1–9 号待机位，编号不能重复")
+        return positions
+
+    @action(
+        node_type=NodeType.MANUAL_CONFIRM,
+        displayname="确认后放入焦耳热并加热",
+        description=(
+            "操作员确认声共振已经下料，并且小坩埚已人工加料完成后，"
+            "机械臂把小坩埚放入焦耳热，按所选载体和加热模式加热。"
+            "上料和加热都完成后才返回。"
+        ),
+    )
+    def run_joule_heating(
+        self,
+        carrier_type: str = "椭圆石墨舟",
+        heating_mode: str = "恒温",
+        pickup_positions: list[int] | None = None,
+        constant_temperature: int = 0,
+        constant_hold_minutes: int = 0,
+        slope_segments: str = "[]",
+        timeout: float = 14400.0,
+    ) -> CommandResult:
+        """Write PLC command 4 for each selected standby slot and wait for heat."""
+
+        self._ensure_connected()
+        positions = self._standby_positions(carrier_type, pickup_positions)
+        code = 2
+        for position in positions:
+            recipe = self._joule_firing_kwargs(
+                carrier_type=carrier_type,
+                heating_mode=heating_mode,
+                pickup_position=position,
+                constant_temperature=constant_temperature,
+                constant_hold_minutes=constant_hold_minutes,
+                slope_segments=slope_segments,
+            )
+            previous_load = int(self.controller.status().get("send_firing", 0) or 0)
+            self.controller.send_firing(**recipe)
+            self._poll_plc_status("send_firing", "焦耳热上料", timeout, 0.2, previous_load)
+            heat_now = int(self.controller.status().get("joule_heating", 0) or 0)
+            code = heat_now if heat_now == 2 else self._poll_plc_status(
+                "joule_heating", "焦耳热加热", timeout, 0.2, heat_now
+            )
+        message = "焦耳热已加热完成，等待下料确认"
+        if carrier_type == "石墨板":
+            message = "石墨板已按所选工艺加热完成。板由人工放置，未搬运待机位"
+        return {
+            "accepted": True,
+            "success": code == 2,
+            "message": message,
+            "command": "send_firing",
+            "status_code": code,
+            "status_name": self._status_name(code),
+        }
+
+    @action(
+        node_type=NodeType.MANUAL_CONFIRM,
+        displayname="等待一分钟后焦耳热下料",
+        description=(
+            "加热完成后，操作员等待一分钟再确认。"
+            "确认后机械臂把小坩埚放回原来的待机位。石墨板由人工取出。"
+        ),
+    )
+    def unload_joule_heating(
+        self,
+        carrier_type: str = "椭圆石墨舟",
+        pickup_positions: list[int] | None = None,
+        timeout: float = 600.0,
+    ) -> CommandResult:
+        """Write PLC command 5 back to each selected standby slot."""
+
+        self._ensure_connected()
+        if carrier_type == "石墨板":
+            self._joule_carrier_code(carrier_type)
+            return {
+                "accepted": True,
+                "success": True,
+                "message": "石墨板由人工取出，未写 PLC 下料",
+                "command": "fetch_firing",
+                "status_code": 2,
+                "status_name": self._status_name(2),
+            }
+        carrier = self._joule_carrier_code(carrier_type)
+        positions = self._standby_positions(carrier_type, pickup_positions)
+        code = 2
+        for position in positions:
+            previous = int(self.controller.status().get("fetch_firing", 0) or 0)
+            self.controller.fetch_firing(
+                position=5,
+                joule_position=position,
+                joule_carrier_type=carrier,
+            )
+            code = self._poll_plc_status(
+                "fetch_firing", "焦耳热下料", timeout, 0.2, previous
+            )
+        return {
+            "accepted": True,
+            "success": code == 2,
+            "message": "焦耳热已下料，小坩埚已放回原待机位",
+            "command": "fetch_firing",
             "status_code": code,
             "status_name": self._status_name(code),
         }

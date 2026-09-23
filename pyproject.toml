@@ -30,6 +30,6 @@ yb_sse_devices = [
 ]
 
 [tool.unilabos.startup]
-graph = "deployment/graphs/simulation.json"
+graph = "deployment/graphs/local-sim.json"
 config = "deployment/local_config.py"
 ensure_dependencies = true
