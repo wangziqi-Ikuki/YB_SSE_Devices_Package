@@ -704,10 +704,12 @@ class YBSynthesisAtomicStation:
         )
 
     @action(
-        displayname="料架注粉称重",
+        node_type=NodeType.MANUAL_CONFIRM,
+        displayname="确认后执行注粉称重",
         description=(
-            "向 PLC 写入命令3，由 PLC 完成扫码、天平开关门、称粉/加珠，"
-            "并按所选槽位放回坩埚。只写 Modbus 加样寄存器，不调用配方或 TASK 接口。"
+            "操作员确认现场允许加样后，向 PLC 写入命令3，"
+            "由 PLC 完成扫码、天平开关门、称粉/加珠，并按所选槽位放回坩埚。"
+            "只写 Modbus 加样寄存器，不调用配方或 TASK 接口。"
         ),
     )
     def dose_selected_slots(
@@ -731,6 +733,39 @@ class YBSynthesisAtomicStation:
             bead_count=bead_count,
             timeout=timeout,
         )
+
+    @action(
+        node_type=NodeType.MANUAL_CONFIRM,
+        displayname="确认后声共振上料",
+        description=(
+            "操作员确认命令3已结束、托盘仍在料架1后，向 PLC 写入命令8，"
+            "并等待声共振运行完成。振动结束前不写下料命令。"
+        ),
+    )
+    def run_acoustic_load(
+        self,
+        acceleration: int = 0,
+        frequency: int = 0,
+        duration_minutes: int = 0,
+        timeout: float = 14400.0,
+    ) -> PlcCommandResult:
+        """Confirm, then run PLC command 8 until the vibration finishes."""
+
+        return self.station.run_acoustic_load(
+            acceleration=acceleration,
+            frequency=frequency,
+            duration_minutes=duration_minutes,
+            timeout=timeout,
+        )
+
+    @action(
+        displayname="声共振下料",
+        description="声共振运行完成后向 PLC 写入命令9，取出托盘。",
+    )
+    def run_acoustic_unload(self, timeout: float = 600.0) -> PlcCommandResult:
+        """Run PLC command 9 after the vibration status is complete."""
+
+        return self.station.run_acoustic_unload(timeout=timeout)
 
     @action(description="取大坩埚（PLC命令7含取盖/放盖）并完成方舱关门握手")
     def load_big_crucible(

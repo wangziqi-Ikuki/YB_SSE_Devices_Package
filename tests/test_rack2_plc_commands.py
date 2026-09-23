@@ -66,5 +66,17 @@ def test_rack2_actions_write_command7_then_command3() -> None:
         assert dosed["success"] is True
         assert dosed["slot_nums"] == [1]
         assert len(dosed["weights"]) == 4
+
+        resonated = station.run_acoustic_load(
+            acceleration=2, frequency=3, duration_minutes=4, timeout=5
+        )
+        command8 = writes[-1]
+        assert command8[0] == 8
+        assert command8[1:6] == (1, 2, 2, 3, 240)
+        assert resonated["success"] is True
+
+        unloaded = station.run_acoustic_unload(timeout=5)
+        assert writes[-1][:3] == (9, 1, 1)
+        assert unloaded["success"] is True
     finally:
         station.close()

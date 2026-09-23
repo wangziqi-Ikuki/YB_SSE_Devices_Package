@@ -13,6 +13,8 @@ class Rack2WeighResult(TypedDict):
     message: str
     qr_codes: list[str]
     weights: list[float]
+    resonance_finished: bool
+    resonance_unloaded: bool
 
 
 station: YBSynthesisAtomicStation = device("yb_synthesis_atomic_station_01")
@@ -20,8 +22,8 @@ station: YBSynthesisAtomicStation = device("yb_synthesis_atomic_station_01")
 
 @workflow(
     workflow_uuid="2b618ad2-cb04-4ce0-8f0f-4155497740b2",
-    displayname="料架2注粉称重",
-    description="启动后先由人工确认托盘和坩埚已放到料架2；确认通过后，OS 向 PLC 写入命令7，把托盘搬到料架1；随后写入命令3，由 PLC 完成扫码、天平开关门、称粉/加珠，并按所选槽位放回坩埚。",
+    displayname="料架2-加粉加珠声共振流程",
+    description="确认托盘和坩埚已放在料架2后，把托盘搬到料架1。再次确认后，按所选槽位加粉、加珠并放回料架1。随后确认声共振参数，上料并等待振动完成，最后下料。",
 )
 def synthesis_powder_bead_rack2(
     *,
@@ -63,6 +65,9 @@ def synthesis_powder_bead_rack2(
     task_slot_nums: list[int],
     has_bead_bottle: bool = False,
     bead_count: int = 0,
+    resonance_acceleration: int,
+    resonance_frequency: int,
+    resonance_time: int,
 ) -> Rack2WeighResult:
     # unilab:node_uuid=4c1a8f6e-0d55-4e67-9f0c-5eb22ab87f7c
     loaded = synthesis_load_tray(
@@ -72,7 +77,7 @@ def synthesis_powder_bead_rack2(
         pallet_type=pallet_type,
         task_slot_nums=task_slot_nums,
     )
-    # unilab:node_uuid=76ec0634-9277-4474-bfa6-b0ea0b4f8969
+    # unilab:node_uuid=76ec0634-9277-4474-bfa6-b0ea0b4f8969 manual_confirmation_timeout_seconds=3600
     dosed = station.dose_selected_slots(
         bead_count=bead_count,
         cubic_type=cubic_type,
@@ -81,10 +86,20 @@ def synthesis_powder_bead_rack2(
         recipe_name=recipe_name,
         task_slot_nums=task_slot_nums,
     )
+    # unilab:node_uuid=8f3c1a20-6b14-4d2e-9c55-1a0e7d2b91c4 manual_confirmation_timeout_seconds=3600
+    resonated = station.run_acoustic_load(
+        acceleration=resonance_acceleration,
+        duration_minutes=resonance_time,
+        frequency=resonance_frequency,
+    )
+    # unilab:node_uuid=c2a91e44-5f08-4b77-8d31-6e4b0a9c2f17
+    unloaded = station.run_acoustic_unload()
     return {
         "pallet_loaded": loaded.success,
-        "success": dosed.success,
-        "message": dosed.message,
+        "success": unloaded.success,
+        "message": unloaded.message,
         "qr_codes": dosed.qr_codes,
         "weights": dosed.weights,
+        "resonance_finished": resonated.success,
+        "resonance_unloaded": unloaded.success,
     }

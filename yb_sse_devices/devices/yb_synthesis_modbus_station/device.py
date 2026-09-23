@@ -1349,6 +1349,96 @@ class YBSynthesisModbusStation:
             "weights": weights,
         }
 
+    @staticmethod
+    def _resonance_segment(
+        acceleration: int, frequency: int, duration_minutes: int
+    ) -> tuple[list[int], list[int], list[int]]:
+        """One PLC command-8 segment.
+
+        The operator enters time in minutes. Command 8 stores that time in
+        seconds, and the seconds value must still fit in one 16-bit register.
+        """
+
+        accel = int(acceleration)
+        freq = int(frequency)
+        minutes = int(duration_minutes)
+        if not 0 <= accel <= 130:
+            raise ValueError("声共振加速度必须在 0–130")
+        if not 0 <= freq <= 100:
+            raise ValueError("声共振频率必须在 0–100")
+        if not 1 <= minutes <= 1092:
+            raise ValueError("声共振时间必须在 1–1092 分钟，下发前会换算成秒")
+        seconds = minutes * 60
+        return [accel], [freq], [seconds]
+
+    @action(
+        displayname="声共振上料并等待振动完成",
+        description=(
+            "向 PLC 写入命令8。取托盘位置为料架1，放托盘位置按既有编码为声共振工位。"
+            "上料状态和声共振运行状态都完成后才返回，此时还没有下料。"
+        ),
+    )
+    def run_acoustic_load(
+        self,
+        acceleration: int = 0,
+        frequency: int = 0,
+        duration_minutes: int = 0,
+        timeout: float = 14400.0,
+    ) -> CommandResult:
+        """Write PLC command 8 and wait until the vibration itself finishes."""
+
+        self._ensure_connected()
+        accelerations, frequencies, times = self._resonance_segment(
+            acceleration, frequency, duration_minutes
+        )
+        previous_load = int(self.controller.status().get("acoustic_resonance", 0) or 0)
+        previous_process = int(self.controller.status().get("acoustic_process", 0) or 0)
+        self.controller.acoustic_resonance(
+            fetch_position=1,
+            accelerations=accelerations,
+            frequencies=frequencies,
+            times=times,
+        )
+        self._poll_plc_status(
+            "acoustic_resonance", "命令8声共振上料", timeout, 0.2, previous_load
+        )
+        code = self._poll_plc_status(
+            "acoustic_process", "声共振运行", timeout, 0.2, previous_process
+        )
+        return {
+            "accepted": True,
+            "success": code == 2,
+            "message": "声共振已振完，等待下料",
+            "command": "acoustic_resonance",
+            "status_code": code,
+            "status_name": self._status_name(code),
+        }
+
+    @action(
+        displayname="声共振下料",
+        description=(
+            "声共振运行完成后向 PLC 写入命令9，把托盘从声共振工位取出。"
+            "命令9按既有编码只写命令号和取放位置，不再重发加速度、频率和时间。"
+        ),
+    )
+    def run_acoustic_unload(self, timeout: float = 600.0) -> CommandResult:
+        """Write PLC command 9 and wait for the unload status."""
+
+        self._ensure_connected()
+        previous = int(self.controller.status().get("acoustic_fetch", 0) or 0)
+        self.controller.fetch_acoustic_resonance()
+        code = self._poll_plc_status(
+            "acoustic_fetch", "命令9声共振下料", timeout, 0.2, previous
+        )
+        return {
+            "accepted": True,
+            "success": code == 2,
+            "message": "PLC 命令9已完成，声共振托盘已取出",
+            "command": "fetch_acoustic_resonance",
+            "status_code": code,
+            "status_name": self._status_name(code),
+        }
+
     @action(description="向坩埚加入研磨珠")
     def add_bead(self, source: int = 1) -> CommandResult:
         self._ensure_connected()
