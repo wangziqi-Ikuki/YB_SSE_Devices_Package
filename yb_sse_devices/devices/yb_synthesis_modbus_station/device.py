@@ -7,18 +7,29 @@ this module only exposes stable actions to Uni-Lab OS.
 
 from __future__ import annotations
 
+import time
 from collections.abc import Mapping
 from itertools import count
 from typing import Annotated, Any, TypedDict
 
 from unilabos.registry.annotations import AllowedResourceTemplates
-from unilabos.registry.decorators import action, device, not_action, topic_config
+from unilabos.registry.decorators import NodeType, action, device, not_action, topic_config
 from unilabos.registry.placeholder_type import ResourceSlot
 
 from yb_sse_devices.resources.synthesis_crucible.resource import SynthesisCrucible
 from yb_sse_devices.simulation import SynthesisPlcModel, SynthesisSimulationTransport
 from yb_sse_devices.devices.yb_synthesis_modbus_station.controller import SynthesisDirectController
-from yb_sse_devices.devices.yb_synthesis_modbus_station.modbus import ModbusTcpTransport
+from yb_sse_devices.devices.yb_synthesis_modbus_station.modbus import (
+    ModbusTcpTransport,
+    cubic_source_to_plc,
+)
+from yb_sse_devices.common.synthesis_catalog import (
+    cubic_type_code,
+    derive_pallet_slot_types,
+    pallet_type_code,
+    rack_material_positions,
+    recipe_spec,
+)
 from yb_sse_devices.common.synthesis_protocol import (
     flatten_recipe_param,
     resolve_recipe_materials_input,
@@ -54,6 +65,17 @@ class CommandResult(TypedDict):
     command: str
     status_code: int
     status_name: str
+
+
+class Rack2DoseResult(TypedDict):
+    """PLC 命令3按槽位执行后的回读结果。"""
+
+    success: bool
+    message: str
+    command: str
+    slot_nums: list[int]
+    qr_codes: list[str]
+    weights: list[float]
 
 
 class SamplingStartedResult(TypedDict):
@@ -1167,6 +1189,165 @@ class YBSynthesisModbusStation:
             slot_numbers=slot_numbers or [],
             bead_source=bead_source,
         ))
+
+    def _poll_plc_status(
+        self,
+        status_key: str,
+        operation: str,
+        timeout: float,
+        step: float,
+        previous: int,
+    ) -> int:
+        """Poll one PLC status word until it completes, faults, or times out.
+
+        ``previous`` is the status sampled before the command write, so a
+        leftover completion code cannot be mistaken for this command.
+        """
+
+        if timeout <= 0 or step <= 0:
+            raise ValueError("timeout 和 step 必须为正数")
+        saw_running = False
+        deadline = time.monotonic() + float(timeout)
+        while True:
+            code = int(self.controller.status().get(status_key, 0) or 0)
+            if code == 1:
+                saw_running = True
+            if code == 2 and (saw_running or previous != 2):
+                return code
+            if code == 3:
+                raise RuntimeError(f"PLC{operation}报告故障状态")
+            if time.monotonic() >= deadline:
+                raise TimeoutError(f"等待{operation}超时；最后状态={code}")
+            if callable(getattr(self.controller.transport, "advance", None)):
+                self.controller.advance(step)
+            else:
+                time.sleep(step)
+
+    @staticmethod
+    def _bead_count_for_command(has_bead_bottle: bool, bead_count: int) -> int:
+        count = int(bead_count)
+        if has_bead_bottle and count <= 0:
+            raise ValueError("有加珠瓶时球磨珠数量必须大于 0")
+        if count < 0 or count > 0xFFFF:
+            raise ValueError("球磨珠数量必须是 0..65535 的整数")
+        return count if has_bead_bottle else 0
+
+    @action(
+        node_type=NodeType.MANUAL_CONFIRM,
+        displayname="确认后执行上托盘",
+        description=(
+            "操作员确认托盘和坩埚已放在料架2后，向 PLC 写入命令7，"
+            "把托盘搬运到料架1。只写 Modbus 上托盘寄存器，不调用配方或 TASK 接口。"
+        ),
+    )
+    def load_pallet_from_rack2(
+        self,
+        pallet_type: str = "6 槽位托盘",
+        cubic_type: str = "Al2O3 30*30",
+        task_slot_nums: list[int] | None = None,
+        has_bead_bottle: bool = False,
+        bead_count: int = 0,
+        timeout: float = 600.0,
+    ) -> CommandResult:
+        """Write PLC command 7 after the operator confirms rack-2 loading."""
+
+        self._ensure_connected()
+        slots = [int(value) for value in (task_slot_nums or [])]
+        slot_types = derive_pallet_slot_types(pallet_type, cubic_type, slots)
+        beads = self._bead_count_for_command(has_bead_bottle, bead_count)
+        previous = int(self.controller.status().get("upper_pallet", 0) or 0)
+        self.controller.fetch_cubic_from_package(
+            source=1,
+            destination=1,
+            pallet_type=pallet_type_code(pallet_type),
+            slot_numbers=slot_types,
+            bead_source=cubic_source_to_plc(1) if beads else 0,
+        )
+        code = self._poll_plc_status(
+            "upper_pallet", "命令7上托盘", timeout, 0.2, previous
+        )
+        return {
+            "accepted": True,
+            "success": code == 2,
+            "message": "PLC 命令7已完成，托盘已到料架1",
+            "command": "fetch_cubic",
+            "status_code": code,
+            "status_name": self._status_name(code),
+        }
+
+    @action(
+        displayname="料架注粉称重",
+        description=(
+            "向 PLC 写入命令3，由 PLC 完成扫码、天平开关门、称粉/加珠，"
+            "并按所选槽位放回坩埚。只写 Modbus 加样寄存器，不调用配方或 TASK 接口。"
+        ),
+    )
+    def dose_selected_slots(
+        self,
+        recipe_name: str,
+        pallet_type: str = "6 槽位托盘",
+        cubic_type: str = "Al2O3 30*30",
+        task_slot_nums: list[int] | None = None,
+        has_bead_bottle: bool = False,
+        bead_count: int = 0,
+        timeout: float = 1800.0,
+    ) -> Rack2DoseResult:
+        """Write one PLC command 3 for each selected tray slot."""
+
+        self._ensure_connected()
+        slots = [int(value) for value in (task_slot_nums or [])]
+        derive_pallet_slot_types(pallet_type, cubic_type, slots)
+        materials = [
+            item for item in recipe_spec(recipe_name)["materials"] if not item["pre_add"]
+        ]
+        if not materials:
+            raise ValueError("配方没有需要由 PLC 命令3执行的非预加粉料")
+        inventory = rack_material_positions()
+        positions: list[int] = []
+        names: list[str] = []
+        masses: list[float] = []
+        tolerances: list[float] = []
+        for item in materials:
+            name = str(item["name"])
+            if name not in inventory:
+                raise ValueError(f"料架库存没有物料 {name} 的加样位置，不能下发命令3")
+            positions.append(int(inventory[name]))
+            names.append(name)
+            masses.append(float(item["weight"]))
+            tolerances.append(float(item["tolerance"]))
+        beads = self._bead_count_for_command(has_bead_bottle, bead_count)
+        cubic_code = cubic_type_code(cubic_type)
+        qr_codes: list[str] = []
+        weights: list[float] = []
+        for slot in slots:
+            sample = self.controller.run_sampling(
+                slot_num=slot,
+                destination_slot=slot,
+                rack_positions=positions,
+                masses=masses,
+                tolerances=tolerances,
+                cubic_type=cubic_code,
+                bead_count=beads,
+                from_outside=False,
+                material_names=names,
+                timeout=timeout,
+                step=0.2,
+            )
+            result = sample.get("result") if isinstance(sample.get("result"), dict) else {}
+            qr_codes.append(str(result.get("qr_code", "")))
+            raw_weights = result.get("weights", {})
+            if isinstance(raw_weights, dict):
+                weights.extend(float(value) for value in raw_weights.values())
+            else:
+                weights.extend(float(value) for value in raw_weights)
+        return {
+            "success": True,
+            "message": f"PLC 命令3已完成，共 {len(slots)} 个槽位",
+            "command": "sample_add_powder_and_beads",
+            "slot_nums": slots,
+            "qr_codes": qr_codes,
+            "weights": weights,
+        }
 
     @action(description="向坩埚加入研磨珠")
     def add_bead(self, source: int = 1) -> CommandResult:

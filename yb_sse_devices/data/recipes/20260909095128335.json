@@ -1,0 +1,16 @@
+{
+  "recipe_name": "260909-Li5.5P1.0S4.5Cl0.8Br0.7-Pre-03",
+  "formula": "Li5.5P1.0S4.5Cl0.8Br0.7",
+  "synthesis_mass": 0.3,
+  "n_ball_bead": 15,
+  "LiBr": {
+    "weight": 0.2415,
+    "tolerance": 0.04,
+    "pre-add": false
+  },
+  "LiCl": {
+    "weight": 0.2124,
+    "tolerance": 0.04,
+    "pre-add": false
+  }
+}

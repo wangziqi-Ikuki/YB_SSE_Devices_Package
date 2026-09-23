@@ -14,7 +14,7 @@ from typing import Annotated, Any, TypedDict
 from uuid import uuid4
 
 from unilabos.registry.annotations import AllowedResourceTemplates, JSONValue
-from unilabos.registry.decorators import action, device, not_action, topic_config
+from unilabos.registry.decorators import NodeType, action, device, not_action, topic_config
 from unilabos.registry.placeholder_type import ResourceSlot
 
 from yb_sse_devices.resources.synthesis_bead_bottle.resource import SynthesisBeadBottle
@@ -64,6 +64,24 @@ class DoseRecipeResult(TypedDict):
     crucible: ResourceSlot | None
     small_crucible: ResourceSlot | None
     sampling_results: list[dict[str, JSONValue]]
+
+
+class PlcCommandResult(TypedDict):
+    accepted: bool
+    success: bool
+    message: str
+    command: str
+    status_code: int
+    status_name: str
+
+
+class PlcDoseResult(TypedDict):
+    success: bool
+    message: str
+    command: str
+    slot_nums: list[int]
+    qr_codes: list[str]
+    weights: list[float]
 
 
 class LegacyTaskActionResult(TypedDict):
@@ -656,6 +674,63 @@ class YBSynthesisAtomicStation:
                 if self._direct_plc_mode()
                 else "TASK 已创建并启动",
             )
+
+    @action(
+        node_type=NodeType.MANUAL_CONFIRM,
+        displayname="确认后执行上托盘",
+        description=(
+            "操作员确认托盘和坩埚已放在料架2后，向 PLC 写入命令7，"
+            "把托盘搬运到料架1。只写 Modbus 上托盘寄存器，不调用配方或 TASK 接口。"
+        ),
+    )
+    def load_pallet_from_rack2(
+        self,
+        pallet_type: str = "6 槽位托盘",
+        cubic_type: str = "Al2O3 30*30",
+        task_slot_nums: list[int] | None = None,
+        has_bead_bottle: bool = False,
+        bead_count: int = 0,
+        timeout: float = 600.0,
+    ) -> PlcCommandResult:
+        """Forward rack-2 loading to the nested PLC station."""
+
+        return self.station.load_pallet_from_rack2(
+            pallet_type=pallet_type,
+            cubic_type=cubic_type,
+            task_slot_nums=task_slot_nums,
+            has_bead_bottle=has_bead_bottle,
+            bead_count=bead_count,
+            timeout=timeout,
+        )
+
+    @action(
+        displayname="料架注粉称重",
+        description=(
+            "向 PLC 写入命令3，由 PLC 完成扫码、天平开关门、称粉/加珠，"
+            "并按所选槽位放回坩埚。只写 Modbus 加样寄存器，不调用配方或 TASK 接口。"
+        ),
+    )
+    def dose_selected_slots(
+        self,
+        recipe_name: str,
+        pallet_type: str = "6 槽位托盘",
+        cubic_type: str = "Al2O3 30*30",
+        task_slot_nums: list[int] | None = None,
+        has_bead_bottle: bool = False,
+        bead_count: int = 0,
+        timeout: float = 1800.0,
+    ) -> PlcDoseResult:
+        """Forward rack-2 dosing to the nested PLC station."""
+
+        return self.station.dose_selected_slots(
+            recipe_name=recipe_name,
+            pallet_type=pallet_type,
+            cubic_type=cubic_type,
+            task_slot_nums=task_slot_nums,
+            has_bead_bottle=has_bead_bottle,
+            bead_count=bead_count,
+            timeout=timeout,
+        )
 
     @action(description="取大坩埚（PLC命令7含取盖/放盖）并完成方舱关门握手")
     def load_big_crucible(

@@ -10,7 +10,10 @@ configuration until the station mapping is confirmed.
 
 from __future__ import annotations
 
+import json
+import os
 from copy import deepcopy
+from pathlib import Path
 from typing import Any
 
 from yb_sse_devices.common.synthesis_protocol import DEFAULT_RECIPE_MATERIALS
@@ -46,10 +49,10 @@ def _material_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     ]
 
 
-# Recipe metadata belongs to the package because it is consumed by both the
-# device action and the workflow contract.  Rack positions are deliberately
-# absent; see ``physical_mappings`` below.
-RECIPE_SPECS: dict[str, dict[str, Any]] = {
+# The legacy entries are retained for atomic/simulator callers that upload a
+# recipe by hand.  Operator workflows use the recipe files synchronized from
+# the legacy upper computer below, so these are not used to populate the UI.
+_LEGACY_RECIPE_SPECS: dict[str, dict[str, Any]] = {
     "YB-LiCl-P2S5-2G": {
         "formula": "LiCl-P2S5",
         "synthesis_mass": 4.0,
@@ -69,6 +72,165 @@ RECIPE_SPECS: dict[str, dict[str, Any]] = {
         "materials": _material_rows([dict(item) for item in DEFAULT_RECIPE_MATERIALS]),
     },
 }
+
+
+_PACKAGE_DATA_DIR = Path(__file__).resolve().parents[1] / "data"
+_BUNDLED_RECIPE_DIR = _PACKAGE_DATA_DIR / "recipes"
+_BUNDLED_RACK_DATA = _PACKAGE_DATA_DIR / "rackdata.json"
+
+
+def recipe_data_dir() -> Path:
+    """Return the active upper-computer recipe directory.
+
+    ``YB_SYNTHESIS_RECIPE_DIR`` is intended for a live workstation directory
+    such as ``D:\\yb_solidexperiment-260824\\yb_solidexperiment-260824\\recipes``.
+    The synchronized package snapshot remains the deterministic fallback for
+    simulation, packaging, and another computer where the legacy application
+    is not installed.
+    """
+
+    configured = str(os.environ.get("YB_SYNTHESIS_RECIPE_DIR", "")).strip()
+    if configured:
+        path = Path(configured).expanduser()
+        # An empty or half-copied live directory must not replace the package
+        # catalog with the two legacy compatibility aliases.
+        if path.is_dir() and any(path.glob("*.json")):
+            return path
+    return _BUNDLED_RECIPE_DIR
+
+
+def rack_data_file() -> Path:
+    """Return the active upper-computer rack inventory file."""
+
+    configured = str(os.environ.get("YB_SYNTHESIS_RACK_DATA", "")).strip()
+    if configured:
+        path = Path(configured).expanduser()
+        if path.is_file():
+            return path
+    return _BUNDLED_RACK_DATA
+
+
+def rack_material_positions() -> dict[str, int]:
+    """Read the legacy rack inventory as ``material -> PLC rack position``.
+
+    This is intentionally a read-only inventory helper.  Real PLC execution
+    still requires the deployment to opt in to the confirmed mapping through
+    ``powder_rack_positions``; a stale snapshot must never silently drive a
+    robot.
+    """
+
+    try:
+        payload = json.loads(rack_data_file().read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        return {}
+    rows = payload.get("rack", []) if isinstance(payload, dict) else []
+    result: dict[str, int] = {}
+    for row in rows if isinstance(rows, list) else []:
+        if not isinstance(row, dict) or not row.get("hasDosingHead"):
+            continue
+        material = str(row.get("material", "")).strip()
+        location = row.get("location")
+        if not material or not isinstance(location, int):
+            continue
+        result.setdefault(material, int(location))
+    return result
+
+
+def _recipe_from_json(path: Path) -> tuple[str, dict[str, Any]] | None:
+    """Parse one legacy ``recipes/*.json`` file.
+
+    The legacy application stores component rows as top-level JSON objects;
+    every object with ``weight`` is treated as a material row.  This preserves
+    the original recipe ordering while ignoring unrelated metadata fields.
+    """
+
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        return None
+    if not isinstance(payload, dict):
+        return None
+    name = str(payload.get("recipe_name", "")).strip()
+    if not name:
+        return None
+    materials: list[dict[str, Any]] = []
+    for material_name, row in payload.items():
+        if not isinstance(row, dict) or "weight" not in row:
+            continue
+        materials.append(
+            {
+                "name": str(material_name),
+                "weight": float(row.get("weight", 0.0)),
+                "tolerance": float(row.get("tolerance", 0.0)),
+                "pre_add": bool(row.get("pre-add", row.get("pre_add", False))),
+            }
+        )
+    if not materials:
+        return None
+    return name, {
+        "formula": str(payload.get("formula", "")),
+        "synthesis_mass": float(payload.get("synthesis_mass", 0.0)),
+        "n_ball_bead": int(payload.get("n_ball_bead", 0)),
+        "materials": _material_rows(materials),
+        "source_file": str(path),
+    }
+
+
+def _recipe_paths(directory: Path) -> list[Path]:
+    """Return recipe files in the same newest-first order as the Qt UI."""
+
+    paths = list(directory.glob("*.json"))
+    try:
+        return sorted(
+            paths,
+            key=lambda path: (path.stat().st_mtime_ns, path.name),
+            reverse=True,
+        )
+    except OSError:
+        # A package copied between filesystems may not preserve mtimes.  The
+        # timestamped filename still gives a deterministic fallback order.
+        return sorted(paths, key=lambda path: path.name, reverse=True)
+
+
+def _load_recipe_specs() -> dict[str, dict[str, Any]]:
+    """Load the upper-computer recipe catalog with a package fallback."""
+
+    loaded: dict[str, dict[str, Any]] = {}
+    directory = recipe_data_dir()
+    # Apply older files first so a newer file with the same recipe_name wins.
+    for path in reversed(_recipe_paths(directory)):
+        parsed = _recipe_from_json(path)
+        if parsed is not None:
+            name, spec = parsed
+            # File names are timestamped by the legacy application.  Sorting
+            # makes the last duplicate deterministic and keeps the newest
+            # exported definition when a recipe was revised.
+            loaded[name] = spec
+    if not loaded:
+        loaded = deepcopy(_LEGACY_RECIPE_SPECS)
+    else:
+        # Keep non-operator compatibility aliases available to old atomic
+        # tests/callers without exposing them in the recipe dropdown.
+        for name, spec in _LEGACY_RECIPE_SPECS.items():
+            loaded.setdefault(name, deepcopy(spec))
+    return loaded
+
+
+# Recipe metadata is now read from the same JSON files used by the legacy
+# upper computer.  Rack positions are deliberately kept separate because
+# they describe current installation inventory rather than recipe chemistry.
+RECIPE_SPECS: dict[str, dict[str, Any]] = _load_recipe_specs()
+
+
+def operator_recipe_names() -> tuple[str, ...]:
+    """Return only recipes originating from the upper-computer JSON files."""
+
+    names: list[str] = []
+    for path in _recipe_paths(recipe_data_dir()):
+        parsed = _recipe_from_json(path)
+        if parsed is not None and parsed[0] not in names:
+            names.append(parsed[0])
+    return tuple(names) if names else tuple(RECIPE_SPECS)
 
 
 # A visible marker is useful for diagnostics and future configuration UIs,
@@ -133,7 +295,7 @@ def recipe_spec(recipe_name: str) -> dict[str, Any]:
 
 
 def recipe_names() -> tuple[str, ...]:
-    return tuple(RECIPE_SPECS)
+    return operator_recipe_names()
 
 
 def pallet_names() -> tuple[str, ...]:
@@ -223,6 +385,10 @@ __all__ = [
     "pallet_names",
     "pallet_type_code",
     "pallet_type_label",
+    "rack_data_file",
+    "rack_material_positions",
+    "recipe_data_dir",
     "recipe_names",
+    "operator_recipe_names",
     "recipe_spec",
 ]

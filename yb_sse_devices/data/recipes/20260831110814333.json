@@ -1,0 +1,11 @@
+{
+  "recipe_name": "260727-Li3PS5Cl-R1",
+  "formula": "Li3PS5Cl",
+  "synthesis_mass": 0.5,
+  "n_ball_bead": 3,
+  "LiCl": {
+    "weight": 0.631,
+    "tolerance": 0.02,
+    "pre-add": false
+  }
+}

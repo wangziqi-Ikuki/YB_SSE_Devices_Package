@@ -1,0 +1,26 @@
+{
+    "Li2S": {
+        "pre-add": false,
+        "tolerance": 0.002,
+        "weight": 0.9
+    },
+    "LiBr": {
+        "pre-add": false,
+        "tolerance": 0.002,
+        "weight": 0.87
+    },
+    "LiCl": {
+        "pre-add": false,
+        "tolerance": 0.002,
+        "weight": 1.2
+    },
+    "P2S5": {
+        "pre-add": false,
+        "tolerance": 0.002,
+        "weight": 0.89
+    },
+    "formula": "Li6PS5Cl",
+    "n_ball_bead": 3,
+    "recipe_name": "260901-Li6PS5Cl-R2",
+    "synthesis_mass": 3.87
+}

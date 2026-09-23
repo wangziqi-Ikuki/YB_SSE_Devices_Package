@@ -1,0 +1,898 @@
+{
+  "contract": {
+    "boundary_mapping": {
+      "source_mappings": {
+        "026b4237-d0df-5f18-8cc1-938fedc85719": {
+          "kind": "node_output",
+          "source_handle_uuid": "fd98e855-38e1-568a-ac14-d222fb38663b",
+          "workflow_node_uuid": "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52"
+        },
+        "46315ff4-9b0c-5463-b9f7-1f64c675ed36": {
+          "kind": "node_output",
+          "source_handle_uuid": "8fb46436-ac34-55df-8f9b-5652398c3373",
+          "workflow_node_uuid": "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52"
+        },
+        "84ac318b-7c2d-5833-a1f3-b4eb8086344f": {
+          "kind": "node_output",
+          "source_handle_uuid": "cbec2948-20b3-50f2-82c2-c015d02b385b",
+          "workflow_node_uuid": "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52"
+        },
+        "90a8280f-2ddb-5d89-91be-38a55a6ccb73": {
+          "kind": "node_output",
+          "source_handle_uuid": "5b07085b-359b-52a4-a8dd-d454a44045ac",
+          "workflow_node_uuid": "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52"
+        },
+        "cb144ee1-a86b-523a-9ba1-7c1e128e0634": {
+          "kind": "node_output",
+          "source_handle_uuid": "9a789192-b9c4-522f-b80f-9b124a991969",
+          "workflow_node_uuid": "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52"
+        }
+      },
+      "structural_mappings": {
+        "completion_sources": [],
+        "entry_targets": []
+      },
+      "target_mappings": {
+        "110f255a-d9fe-53d2-8abe-9a76d7ad9512": [
+          {
+            "target_handle_uuid": "a908df0a-a405-5d1f-b6c9-fa19c873d4b3",
+            "workflow_node_uuid": "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52"
+          }
+        ],
+        "1ac98b59-e9b9-537f-923a-9f14ee2e1e46": [
+          {
+            "target_handle_uuid": "5cee317c-c36e-5c38-8dda-63fcc22422ec",
+            "workflow_node_uuid": "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52"
+          }
+        ],
+        "8601588c-a256-5f91-b984-135326bc1bea": [
+          {
+            "target_handle_uuid": "c085f67f-d029-5dde-a3be-8952e4a2e4bf",
+            "workflow_node_uuid": "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52"
+          }
+        ],
+        "bcaacea4-50d7-5b0e-ba31-c8f71cb52765": [
+          {
+            "target_handle_uuid": "e0d67657-1309-5194-8ac4-a82317afb61d",
+            "workflow_node_uuid": "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52"
+          }
+        ],
+        "c7ae3890-71d4-5547-b4e7-e9e5457060c1": [
+          {
+            "target_handle_uuid": "96dd6246-f619-50d9-bc1c-4f7d98cfcb04",
+            "workflow_node_uuid": "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52"
+          }
+        ]
+      }
+    },
+    "contract_digest": "sha256:756061a79ad4470f3c95cfdd12af0fde8d0a83d73ca47c6ecc9a0c43cde4ae4f",
+    "create_time": "2026-09-23T04:51:55.732095Z",
+    "description": "人工确认托盘和坩埚已放在料架2后，由 OS 向 PLC 写入命令7，把托盘搬运到料架1。不调用配方或 TASK 业务接口。",
+    "edge_count": 0,
+    "executor_binding_mapping": {
+      "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52": "executor_1"
+    },
+    "executor_requirements": [
+      {
+        "display_name": "执行设备 1",
+        "key": "executor_1",
+        "required": true,
+        "resource_template_uuid": "1aade68a-3c83-5565-b6c5-fbd3b2ac5539"
+      }
+    ],
+    "graph_snapshot": {
+      "edges": [],
+      "handle_templates": [
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "timeout",
+          "data_source": "goal",
+          "display_name": "timeout",
+          "handle_key": "timeout",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 5,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": 600.0,
+                "type": "number"
+              }
+            }
+          },
+          "required": false,
+          "type": "number",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "0a51f80d-8d24-5a6d-a26d-b5544b4f3297",
+          "workflow_node_template_uuid": "b2bac8f2-d145-5678-ab9b-6d0828effd66"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "accepted",
+          "data_source": "executor",
+          "display_name": "accepted",
+          "handle_key": "accepted",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 6,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "boolean"
+              }
+            }
+          },
+          "required": false,
+          "type": "boolean",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "1ade97cd-bab8-5e7f-b03e-4969d02fcf56",
+          "workflow_node_template_uuid": "b2bac8f2-d145-5678-ab9b-6d0828effd66"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "command",
+          "data_source": "executor",
+          "display_name": "command",
+          "handle_key": "command",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 9,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "5b07085b-359b-52a4-a8dd-d454a44045ac",
+          "workflow_node_template_uuid": "b2bac8f2-d145-5678-ab9b-6d0828effd66"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "task_slot_nums",
+          "data_source": "goal",
+          "display_name": "task_slot_nums",
+          "handle_key": "task_slot_nums",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 2,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": null,
+                "items": {
+                  "type": "integer"
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "array",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "5cee317c-c36e-5c38-8dda-63fcc22422ec",
+          "workflow_node_template_uuid": "b2bac8f2-d145-5678-ab9b-6d0828effd66"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "status_name",
+          "data_source": "executor",
+          "display_name": "status_name",
+          "handle_key": "status_name",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 11,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "8fb46436-ac34-55df-8f9b-5652398c3373",
+          "workflow_node_template_uuid": "b2bac8f2-d145-5678-ab9b-6d0828effd66"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "cubic_type",
+          "data_source": "goal",
+          "display_name": "cubic_type",
+          "handle_key": "cubic_type",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 1,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": "Al2O3 30*30",
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "96dd6246-f619-50d9-bc1c-4f7d98cfcb04",
+          "workflow_node_template_uuid": "b2bac8f2-d145-5678-ab9b-6d0828effd66"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "success",
+          "data_source": "executor",
+          "display_name": "success",
+          "handle_key": "success",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 7,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "boolean"
+              }
+            }
+          },
+          "required": false,
+          "type": "boolean",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "9a789192-b9c4-522f-b80f-9b124a991969",
+          "workflow_node_template_uuid": "b2bac8f2-d145-5678-ab9b-6d0828effd66"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "pallet_type",
+          "data_source": "goal",
+          "display_name": "pallet_type",
+          "handle_key": "pallet_type",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 0,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": "6 槽位托盘",
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "a908df0a-a405-5d1f-b6c9-fa19c873d4b3",
+          "workflow_node_template_uuid": "b2bac8f2-d145-5678-ab9b-6d0828effd66"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "display_name": "ready",
+          "handle_key": "ready",
+          "io_type": "source",
+          "meta_data": {},
+          "required": false,
+          "type": "default",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "ac57c059-b44d-5a71-87ac-9260bdfe0cef",
+          "workflow_node_template_uuid": "b2bac8f2-d145-5678-ab9b-6d0828effd66"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "has_bead_bottle",
+          "data_source": "goal",
+          "display_name": "has_bead_bottle",
+          "handle_key": "has_bead_bottle",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 3,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": false,
+                "type": "boolean"
+              }
+            }
+          },
+          "required": false,
+          "type": "boolean",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "c085f67f-d029-5dde-a3be-8952e4a2e4bf",
+          "workflow_node_template_uuid": "b2bac8f2-d145-5678-ab9b-6d0828effd66"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "status_code",
+          "data_source": "executor",
+          "display_name": "status_code",
+          "handle_key": "status_code",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 10,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "cbec2948-20b3-50f2-82c2-c015d02b385b",
+          "workflow_node_template_uuid": "b2bac8f2-d145-5678-ab9b-6d0828effd66"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "display_name": "ready",
+          "handle_key": "ready",
+          "io_type": "target",
+          "meta_data": {},
+          "required": false,
+          "type": "default",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "deda0fc0-a385-59df-bd4b-d053cbd1190f",
+          "workflow_node_template_uuid": "b2bac8f2-d145-5678-ab9b-6d0828effd66"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "bead_count",
+          "data_source": "goal",
+          "display_name": "bead_count",
+          "handle_key": "bead_count",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 4,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": 0,
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "e0d67657-1309-5194-8ac4-a82317afb61d",
+          "workflow_node_template_uuid": "b2bac8f2-d145-5678-ab9b-6d0828effd66"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "message",
+          "data_source": "executor",
+          "display_name": "message",
+          "handle_key": "message",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 8,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "fd98e855-38e1-568a-ac14-d222fb38663b",
+          "workflow_node_template_uuid": "b2bac8f2-d145-5678-ab9b-6d0828effd66"
+        }
+      ],
+      "node_templates": [
+        {
+          "class": "yb_sse_devices.devices.yb_synthesis_modbus_station.device:YBSynthesisModbusStation",
+          "create_time": "1970-01-01T00:00:00Z",
+          "description": "操作员确认托盘和坩埚已放在料架2后，向 PLC 写入命令7，把托盘搬运到料架1。只写 Modbus 上托盘寄存器，不调用配方或 TASK 接口。",
+          "display_name": "确认后执行上托盘",
+          "feedback": {},
+          "goal": {
+            "bead_count": "bead_count",
+            "cubic_type": "cubic_type",
+            "has_bead_bottle": "has_bead_bottle",
+            "pallet_type": "pallet_type",
+            "task_slot_nums": "task_slot_nums",
+            "timeout": "timeout"
+          },
+          "goal_default": {
+            "bead_count": 0,
+            "cubic_type": "Al2O3 30*30",
+            "has_bead_bottle": false,
+            "pallet_type": "6 槽位托盘",
+            "task_slot_nums": null,
+            "timeout": 600.0
+          },
+          "meta_data": {
+            "unilab": {
+              "action_contract_schema": {
+                "description": "操作员确认托盘和坩埚已放在料架2后，向 PLC 写入命令7，把托盘搬运到料架1。只写 Modbus 上托盘寄存器，不调用配方或 TASK 接口。",
+                "properties": {
+                  "feedback": {},
+                  "goal": {
+                    "_unilabos_placeholder_info": {},
+                    "additionalProperties": false,
+                    "properties": {
+                      "bead_count": {
+                        "default": 0,
+                        "type": "integer"
+                      },
+                      "cubic_type": {
+                        "default": "Al2O3 30*30",
+                        "type": "string"
+                      },
+                      "has_bead_bottle": {
+                        "default": false,
+                        "type": "boolean"
+                      },
+                      "pallet_type": {
+                        "default": "6 槽位托盘",
+                        "type": "string"
+                      },
+                      "task_slot_nums": {
+                        "default": null,
+                        "items": {
+                          "type": "integer"
+                        },
+                        "type": [
+                          "array",
+                          "null"
+                        ]
+                      },
+                      "timeout": {
+                        "default": 600.0,
+                        "type": "number"
+                      }
+                    },
+                    "required": [],
+                    "type": "object"
+                  },
+                  "result": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "accepted": {
+                        "type": "boolean"
+                      },
+                      "command": {
+                        "type": "string"
+                      },
+                      "message": {
+                        "type": "string"
+                      },
+                      "status_code": {
+                        "type": "integer"
+                      },
+                      "status_name": {
+                        "type": "string"
+                      },
+                      "success": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "accepted",
+                      "success",
+                      "message",
+                      "command",
+                      "status_code",
+                      "status_name"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "goal"
+                ],
+                "title": "load_pallet_from_rack2参数",
+                "type": "object",
+                "x-unilabos-action-contract": {
+                  "input_order": [
+                    "pallet_type",
+                    "cubic_type",
+                    "task_slot_nums",
+                    "has_bead_bottle",
+                    "bead_count",
+                    "timeout"
+                  ],
+                  "output_order": [
+                    "accepted",
+                    "success",
+                    "message",
+                    "command",
+                    "status_code",
+                    "status_name"
+                  ],
+                  "resource_template_symbols": {
+                    "goal": {},
+                    "result": {}
+                  },
+                  "version": 2
+                }
+              },
+              "contract_kind": "typed",
+              "resource_template": {
+                "display_name": "yb_synthesis_modbus_station",
+                "name": "community.yb_sse_devices.yb_synthesis_modbus_station",
+                "uuid": "1aade68a-3c83-5565-b6c5-fbd3b2ac5539"
+              }
+            }
+          },
+          "name": "load_pallet_from_rack2",
+          "node_type": "manual_confirm",
+          "resource_template_uuid": "1aade68a-3c83-5565-b6c5-fbd3b2ac5539",
+          "result": {},
+          "schema": "{\"_unilabos_placeholder_info\":{},\"additionalProperties\":false,\"properties\":{\"bead_count\":{\"default\":0,\"type\":\"integer\"},\"cubic_type\":{\"default\":\"Al2O3 30*30\",\"type\":\"string\"},\"has_bead_bottle\":{\"default\":false,\"type\":\"boolean\"},\"pallet_type\":{\"default\":\"6 槽位托盘\",\"type\":\"string\"},\"task_slot_nums\":{\"default\":null,\"items\":{\"type\":\"integer\"},\"type\":[\"array\",\"null\"]},\"timeout\":{\"default\":600.0,\"type\":\"number\"}},\"required\":[],\"type\":\"object\"}",
+          "type": "UniLabJsonCommand",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "b2bac8f2-d145-5678-ab9b-6d0828effd66"
+        }
+      ],
+      "nodes": [
+        {
+          "action_name": "load_pallet_from_rack2",
+          "action_type": "UniLabJsonCommand",
+          "create_time": "2026-09-23T04:34:32.165960Z",
+          "description": "操作员确认托盘和坩埚已放在料架2后，向 PLC 写入命令7，把托盘搬运到料架1。只写 Modbus 上托盘寄存器，不调用配方或 TASK 接口。",
+          "disabled": false,
+          "execution_policy": {},
+          "manual_confirmation": {
+            "timeout_seconds": 3600
+          },
+          "material_uuid": null,
+          "meta_data": {
+            "unilab": {
+              "authoring_device_symbol": "yb_synthesis_station",
+              "authoring_result_name": "loaded",
+              "authoring_source_order": 0,
+              "executor_binding": {
+                "device_id": "yb_synthesis_modbus_station_01",
+                "mode": "fixed"
+              },
+              "input_bindings": {
+                "5cee317c-c36e-5c38-8dda-63fcc22422ec": {
+                  "parameter": "task_slot_nums"
+                },
+                "96dd6246-f619-50d9-bc1c-4f7d98cfcb04": {
+                  "parameter": "cubic_type"
+                },
+                "a908df0a-a405-5d1f-b6c9-fa19c873d4b3": {
+                  "parameter": "pallet_type"
+                },
+                "c085f67f-d029-5dde-a3be-8952e4a2e4bf": {
+                  "parameter": "has_bead_bottle"
+                },
+                "e0d67657-1309-5194-8ac4-a82317afb61d": {
+                  "parameter": "bead_count"
+                }
+              }
+            }
+          },
+          "minimized": false,
+          "name": "确认后执行上托盘",
+          "param": {},
+          "pose": {},
+          "status": "idle",
+          "type": "manual_confirm",
+          "update_time": "2026-09-23T04:34:32.165960Z",
+          "uuid": "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52",
+          "workflow_node_template_uuid": "b2bac8f2-d145-5678-ab9b-6d0828effd66",
+          "workflow_uuid": "871ecc8b-9e7c-4e09-8637-3c8c0df42927"
+        }
+      ],
+      "workflow": {
+        "create_time": "2026-09-23T04:34:22.513532Z",
+        "description": "人工确认托盘和坩埚已放在料架2后，由 OS 向 PLC 写入命令7，把托盘搬运到料架1。不调用配方或 TASK 业务接口。",
+        "meta_data": {
+          "unilab": {
+            "authoring_function_name": "synthesis_load_tray",
+            "authoring_result_record_name": "SynthesisLoadTrayResult",
+            "authoring_root_fields": [
+              "workflow_type"
+            ],
+            "input_contract": {
+              "parameters": [
+                {
+                  "default": "6 槽位托盘",
+                  "name": "pallet_type",
+                  "required": false,
+                  "schema": {
+                    "enum": [
+                      "4 槽位托盘",
+                      "5 槽位托盘",
+                      "6 槽位托盘"
+                    ],
+                    "type": "string"
+                  }
+                },
+                {
+                  "default": "Al2O3 30*30",
+                  "name": "cubic_type",
+                  "required": false,
+                  "schema": {
+                    "enum": [
+                      "Al2O3 30*30",
+                      "Al2O3 35*40",
+                      "Al2O3 40*40",
+                      "ZrO2 40*35",
+                      "ZrO2 40*46"
+                    ],
+                    "type": "string"
+                  }
+                },
+                {
+                  "name": "task_slot_nums",
+                  "required": true,
+                  "schema": {
+                    "items": {
+                      "type": "integer"
+                    },
+                    "type": "array"
+                  }
+                },
+                {
+                  "default": false,
+                  "name": "has_bead_bottle",
+                  "required": false,
+                  "schema": {
+                    "type": "boolean"
+                  }
+                },
+                {
+                  "default": 0,
+                  "name": "bead_count",
+                  "required": false,
+                  "schema": {
+                    "type": "integer"
+                  }
+                }
+              ],
+              "version": 1
+            },
+            "output_bindings": {
+              "command": {
+                "kind": "node_output",
+                "source_handle_uuid": "5b07085b-359b-52a4-a8dd-d454a44045ac",
+                "workflow_node_uuid": "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52"
+              },
+              "message": {
+                "kind": "node_output",
+                "source_handle_uuid": "fd98e855-38e1-568a-ac14-d222fb38663b",
+                "workflow_node_uuid": "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52"
+              },
+              "status_code": {
+                "kind": "node_output",
+                "source_handle_uuid": "cbec2948-20b3-50f2-82c2-c015d02b385b",
+                "workflow_node_uuid": "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52"
+              },
+              "status_name": {
+                "kind": "node_output",
+                "source_handle_uuid": "8fb46436-ac34-55df-8f9b-5652398c3373",
+                "workflow_node_uuid": "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52"
+              },
+              "success": {
+                "kind": "node_output",
+                "source_handle_uuid": "9a789192-b9c4-522f-b80f-9b124a991969",
+                "workflow_node_uuid": "6ecb8e79-e13e-4c33-84ec-82ebcb9b5a52"
+              }
+            },
+            "output_contract": {
+              "outputs": [
+                {
+                  "implicit": false,
+                  "name": "success",
+                  "schema": {
+                    "type": "boolean"
+                  }
+                },
+                {
+                  "implicit": false,
+                  "name": "message",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "implicit": false,
+                  "name": "command",
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "implicit": false,
+                  "name": "status_code",
+                  "schema": {
+                    "type": "integer"
+                  }
+                },
+                {
+                  "implicit": false,
+                  "name": "status_name",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "version": 1
+            },
+            "source_bootstrap": {
+              "kind": "editable_package_manifest",
+              "package_id": "yb_sse_devices",
+              "relative_path": "experiment_operations/synthesis_load_tray.py",
+              "source_uri": "package://yb_sse_devices/experiment_operations/synthesis_load_tray.py"
+            }
+          }
+        },
+        "name": "YB 合成工站上托盘",
+        "revision": 3,
+        "tags": [],
+        "update_time": "2026-09-23T04:34:32.143670Z",
+        "uuid": "871ecc8b-9e7c-4e09-8637-3c8c0df42927",
+        "workflow_type": "experiment_operation"
+      }
+    },
+    "input_contract": {
+      "parameters": [
+        {
+          "default": "6 槽位托盘",
+          "name": "pallet_type",
+          "required": false,
+          "schema": {
+            "enum": [
+              "4 槽位托盘",
+              "5 槽位托盘",
+              "6 槽位托盘"
+            ],
+            "type": "string"
+          }
+        },
+        {
+          "default": "Al2O3 30*30",
+          "name": "cubic_type",
+          "required": false,
+          "schema": {
+            "enum": [
+              "Al2O3 30*30",
+              "Al2O3 35*40",
+              "Al2O3 40*40",
+              "ZrO2 40*35",
+              "ZrO2 40*46"
+            ],
+            "type": "string"
+          }
+        },
+        {
+          "name": "task_slot_nums",
+          "required": true,
+          "schema": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array"
+          }
+        },
+        {
+          "default": false,
+          "name": "has_bead_bottle",
+          "required": false,
+          "schema": {
+            "type": "boolean"
+          }
+        },
+        {
+          "default": 0,
+          "name": "bead_count",
+          "required": false,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "version": 1
+    },
+    "meta_data": {},
+    "name": "YB 合成工站上托盘",
+    "node_count": 1,
+    "node_template_uuid": "c3ac58d2-1ab2-4099-bad5-b07381ea4aac",
+    "output_contract": {
+      "outputs": [
+        {
+          "implicit": false,
+          "name": "success",
+          "schema": {
+            "type": "boolean"
+          }
+        },
+        {
+          "implicit": false,
+          "name": "message",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "implicit": false,
+          "name": "command",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "implicit": false,
+          "name": "status_code",
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "implicit": false,
+          "name": "status_name",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "version": 1
+    },
+    "source_hash": "sha256:d925d7f02a972da1ece955ecc65379dc26bf57efa7ef7385613d84075320892d",
+    "tags": [],
+    "update_time": "2026-09-23T04:51:55.732095Z",
+    "uuid": "cd503efa-5ae4-49cb-a6ba-98867aebc16f",
+    "version": 3,
+    "workflow_revision": 3,
+    "workflow_uuid": "871ecc8b-9e7c-4e09-8637-3c8c0df42927"
+  },
+  "source_draft_hash": "sha256:b89d5cce35ce918fbd8549e0ed50877f2e66e0d9fdd9417255f6adea704361d0"
+}

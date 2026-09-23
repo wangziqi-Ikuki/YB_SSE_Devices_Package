@@ -51,6 +51,24 @@ YB_SSE_Devices_Package/
 └── tests/                               # 协议、动作、仿真和包结构测试
 ```
 
+## 上位机配方目录
+
+旧版合成工站上位机把配方保存为程序目录下的 `recipes/*.json`，把粉料架库存保存为
+`rack/rackdata.json`。设备包的 `yb_sse_devices/data/recipes/` 保存一份配方快照，默认按上位机
+界面的最新文件顺序提供配方；如果工站上位机仍安装在本机，可以在启动 OS 前设置
+`YB_SYNTHESIS_RECIPE_DIR` 指向它的 `recipes` 目录，让设备包直接读取当前配方文件。
+
+同步配方时使用：
+
+```powershell
+mamba run -n unilab python scripts/sync_upper_station_data.py `
+  'D:\yb_solidexperiment-260824\yb_solidexperiment-260824'
+```
+
+料架库存是现场状态，不随普通配方同步覆盖。只有确认物理料架内容后，才使用
+`--sync-rack` 更新 `yb_sse_devices/data/rackdata.json`。当前设备包快照保留已确认的映射：LiCl=1、
+Li2S=2、P2S5=3、LiBr=4；2 号位临时卸料不会改变这个已确认位置。
+
 根目录下仍保留少量旧模块名作为兼容导入转发层；里面没有第二份设备注册实现。OS 只从规范
 import package `yb_sse_devices/` 下的 `devices/` 和 `resources/` 目录扫描注册。这样旧测试或旧调用可以继续导入，新的代码和工作流统一使用规范目录。
 

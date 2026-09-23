@@ -1,0 +1,247 @@
+{
+  "rack": [
+    {
+      "currentWeight": 5.663899973487855,
+      "hasDosingHead": true,
+      "initWeight": 11.5211,
+      "location": 1,
+      "material": "LiCl",
+      "rackState": 1,
+      "sampleWeight": 0
+    },
+    {
+      "currentWeight": 25.078500014114383,
+      "hasDosingHead": true,
+      "initWeight": 35.1833,
+      "location": 2,
+      "material": "Li2S",
+      "rackState": 1,
+      "sampleWeight": 0
+    },
+    {
+      "currentWeight": 7.060200023651124,
+      "hasDosingHead": true,
+      "initWeight": 10.8,
+      "location": 3,
+      "material": "P2S5",
+      "rackState": 1,
+      "sampleWeight": 0
+    },
+    {
+      "currentWeight": 5.757899982643128,
+      "hasDosingHead": true,
+      "initWeight": 15.9922,
+      "location": 4,
+      "material": "LiBr",
+      "rackState": 1,
+      "sampleWeight": 0
+    },
+    {
+      "currentWeight": 0,
+      "hasDosingHead": false,
+      "initWeight": 0,
+      "location": 5,
+      "material": "",
+      "rackState": 0,
+      "sampleWeight": 0
+    },
+    {
+      "currentWeight": 0,
+      "hasDosingHead": false,
+      "initWeight": 0,
+      "location": 6,
+      "material": "",
+      "rackState": 0,
+      "sampleWeight": 0
+    },
+    {
+      "currentWeight": 0,
+      "hasDosingHead": false,
+      "initWeight": 0,
+      "location": 7,
+      "material": "",
+      "rackState": 0,
+      "sampleWeight": 0
+    },
+    {
+      "currentWeight": 0,
+      "hasDosingHead": false,
+      "initWeight": 0,
+      "location": 8,
+      "material": "",
+      "rackState": 0,
+      "sampleWeight": 0
+    },
+    {
+      "currentWeight": 0,
+      "hasDosingHead": false,
+      "initWeight": 0,
+      "location": 9,
+      "material": "",
+      "rackState": 0,
+      "sampleWeight": 0
+    },
+    {
+      "currentWeight": 0,
+      "hasDosingHead": false,
+      "initWeight": 0,
+      "location": 10,
+      "material": "",
+      "rackState": 0,
+      "sampleWeight": 0
+    },
+    {
+      "currentWeight": 0,
+      "hasDosingHead": false,
+      "initWeight": 0,
+      "location": 11,
+      "material": "",
+      "rackState": 0,
+      "sampleWeight": 0
+    },
+    {
+      "currentWeight": 0,
+      "hasDosingHead": false,
+      "initWeight": 0,
+      "location": 12,
+      "material": "",
+      "rackState": 0,
+      "sampleWeight": 0
+    },
+    {
+      "currentWeight": 0,
+      "hasDosingHead": false,
+      "initWeight": 0,
+      "location": 13,
+      "material": "",
+      "rackState": 0,
+      "sampleWeight": 0
+    },
+    {
+      "currentWeight": 0,
+      "hasDosingHead": false,
+      "initWeight": 0,
+      "location": 14,
+      "material": "",
+      "rackState": 0,
+      "sampleWeight": 0
+    },
+    {
+      "currentWeight": 0,
+      "hasDosingHead": false,
+      "initWeight": 0,
+      "location": 15,
+      "material": "",
+      "rackState": 0,
+      "sampleWeight": 0
+    },
+    {
+      "currentWeight": 0,
+      "hasDosingHead": false,
+      "initWeight": 0,
+      "location": 16,
+      "material": "",
+      "rackState": 0,
+      "sampleWeight": 0
+    },
+    {
+      "currentWeight": 0,
+      "hasDosingHead": false,
+      "initWeight": 0,
+      "location": 17,
+      "material": "",
+      "rackState": 0,
+      "sampleWeight": 0
+    },
+    {
+      "currentWeight": 0,
+      "hasDosingHead": false,
+      "initWeight": 0,
+      "location": 18,
+      "material": "",
+      "rackState": 0,
+      "sampleWeight": 0
+    },
+    {
+      "currentWeight": 0,
+      "hasDosingHead": false,
+      "initWeight": 0,
+      "location": 19,
+      "material": "",
+      "rackState": 0,
+      "sampleWeight": 0
+    },
+    {
+      "currentWeight": 0,
+      "hasDosingHead": false,
+      "initWeight": 0,
+      "location": 20,
+      "material": "",
+      "rackState": 0,
+      "sampleWeight": 0
+    },
+    {
+      "currentWeight": 0,
+      "hasDosingHead": false,
+      "initWeight": 0,
+      "location": 21,
+      "material": "",
+      "rackState": 0,
+      "sampleWeight": 0
+    },
+    {
+      "currentWeight": 0,
+      "hasDosingHead": false,
+      "initWeight": 0,
+      "location": 22,
+      "material": "",
+      "rackState": 0,
+      "sampleWeight": 0
+    },
+    {
+      "currentWeight": 0,
+      "hasDosingHead": false,
+      "initWeight": 0,
+      "location": 23,
+      "material": "",
+      "rackState": 0,
+      "sampleWeight": 0
+    },
+    {
+      "currentWeight": 0,
+      "hasDosingHead": false,
+      "initWeight": 0,
+      "location": 24,
+      "material": "",
+      "rackState": 0,
+      "sampleWeight": 0
+    },
+    {
+      "currentWeight": 0,
+      "hasDosingHead": false,
+      "initWeight": 0,
+      "location": 25,
+      "material": "",
+      "rackState": 0,
+      "sampleWeight": 0
+    },
+    {
+      "currentWeight": 0,
+      "hasDosingHead": false,
+      "initWeight": 0,
+      "location": 26,
+      "material": "",
+      "rackState": 0,
+      "sampleWeight": 0
+    },
+    {
+      "currentWeight": 0,
+      "hasDosingHead": false,
+      "initWeight": 0,
+      "location": 27,
+      "material": "",
+      "rackState": 0,
+      "sampleWeight": 0
+    }
+  ]
+}
