@@ -3,7 +3,6 @@ from typing import Literal, TypedDict
 from yb_sse_devices.devices.yb_synthesis_atomic_station.device import (
     YBSynthesisAtomicStation,
 )
-from yb_sse_devices.experiment_operations.synthesis_load_tray import synthesis_load_tray
 from unilabos.workflow.authoring import device, workflow
 
 
@@ -23,11 +22,12 @@ station: YBSynthesisAtomicStation = device("yb_synthesis_atomic_station_01")
 @workflow(
     workflow_uuid="2b618ad2-cb04-4ce0-8f0f-4155497740b2",
     displayname="料架2-加粉加珠声共振流程",
-    description="确认托盘和坩埚已放在料架2后，把托盘搬到料架1。再次确认后，按所选槽位加粉、加珠并放回料架1。随后确认声共振参数，上料并等待振动完成，最后下料。",
+    description="确认托盘和坩埚已放在料架2后，把托盘搬到料架1。4 槽、5 槽、6 槽托盘都按槽位单独选择配方。确认后按槽位加粉、加珠并放回料架1。随后确认声共振参数，放入声共振后先放开工站，等振完再下料。",
 )
 def synthesis_powder_bead_rack2(
     *,
-    recipe_name: Literal[
+    slot_recipes: list[Literal[
+        "",
         "260727-Li333PS5Cl-R1",
         "260727-Li444PS5Cl-R1",
         "260727-Li1PS5Cl-R1",
@@ -57,25 +57,26 @@ def synthesis_powder_bead_rack2(
         "260909-Li5.5P1.0S4.5Cl0.8Br0.7",
         "20260920-Li5.3P1.0S4.3Cl1.0Br0.7-R1",
         "20260920-Li5.5P1.0S4.5Cl0.8Br0.7-R2",
-    ] = "20260920-Li5.3P1.0S4.3Cl1.0Br0.7-R1",
+        "260924-Li5.5P1.0S4.5Cl0.8Br0.7-pre-01",
+        "260924-Li5.5P1.0S4.5Cl0.8Br0.7-pre-02",
+    ]],
     pallet_type: Literal["4 槽位托盘", "5 槽位托盘", "6 槽位托盘"] = "6 槽位托盘",
     cubic_type: Literal[
         "Al2O3 30*30", "Al2O3 35*40", "Al2O3 40*40", "ZrO2 40*35", "ZrO2 40*46"
     ] = "Al2O3 30*30",
-    task_slot_nums: list[int],
     has_bead_bottle: bool = False,
     bead_count: int = 0,
     resonance_acceleration: int,
     resonance_frequency: int,
     resonance_time: int,
 ) -> Rack2WeighResult:
-    # unilab:node_uuid=4c1a8f6e-0d55-4e67-9f0c-5eb22ab87f7c
-    loaded = synthesis_load_tray(
+    # unilab:node_uuid=4c1a8f6e-0d55-4e67-9f0c-5eb22ab87f7c manual_confirmation_timeout_seconds=3600
+    loaded = station.load_pallet_from_rack2(
         bead_count=bead_count,
         cubic_type=cubic_type,
         has_bead_bottle=has_bead_bottle,
         pallet_type=pallet_type,
-        task_slot_nums=task_slot_nums,
+        slot_recipes=slot_recipes,
     )
     # unilab:node_uuid=76ec0634-9277-4474-bfa6-b0ea0b4f8969 manual_confirmation_timeout_seconds=3600
     dosed = station.dose_selected_slots(
@@ -83,15 +84,16 @@ def synthesis_powder_bead_rack2(
         cubic_type=cubic_type,
         has_bead_bottle=has_bead_bottle,
         pallet_type=pallet_type,
-        recipe_name=recipe_name,
-        task_slot_nums=task_slot_nums,
+        slot_recipes=slot_recipes,
     )
     # unilab:node_uuid=8f3c1a20-6b14-4d2e-9c55-1a0e7d2b91c4 manual_confirmation_timeout_seconds=3600
-    resonated = station.run_acoustic_load(
+    placed = station.run_acoustic_load(
         acceleration=resonance_acceleration,
         duration_minutes=resonance_time,
         frequency=resonance_frequency,
     )
+    # unilab:node_uuid=5e8a1c74-2b90-4d6f-a173-9f0c6d4e8a21
+    finished = station.wait_acoustic_process()
     # unilab:node_uuid=c2a91e44-5f08-4b77-8d31-6e4b0a9c2f17
     unloaded = station.run_acoustic_unload()
     return {
@@ -100,6 +102,6 @@ def synthesis_powder_bead_rack2(
         "message": unloaded.message,
         "qr_codes": dosed.qr_codes,
         "weights": dosed.weights,
-        "resonance_finished": resonated.success,
+        "resonance_finished": finished.success,
         "resonance_unloaded": unloaded.success,
     }

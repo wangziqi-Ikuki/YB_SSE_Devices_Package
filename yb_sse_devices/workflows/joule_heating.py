@@ -40,8 +40,7 @@ def joule_heating(
     )
     # unilab:node_uuid=b7e2a9c1-5d46-4f83-8b20-6a1c3e9d0f54 manual_confirmation_timeout_seconds=3600
     unloaded = station.unload_joule_heating(
-        carrier_type=carrier_type,
-        pickup_positions=pickup_positions,
+        carrier_type=carrier_type, pickup_positions=pickup_positions
     )
     return {
         "heating_finished": heated.success,

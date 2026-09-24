@@ -86,6 +86,8 @@ class CodecTests(unittest.TestCase):
         self.assertEqual(len(furnace), 81)
         self.assertEqual(furnace[0], 4)
         self.assertEqual(furnace[16], 1)
+        self.assertEqual(furnace[17], 800)
+        self.assertEqual(furnace[23], 10)
         joule = encode_send_firing_command(position=5, joule_carrier_type=1)
         self.assertEqual(joule[61:64], (0, 0, 2))
         self.assertEqual(encode_fetch_firing_command(position=3)[:3], (5, 3, 3))

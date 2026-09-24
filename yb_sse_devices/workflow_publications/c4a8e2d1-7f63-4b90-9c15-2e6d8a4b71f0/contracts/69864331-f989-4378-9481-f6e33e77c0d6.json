@@ -1,0 +1,1458 @@
+{
+  "contract": {
+    "boundary_mapping": {
+      "source_mappings": {
+        "33c78cb8-2c77-52ab-8947-e7dcf303bb91": {
+          "kind": "node_output",
+          "source_handle_uuid": "a1b624d6-bf3b-5536-9170-5713c22de27e",
+          "workflow_node_uuid": "f3a6d1e8-2c49-4b77-8e05-9a1d4c7e60b2"
+        },
+        "b4d5447b-7779-5150-847c-2c20d25a614a": {
+          "kind": "node_output",
+          "source_handle_uuid": "506133aa-acff-5b5b-826d-30d1e87ac5e6",
+          "workflow_node_uuid": "d1e4a8c2-6b70-4f91-8a33-1c5e9d2b70a4"
+        },
+        "edc9bab9-238a-5bef-8906-a78fb70f238c": {
+          "kind": "node_output",
+          "source_handle_uuid": "0291f012-1273-5bf0-8605-e99010156bf0",
+          "workflow_node_uuid": "f3a6d1e8-2c49-4b77-8e05-9a1d4c7e60b2"
+        },
+        "f9cb9857-5bd3-51d0-8677-94e6ab4fdfba": {
+          "kind": "node_output",
+          "source_handle_uuid": "2c447a66-1067-5d8f-bce5-54c6e20d82d9",
+          "workflow_node_uuid": "e7b2c9d4-1a58-4e60-9f12-8d3c6a5b40e1"
+        }
+      },
+      "structural_mappings": {
+        "completion_sources": [],
+        "entry_targets": []
+      },
+      "target_mappings": {
+        "a046182e-3a90-59ce-a665-fe3f1f84216b": [
+          {
+            "target_handle_uuid": "473d906e-e40b-5d5a-baf6-9058ce9c3cc6",
+            "workflow_node_uuid": "d1e4a8c2-6b70-4f91-8a33-1c5e9d2b70a4"
+          }
+        ],
+        "de123480-a848-5eab-bf48-fb0187bf5808": [
+          {
+            "target_handle_uuid": "dbc007d9-af20-5f6b-9360-55215e0d0d10",
+            "workflow_node_uuid": "d1e4a8c2-6b70-4f91-8a33-1c5e9d2b70a4"
+          },
+          {
+            "target_handle_uuid": "0555c82c-0653-500e-be6d-c8fe751654c3",
+            "workflow_node_uuid": "e7b2c9d4-1a58-4e60-9f12-8d3c6a5b40e1"
+          },
+          {
+            "target_handle_uuid": "f8e635a7-96b2-5f7f-971c-360a388dc294",
+            "workflow_node_uuid": "f3a6d1e8-2c49-4b77-8e05-9a1d4c7e60b2"
+          }
+        ]
+      }
+    },
+    "contract_digest": "sha256:171c0f076246175df48fb60d31a60b77278b090c6347717fcfecc52ba27478dc",
+    "create_time": "2026-09-24T04:19:57.168140Z",
+    "description": "先人工确认小坩埚已放入石英坩埚，并放在料架2的对应槽位。确认后机械臂送入同号马弗炉，放入后即放开工站。烧结期间只等待该炉完成，机械臂可以去做别的任务。加热完成后再把石英坩埚放回原来的槽位。槽位1到4对应马弗炉1到4。",
+    "edge_count": 2,
+    "executor_binding_mapping": {
+      "d1e4a8c2-6b70-4f91-8a33-1c5e9d2b70a4": "executor_1",
+      "e7b2c9d4-1a58-4e60-9f12-8d3c6a5b40e1": "executor_1",
+      "f3a6d1e8-2c49-4b77-8e05-9a1d4c7e60b2": "executor_1"
+    },
+    "executor_requirements": [
+      {
+        "display_name": "执行设备 1",
+        "key": "executor_1",
+        "required": true,
+        "resource_template_uuid": "e4cf23b6-d482-5de4-8e04-f38d9c87a061"
+      }
+    ],
+    "graph_snapshot": {
+      "edges": [
+        {
+          "create_time": "2026-09-24T04:03:13.629086Z",
+          "meta_data": {},
+          "source_handle_uuid": "43219148-be98-5282-b1d2-5facb39ce777",
+          "source_node_uuid": "e7b2c9d4-1a58-4e60-9f12-8d3c6a5b40e1",
+          "target_handle_uuid": "46480c70-33dc-5694-8a01-357abcf7254b",
+          "target_node_uuid": "f3a6d1e8-2c49-4b77-8e05-9a1d4c7e60b2",
+          "update_time": "2026-09-24T04:03:13.629086Z",
+          "uuid": "af3e84cf-cfef-5883-966b-447425f6e33e"
+        },
+        {
+          "create_time": "2026-09-24T04:03:13.629086Z",
+          "meta_data": {},
+          "source_handle_uuid": "62cc4140-25c8-5b3c-b98c-4a0188e9a1e1",
+          "source_node_uuid": "d1e4a8c2-6b70-4f91-8a33-1c5e9d2b70a4",
+          "target_handle_uuid": "db4a3e48-5568-5d2e-b480-841faffd33f0",
+          "target_node_uuid": "e7b2c9d4-1a58-4e60-9f12-8d3c6a5b40e1",
+          "update_time": "2026-09-24T04:03:13.629086Z",
+          "uuid": "ecf07ce0-2818-502d-b1c6-1f384e71b11e"
+        }
+      ],
+      "handle_templates": [
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "success",
+          "data_source": "executor",
+          "display_name": "success",
+          "handle_key": "success",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 3,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "boolean"
+              }
+            }
+          },
+          "required": false,
+          "type": "boolean",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "0291f012-1273-5bf0-8605-e99010156bf0",
+          "workflow_node_template_uuid": "502e074a-0bc3-5ca0-bc35-e8ee77079b72"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "status_code",
+          "data_source": "executor",
+          "display_name": "status_code",
+          "handle_key": "status_code",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 6,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "03f7da51-0640-58ad-b70e-ea5c7750f2c9",
+          "workflow_node_template_uuid": "d74e76d1-a9fa-5dc5-8537-610810352eb5"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "quartz_slot",
+          "data_source": "goal",
+          "display_name": "quartz_slot",
+          "handle_key": "quartz_slot",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 0,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": 1,
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "0555c82c-0653-500e-be6d-c8fe751654c3",
+          "workflow_node_template_uuid": "d74e76d1-a9fa-5dc5-8537-610810352eb5"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "timeout",
+          "data_source": "goal",
+          "display_name": "timeout",
+          "handle_key": "timeout",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 2,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": 14400.0,
+                "type": "number"
+              }
+            }
+          },
+          "required": false,
+          "type": "number",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "201b52f9-674e-51d1-8403-f453fd8dac68",
+          "workflow_node_template_uuid": "ac54b006-7bf2-5b29-b186-a3f6abc1585f"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "accepted",
+          "data_source": "executor",
+          "display_name": "accepted",
+          "handle_key": "accepted",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 2,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "boolean"
+              }
+            }
+          },
+          "required": false,
+          "type": "boolean",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "222a9ada-5541-5903-8d9c-1551a6c28d2c",
+          "workflow_node_template_uuid": "502e074a-0bc3-5ca0-bc35-e8ee77079b72"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "display_name": "ready",
+          "handle_key": "ready",
+          "io_type": "source",
+          "meta_data": {},
+          "required": false,
+          "type": "default",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "26a66c71-117f-5667-b4f1-3897683af3da",
+          "workflow_node_template_uuid": "502e074a-0bc3-5ca0-bc35-e8ee77079b72"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "command",
+          "data_source": "executor",
+          "display_name": "command",
+          "handle_key": "command",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 5,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "2b88820f-8ed4-5fa2-bd1e-fa7042d94bc3",
+          "workflow_node_template_uuid": "d74e76d1-a9fa-5dc5-8537-610810352eb5"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "success",
+          "data_source": "executor",
+          "display_name": "success",
+          "handle_key": "success",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 3,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "boolean"
+              }
+            }
+          },
+          "required": false,
+          "type": "boolean",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "2c447a66-1067-5d8f-bce5-54c6e20d82d9",
+          "workflow_node_template_uuid": "d74e76d1-a9fa-5dc5-8537-610810352eb5"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "status_code",
+          "data_source": "executor",
+          "display_name": "status_code",
+          "handle_key": "status_code",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 6,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "3334da0a-0587-59b3-901a-e35a93807d5c",
+          "workflow_node_template_uuid": "502e074a-0bc3-5ca0-bc35-e8ee77079b72"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "display_name": "ready",
+          "handle_key": "ready",
+          "io_type": "source",
+          "meta_data": {},
+          "required": false,
+          "type": "default",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "43219148-be98-5282-b1d2-5facb39ce777",
+          "workflow_node_template_uuid": "d74e76d1-a9fa-5dc5-8537-610810352eb5"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "display_name": "ready",
+          "handle_key": "ready",
+          "io_type": "target",
+          "meta_data": {},
+          "required": false,
+          "type": "default",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "46480c70-33dc-5694-8a01-357abcf7254b",
+          "workflow_node_template_uuid": "502e074a-0bc3-5ca0-bc35-e8ee77079b72"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "furnace_segments",
+          "data_source": "goal",
+          "display_name": "furnace_segments",
+          "handle_key": "furnace_segments",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 1,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": "[]",
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "473d906e-e40b-5d5a-baf6-9058ce9c3cc6",
+          "workflow_node_template_uuid": "ac54b006-7bf2-5b29-b186-a3f6abc1585f"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "success",
+          "data_source": "executor",
+          "display_name": "success",
+          "handle_key": "success",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 4,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "boolean"
+              }
+            }
+          },
+          "required": false,
+          "type": "boolean",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "506133aa-acff-5b5b-826d-30d1e87ac5e6",
+          "workflow_node_template_uuid": "ac54b006-7bf2-5b29-b186-a3f6abc1585f"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "status_name",
+          "data_source": "executor",
+          "display_name": "status_name",
+          "handle_key": "status_name",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 7,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "5bd0b9c6-32ed-55f7-93f6-b7f649551d12",
+          "workflow_node_template_uuid": "502e074a-0bc3-5ca0-bc35-e8ee77079b72"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "display_name": "ready",
+          "handle_key": "ready",
+          "io_type": "source",
+          "meta_data": {},
+          "required": false,
+          "type": "default",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "62cc4140-25c8-5b3c-b98c-4a0188e9a1e1",
+          "workflow_node_template_uuid": "ac54b006-7bf2-5b29-b186-a3f6abc1585f"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "command",
+          "data_source": "executor",
+          "display_name": "command",
+          "handle_key": "command",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 6,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "6732814d-a63d-5b54-b5cf-a2d614ffb430",
+          "workflow_node_template_uuid": "ac54b006-7bf2-5b29-b186-a3f6abc1585f"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "status_name",
+          "data_source": "executor",
+          "display_name": "status_name",
+          "handle_key": "status_name",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 8,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "7d763c17-2255-5172-a87b-3d9a3569ea8c",
+          "workflow_node_template_uuid": "ac54b006-7bf2-5b29-b186-a3f6abc1585f"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "display_name": "ready",
+          "handle_key": "ready",
+          "io_type": "target",
+          "meta_data": {},
+          "required": false,
+          "type": "default",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "8f0a57b4-8348-5bc7-a0b6-2cf2c6169c25",
+          "workflow_node_template_uuid": "ac54b006-7bf2-5b29-b186-a3f6abc1585f"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "message",
+          "data_source": "executor",
+          "display_name": "message",
+          "handle_key": "message",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 4,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "939212dd-77e7-5a83-a0b3-b9aa8daba00f",
+          "workflow_node_template_uuid": "d74e76d1-a9fa-5dc5-8537-610810352eb5"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "accepted",
+          "data_source": "executor",
+          "display_name": "accepted",
+          "handle_key": "accepted",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 2,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "boolean"
+              }
+            }
+          },
+          "required": false,
+          "type": "boolean",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "942d4cea-426c-5245-bb93-3e91794de678",
+          "workflow_node_template_uuid": "d74e76d1-a9fa-5dc5-8537-610810352eb5"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "timeout",
+          "data_source": "goal",
+          "display_name": "timeout",
+          "handle_key": "timeout",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 1,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": 14400.0,
+                "type": "number"
+              }
+            }
+          },
+          "required": false,
+          "type": "number",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "9771fd4c-50e0-5fc4-a8a7-d986e10d5b40",
+          "workflow_node_template_uuid": "d74e76d1-a9fa-5dc5-8537-610810352eb5"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "message",
+          "data_source": "executor",
+          "display_name": "message",
+          "handle_key": "message",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 4,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "a1b624d6-bf3b-5536-9170-5713c22de27e",
+          "workflow_node_template_uuid": "502e074a-0bc3-5ca0-bc35-e8ee77079b72"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "status_code",
+          "data_source": "executor",
+          "display_name": "status_code",
+          "handle_key": "status_code",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 7,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "a5d0e690-cede-5d85-8622-39d19d38f808",
+          "workflow_node_template_uuid": "ac54b006-7bf2-5b29-b186-a3f6abc1585f"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "command",
+          "data_source": "executor",
+          "display_name": "command",
+          "handle_key": "command",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 5,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "a5e7e35e-b7e1-56d1-aec2-7dc3c8dd967a",
+          "workflow_node_template_uuid": "502e074a-0bc3-5ca0-bc35-e8ee77079b72"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "timeout",
+          "data_source": "goal",
+          "display_name": "timeout",
+          "handle_key": "timeout",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 1,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": 14400.0,
+                "type": "number"
+              }
+            }
+          },
+          "required": false,
+          "type": "number",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "ca50e56b-268e-5b50-9ea8-4887e94990d2",
+          "workflow_node_template_uuid": "502e074a-0bc3-5ca0-bc35-e8ee77079b72"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "display_name": "ready",
+          "handle_key": "ready",
+          "io_type": "target",
+          "meta_data": {},
+          "required": false,
+          "type": "default",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "db4a3e48-5568-5d2e-b480-841faffd33f0",
+          "workflow_node_template_uuid": "d74e76d1-a9fa-5dc5-8537-610810352eb5"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "quartz_slot",
+          "data_source": "goal",
+          "display_name": "quartz_slot",
+          "handle_key": "quartz_slot",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 0,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": 1,
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "dbc007d9-af20-5f6b-9360-55215e0d0d10",
+          "workflow_node_template_uuid": "ac54b006-7bf2-5b29-b186-a3f6abc1585f"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "message",
+          "data_source": "executor",
+          "display_name": "message",
+          "handle_key": "message",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 5,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "e1a9f64f-888c-5108-862f-145c5fc007d4",
+          "workflow_node_template_uuid": "ac54b006-7bf2-5b29-b186-a3f6abc1585f"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "accepted",
+          "data_source": "executor",
+          "display_name": "accepted",
+          "handle_key": "accepted",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 3,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "boolean"
+              }
+            }
+          },
+          "required": false,
+          "type": "boolean",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "ea379f42-4147-5332-b5d8-ea51238c3ca9",
+          "workflow_node_template_uuid": "ac54b006-7bf2-5b29-b186-a3f6abc1585f"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "status_name",
+          "data_source": "executor",
+          "display_name": "status_name",
+          "handle_key": "status_name",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 7,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "effea8ab-abe1-5d30-8ae5-c5c2dce43440",
+          "workflow_node_template_uuid": "d74e76d1-a9fa-5dc5-8537-610810352eb5"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "quartz_slot",
+          "data_source": "goal",
+          "display_name": "quartz_slot",
+          "handle_key": "quartz_slot",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 0,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": 1,
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "f8e635a7-96b2-5f7f-971c-360a388dc294",
+          "workflow_node_template_uuid": "502e074a-0bc3-5ca0-bc35-e8ee77079b72"
+        }
+      ],
+      "node_templates": [
+        {
+          "class": "yb_sse_devices.devices.yb_synthesis_atomic_station.device:YBSynthesisAtomicStation",
+          "create_time": "1970-01-01T00:00:00Z",
+          "description": "机械臂把石英坩埚放回料架2原来的槽位。",
+          "display_name": "马弗炉下料回原槽位",
+          "feedback": {},
+          "goal": {
+            "quartz_slot": "quartz_slot",
+            "timeout": "timeout"
+          },
+          "goal_default": {
+            "quartz_slot": 1,
+            "timeout": 14400.0
+          },
+          "meta_data": {
+            "unilab": {
+              "action_contract_schema": {
+                "description": "机械臂把石英坩埚放回料架2原来的槽位。",
+                "properties": {
+                  "feedback": {},
+                  "goal": {
+                    "_unilabos_placeholder_info": {},
+                    "additionalProperties": false,
+                    "properties": {
+                      "quartz_slot": {
+                        "default": 1,
+                        "type": "integer"
+                      },
+                      "timeout": {
+                        "default": 14400.0,
+                        "type": "number"
+                      }
+                    },
+                    "required": [],
+                    "type": "object"
+                  },
+                  "result": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "accepted": {
+                        "type": "boolean"
+                      },
+                      "command": {
+                        "type": "string"
+                      },
+                      "message": {
+                        "type": "string"
+                      },
+                      "status_code": {
+                        "type": "integer"
+                      },
+                      "status_name": {
+                        "type": "string"
+                      },
+                      "success": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "accepted",
+                      "success",
+                      "message",
+                      "command",
+                      "status_code",
+                      "status_name"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "goal"
+                ],
+                "title": "run_muffle_unload参数",
+                "type": "object",
+                "x-unilabos-action-contract": {
+                  "input_order": [
+                    "quartz_slot",
+                    "timeout"
+                  ],
+                  "output_order": [
+                    "accepted",
+                    "success",
+                    "message",
+                    "command",
+                    "status_code",
+                    "status_name"
+                  ],
+                  "resource_template_symbols": {
+                    "goal": {},
+                    "result": {}
+                  },
+                  "version": 2
+                }
+              },
+              "contract_kind": "typed",
+              "resource_template": {
+                "display_name": "yb_synthesis_atomic_station",
+                "name": "community.yb_sse_devices.yb_synthesis_atomic_station",
+                "uuid": "e4cf23b6-d482-5de4-8e04-f38d9c87a061"
+              }
+            }
+          },
+          "name": "run_muffle_unload",
+          "node_type": "ILab",
+          "resource_template_uuid": "e4cf23b6-d482-5de4-8e04-f38d9c87a061",
+          "result": {},
+          "schema": "{\"_unilabos_placeholder_info\":{},\"additionalProperties\":false,\"properties\":{\"quartz_slot\":{\"default\":1,\"type\":\"integer\"},\"timeout\":{\"default\":14400.0,\"type\":\"number\"}},\"required\":[],\"type\":\"object\"}",
+          "type": "UniLabJsonCommand",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "502e074a-0bc3-5ca0-bc35-e8ee77079b72"
+        },
+        {
+          "class": "yb_sse_devices.devices.yb_synthesis_atomic_station.device:YBSynthesisAtomicStation",
+          "create_time": "1970-01-01T00:00:00Z",
+          "description": "先由人工确认小坩埚已放入石英坩埚，并放在料架2对应槽位。确认后机械臂送入同号马弗炉，放入后即返回并放开工站。",
+          "display_name": "确认后放入马弗炉",
+          "feedback": {},
+          "goal": {
+            "furnace_segments": "furnace_segments",
+            "quartz_slot": "quartz_slot",
+            "timeout": "timeout"
+          },
+          "goal_default": {
+            "furnace_segments": "[]",
+            "quartz_slot": 1,
+            "timeout": 14400.0
+          },
+          "meta_data": {
+            "unilab": {
+              "action_contract_schema": {
+                "description": "先由人工确认小坩埚已放入石英坩埚，并放在料架2对应槽位。确认后机械臂送入同号马弗炉，放入后即返回并放开工站。",
+                "properties": {
+                  "feedback": {},
+                  "goal": {
+                    "_unilabos_placeholder_info": {},
+                    "additionalProperties": false,
+                    "properties": {
+                      "furnace_segments": {
+                        "default": "[]",
+                        "type": "string"
+                      },
+                      "quartz_slot": {
+                        "default": 1,
+                        "type": "integer"
+                      },
+                      "timeout": {
+                        "default": 14400.0,
+                        "type": "number"
+                      }
+                    },
+                    "required": [],
+                    "type": "object"
+                  },
+                  "result": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "accepted": {
+                        "type": "boolean"
+                      },
+                      "command": {
+                        "type": "string"
+                      },
+                      "message": {
+                        "type": "string"
+                      },
+                      "status_code": {
+                        "type": "integer"
+                      },
+                      "status_name": {
+                        "type": "string"
+                      },
+                      "success": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "accepted",
+                      "success",
+                      "message",
+                      "command",
+                      "status_code",
+                      "status_name"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "goal"
+                ],
+                "title": "run_muffle_load参数",
+                "type": "object",
+                "x-unilabos-action-contract": {
+                  "input_order": [
+                    "quartz_slot",
+                    "furnace_segments",
+                    "timeout"
+                  ],
+                  "output_order": [
+                    "accepted",
+                    "success",
+                    "message",
+                    "command",
+                    "status_code",
+                    "status_name"
+                  ],
+                  "resource_template_symbols": {
+                    "goal": {},
+                    "result": {}
+                  },
+                  "version": 2
+                }
+              },
+              "contract_kind": "typed",
+              "resource_template": {
+                "display_name": "yb_synthesis_atomic_station",
+                "name": "community.yb_sse_devices.yb_synthesis_atomic_station",
+                "uuid": "e4cf23b6-d482-5de4-8e04-f38d9c87a061"
+              }
+            }
+          },
+          "name": "run_muffle_load",
+          "node_type": "manual_confirm",
+          "resource_template_uuid": "e4cf23b6-d482-5de4-8e04-f38d9c87a061",
+          "result": {},
+          "schema": "{\"_unilabos_placeholder_info\":{},\"additionalProperties\":false,\"properties\":{\"furnace_segments\":{\"default\":\"[]\",\"type\":\"string\"},\"quartz_slot\":{\"default\":1,\"type\":\"integer\"},\"timeout\":{\"default\":14400.0,\"type\":\"number\"}},\"required\":[],\"type\":\"object\"}",
+          "type": "UniLabJsonCommand",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "ac54b006-7bf2-5b29-b186-a3f6abc1585f"
+        },
+        {
+          "class": "yb_sse_devices.devices.yb_synthesis_atomic_station.device:YBSynthesisAtomicStation",
+          "create_time": "1970-01-01T00:00:00Z",
+          "description": "烧结期间只轮询该炉状态，不写命令，也不占用机械臂。",
+          "display_name": "等待马弗炉加热完成",
+          "feedback": {},
+          "goal": {
+            "quartz_slot": "quartz_slot",
+            "timeout": "timeout"
+          },
+          "goal_default": {
+            "quartz_slot": 1,
+            "timeout": 14400.0
+          },
+          "meta_data": {
+            "unilab": {
+              "action_contract_schema": {
+                "description": "烧结期间只轮询该炉状态，不写命令，也不占用机械臂。",
+                "properties": {
+                  "feedback": {},
+                  "goal": {
+                    "_unilabos_placeholder_info": {},
+                    "additionalProperties": false,
+                    "properties": {
+                      "quartz_slot": {
+                        "default": 1,
+                        "type": "integer"
+                      },
+                      "timeout": {
+                        "default": 14400.0,
+                        "type": "number"
+                      }
+                    },
+                    "required": [],
+                    "type": "object"
+                  },
+                  "result": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "accepted": {
+                        "type": "boolean"
+                      },
+                      "command": {
+                        "type": "string"
+                      },
+                      "message": {
+                        "type": "string"
+                      },
+                      "status_code": {
+                        "type": "integer"
+                      },
+                      "status_name": {
+                        "type": "string"
+                      },
+                      "success": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "accepted",
+                      "success",
+                      "message",
+                      "command",
+                      "status_code",
+                      "status_name"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "goal"
+                ],
+                "title": "wait_muffle_process参数",
+                "type": "object",
+                "x-unilabos-action-contract": {
+                  "input_order": [
+                    "quartz_slot",
+                    "timeout"
+                  ],
+                  "output_order": [
+                    "accepted",
+                    "success",
+                    "message",
+                    "command",
+                    "status_code",
+                    "status_name"
+                  ],
+                  "resource_template_symbols": {
+                    "goal": {},
+                    "result": {}
+                  },
+                  "version": 2
+                }
+              },
+              "always_free": true,
+              "contract_kind": "typed",
+              "resource_template": {
+                "display_name": "yb_synthesis_atomic_station",
+                "name": "community.yb_sse_devices.yb_synthesis_atomic_station",
+                "uuid": "e4cf23b6-d482-5de4-8e04-f38d9c87a061"
+              }
+            }
+          },
+          "name": "wait_muffle_process",
+          "node_type": "ILab",
+          "resource_template_uuid": "e4cf23b6-d482-5de4-8e04-f38d9c87a061",
+          "result": {},
+          "schema": "{\"_unilabos_placeholder_info\":{},\"additionalProperties\":false,\"properties\":{\"quartz_slot\":{\"default\":1,\"type\":\"integer\"},\"timeout\":{\"default\":14400.0,\"type\":\"number\"}},\"required\":[],\"type\":\"object\"}",
+          "type": "UniLabJsonCommand",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "d74e76d1-a9fa-5dc5-8537-610810352eb5"
+        }
+      ],
+      "nodes": [
+        {
+          "action_name": "run_muffle_load",
+          "action_type": "UniLabJsonCommand",
+          "create_time": "2026-09-24T04:03:13.629086Z",
+          "description": "先由人工确认小坩埚已放入石英坩埚，并放在料架2对应槽位。确认后机械臂送入同号马弗炉，放入后即返回并放开工站。",
+          "disabled": false,
+          "execution_policy": {},
+          "manual_confirmation": {
+            "timeout_seconds": 3600
+          },
+          "material_uuid": null,
+          "meta_data": {
+            "unilab": {
+              "authoring_device_symbol": "station",
+              "authoring_result_name": "loaded",
+              "authoring_source_order": 0,
+              "executor_binding": {
+                "device_id": "yb_synthesis_atomic_station_01",
+                "mode": "fixed"
+              },
+              "input_bindings": {
+                "473d906e-e40b-5d5a-baf6-9058ce9c3cc6": {
+                  "parameter": "furnace_segments"
+                },
+                "dbc007d9-af20-5f6b-9360-55215e0d0d10": {
+                  "parameter": "quartz_slot"
+                }
+              }
+            }
+          },
+          "minimized": false,
+          "name": "确认后放入马弗炉",
+          "param": {},
+          "pose": {},
+          "status": "idle",
+          "type": "manual_confirm",
+          "update_time": "2026-09-24T04:03:13.629086Z",
+          "uuid": "d1e4a8c2-6b70-4f91-8a33-1c5e9d2b70a4",
+          "workflow_node_template_uuid": "ac54b006-7bf2-5b29-b186-a3f6abc1585f",
+          "workflow_uuid": "c4a8e2d1-7f63-4b90-9c15-2e6d8a4b71f0"
+        },
+        {
+          "action_name": "wait_muffle_process",
+          "action_type": "UniLabJsonCommand",
+          "create_time": "2026-09-24T04:03:13.629086Z",
+          "description": "烧结期间只轮询该炉状态，不写命令，也不占用机械臂。",
+          "disabled": false,
+          "execution_policy": {},
+          "material_uuid": null,
+          "meta_data": {
+            "unilab": {
+              "authoring_device_symbol": "station",
+              "authoring_result_name": "finished",
+              "authoring_source_order": 1,
+              "executor_binding": {
+                "device_id": "yb_synthesis_atomic_station_01",
+                "mode": "fixed"
+              },
+              "input_bindings": {
+                "0555c82c-0653-500e-be6d-c8fe751654c3": {
+                  "parameter": "quartz_slot"
+                }
+              }
+            }
+          },
+          "minimized": false,
+          "name": "等待马弗炉加热完成",
+          "param": {},
+          "pose": {},
+          "status": "idle",
+          "type": "ILab",
+          "update_time": "2026-09-24T04:03:13.629086Z",
+          "uuid": "e7b2c9d4-1a58-4e60-9f12-8d3c6a5b40e1",
+          "workflow_node_template_uuid": "d74e76d1-a9fa-5dc5-8537-610810352eb5",
+          "workflow_uuid": "c4a8e2d1-7f63-4b90-9c15-2e6d8a4b71f0"
+        },
+        {
+          "action_name": "run_muffle_unload",
+          "action_type": "UniLabJsonCommand",
+          "create_time": "2026-09-24T04:03:13.629086Z",
+          "description": "机械臂把石英坩埚放回料架2原来的槽位。",
+          "disabled": false,
+          "execution_policy": {},
+          "material_uuid": null,
+          "meta_data": {
+            "unilab": {
+              "authoring_device_symbol": "station",
+              "authoring_result_name": "unloaded",
+              "authoring_source_order": 2,
+              "executor_binding": {
+                "device_id": "yb_synthesis_atomic_station_01",
+                "mode": "fixed"
+              },
+              "input_bindings": {
+                "f8e635a7-96b2-5f7f-971c-360a388dc294": {
+                  "parameter": "quartz_slot"
+                }
+              }
+            }
+          },
+          "minimized": false,
+          "name": "马弗炉下料回原槽位",
+          "param": {},
+          "pose": {},
+          "status": "idle",
+          "type": "ILab",
+          "update_time": "2026-09-24T04:03:13.629086Z",
+          "uuid": "f3a6d1e8-2c49-4b77-8e05-9a1d4c7e60b2",
+          "workflow_node_template_uuid": "502e074a-0bc3-5ca0-bc35-e8ee77079b72",
+          "workflow_uuid": "c4a8e2d1-7f63-4b90-9c15-2e6d8a4b71f0"
+        }
+      ],
+      "workflow": {
+        "create_time": "2026-09-24T04:03:10.015272Z",
+        "description": "先人工确认小坩埚已放入石英坩埚，并放在料架2的对应槽位。确认后机械臂送入同号马弗炉，放入后即放开工站。烧结期间只等待该炉完成，机械臂可以去做别的任务。加热完成后再把石英坩埚放回原来的槽位。槽位1到4对应马弗炉1到4。",
+        "meta_data": {
+          "unilab": {
+            "authoring_function_name": "muffle_furnace_heating",
+            "authoring_result_record_name": "MuffleFurnaceResult",
+            "input_contract": {
+              "parameters": [
+                {
+                  "default": 1,
+                  "name": "quartz_slot",
+                  "required": false,
+                  "schema": {
+                    "enum": [
+                      1,
+                      2,
+                      3,
+                      4
+                    ],
+                    "type": "integer"
+                  }
+                },
+                {
+                  "default": "[]",
+                  "name": "furnace_segments",
+                  "required": false,
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "version": 1
+            },
+            "output_bindings": {
+              "heating_finished": {
+                "kind": "node_output",
+                "source_handle_uuid": "2c447a66-1067-5d8f-bce5-54c6e20d82d9",
+                "workflow_node_uuid": "e7b2c9d4-1a58-4e60-9f12-8d3c6a5b40e1"
+              },
+              "loaded": {
+                "kind": "node_output",
+                "source_handle_uuid": "506133aa-acff-5b5b-826d-30d1e87ac5e6",
+                "workflow_node_uuid": "d1e4a8c2-6b70-4f91-8a33-1c5e9d2b70a4"
+              },
+              "message": {
+                "kind": "node_output",
+                "source_handle_uuid": "a1b624d6-bf3b-5536-9170-5713c22de27e",
+                "workflow_node_uuid": "f3a6d1e8-2c49-4b77-8e05-9a1d4c7e60b2"
+              },
+              "success": {
+                "kind": "node_output",
+                "source_handle_uuid": "0291f012-1273-5bf0-8605-e99010156bf0",
+                "workflow_node_uuid": "f3a6d1e8-2c49-4b77-8e05-9a1d4c7e60b2"
+              }
+            },
+            "output_contract": {
+              "outputs": [
+                {
+                  "implicit": false,
+                  "name": "loaded",
+                  "schema": {
+                    "type": "boolean"
+                  }
+                },
+                {
+                  "implicit": false,
+                  "name": "heating_finished",
+                  "schema": {
+                    "type": "boolean"
+                  }
+                },
+                {
+                  "implicit": false,
+                  "name": "success",
+                  "schema": {
+                    "type": "boolean"
+                  }
+                },
+                {
+                  "implicit": false,
+                  "name": "message",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "version": 1
+            },
+            "source_bootstrap": {
+              "kind": "editable_package_manifest",
+              "package_id": "yb_sse_devices",
+              "relative_path": "workflows/muffle_furnace_heating.py",
+              "source_uri": "package://yb_sse_devices/workflows/muffle_furnace_heating.py"
+            }
+          }
+        },
+        "name": "马弗炉加热",
+        "revision": 2,
+        "tags": [],
+        "update_time": "2026-09-24T04:03:13.616322Z",
+        "uuid": "c4a8e2d1-7f63-4b90-9c15-2e6d8a4b71f0",
+        "workflow_type": "normal"
+      }
+    },
+    "input_contract": {
+      "parameters": [
+        {
+          "default": 1,
+          "name": "quartz_slot",
+          "required": false,
+          "schema": {
+            "enum": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "type": "integer"
+          }
+        },
+        {
+          "default": "[]",
+          "name": "furnace_segments",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "version": 1
+    },
+    "meta_data": {},
+    "name": "马弗炉加热",
+    "node_count": 3,
+    "node_template_uuid": "afd6fe5c-66ba-4d53-9675-24572649062a",
+    "output_contract": {
+      "outputs": [
+        {
+          "implicit": false,
+          "name": "loaded",
+          "schema": {
+            "type": "boolean"
+          }
+        },
+        {
+          "implicit": false,
+          "name": "heating_finished",
+          "schema": {
+            "type": "boolean"
+          }
+        },
+        {
+          "implicit": false,
+          "name": "success",
+          "schema": {
+            "type": "boolean"
+          }
+        },
+        {
+          "implicit": false,
+          "name": "message",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "version": 1
+    },
+    "source_hash": "sha256:96b78bccd03a49353c4bc699723b1156ab9a466c4b9226bbb95ea61569439a92",
+    "tags": [],
+    "update_time": "2026-09-24T04:19:57.168140Z",
+    "uuid": "69864331-f989-4378-9481-f6e33e77c0d6",
+    "version": 1,
+    "workflow_revision": 2,
+    "workflow_uuid": "c4a8e2d1-7f63-4b90-9c15-2e6d8a4b71f0"
+  },
+  "source_draft_hash": "sha256:435a04bc74c77a2dc1f6498478ec86ccc19c51be1f53dbd544e443e30883f0fb"
+}

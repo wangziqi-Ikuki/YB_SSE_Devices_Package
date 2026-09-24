@@ -348,6 +348,29 @@ def derive_pallet_slot_types(
     return result
 
 
+def slot_recipe_assignments(
+    pallet_type: int | str,
+    slot_recipes: list[str] | None,
+) -> list[tuple[int, str]]:
+    """Pair each occupied tray slot with its own recipe.
+
+    ``slot_recipes`` is ordered from slot 1.  An empty item means that slot
+    has no crucible and is left out of both the tray move and dosing.
+    """
+
+    pallet_label = pallet_type_label(pallet_type)
+    count = int(PALLET_SPECS[pallet_label]["slot_count"])
+    names = [str(item).strip() for item in (slot_recipes or [])]
+    if len(names) > count:
+        raise ValueError(f"{pallet_label}最多 {count} 个槽位")
+    pairs = [
+        (index + 1, name) for index, name in enumerate(names) if name
+    ]
+    if not pairs:
+        raise ValueError("至少为一个槽位选择配方")
+    return pairs
+
+
 def default_recipe_inputs(recipe_name: str) -> dict[str, Any]:
     """Flatten a recipe spec into the legacy device action columns."""
 
@@ -382,6 +405,7 @@ __all__ = [
     "cubic_type_label",
     "default_recipe_inputs",
     "derive_pallet_slot_types",
+    "slot_recipe_assignments",
     "pallet_names",
     "pallet_type_code",
     "pallet_type_label",

@@ -11,9 +11,9 @@ station: yb_solid_electrolyte_synthesis
 
 source:
   io_workbook:
-    path: null
-    filename: 固态电解质合成项目IO表.xls
-    source_note: PLC 工程师提供的只读 IO 表；原始文件不随设备包分发
+    path: protocol/upper_pc_modbus.csv
+    filename: 固态电解质合成项目上位机.xlsx
+    source_note: 上位机通讯点表已整理进 protocol/upper_pc_modbus.csv；原始 xlsx 不随设备包分发
     sha256: 960faacaedd1744e254007fed045f5813ac0305ede419cecb388173a187c272e
     sheets:
       - IP

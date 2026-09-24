@@ -688,6 +688,7 @@ class YBSynthesisAtomicStation:
         pallet_type: str = "6 槽位托盘",
         cubic_type: str = "Al2O3 30*30",
         task_slot_nums: list[int] | None = None,
+        slot_recipes: list[str] | None = None,
         has_bead_bottle: bool = False,
         bead_count: int = 0,
         timeout: float = 600.0,
@@ -698,6 +699,7 @@ class YBSynthesisAtomicStation:
             pallet_type=pallet_type,
             cubic_type=cubic_type,
             task_slot_nums=task_slot_nums,
+            slot_recipes=slot_recipes,
             has_bead_bottle=has_bead_bottle,
             bead_count=bead_count,
             timeout=timeout,
@@ -714,10 +716,11 @@ class YBSynthesisAtomicStation:
     )
     def dose_selected_slots(
         self,
-        recipe_name: str,
+        recipe_name: str = "",
         pallet_type: str = "6 槽位托盘",
         cubic_type: str = "Al2O3 30*30",
         task_slot_nums: list[int] | None = None,
+        slot_recipes: list[str] | None = None,
         has_bead_bottle: bool = False,
         bead_count: int = 0,
         timeout: float = 1800.0,
@@ -729,6 +732,7 @@ class YBSynthesisAtomicStation:
             pallet_type=pallet_type,
             cubic_type=cubic_type,
             task_slot_nums=task_slot_nums,
+            slot_recipes=slot_recipes,
             has_bead_bottle=has_bead_bottle,
             bead_count=bead_count,
             timeout=timeout,
@@ -736,10 +740,10 @@ class YBSynthesisAtomicStation:
 
     @action(
         node_type=NodeType.MANUAL_CONFIRM,
-        displayname="确认后声共振上料",
+        displayname="确认后放入声共振",
         description=(
-            "操作员确认命令3已结束、托盘仍在料架1后，向 PLC 写入命令8，"
-            "并等待声共振运行完成。振动结束前不写下料命令。"
+            "操作员确认加粉已结束、托盘仍在料架1后，向 PLC 写入声共振上料。"
+            "托盘放入后即返回，振动期间不再占着工站。"
         ),
     )
     def run_acoustic_load(
@@ -749,7 +753,7 @@ class YBSynthesisAtomicStation:
         duration_minutes: int = 0,
         timeout: float = 14400.0,
     ) -> PlcCommandResult:
-        """Confirm, then run PLC command 8 until the vibration finishes."""
+        """Confirm, then place the tray into the resonator."""
 
         return self.station.run_acoustic_load(
             acceleration=acceleration,
@@ -757,6 +761,16 @@ class YBSynthesisAtomicStation:
             duration_minutes=duration_minutes,
             timeout=timeout,
         )
+
+    @action(
+        always_free=True,
+        displayname="等待声共振振完",
+        description="只查看声共振是否振完，不占用工站。振完后才允许下料。",
+    )
+    def wait_acoustic_process(self, timeout: float = 14400.0) -> PlcCommandResult:
+        """Wait for vibration without taking the station lock."""
+
+        return self.station.wait_acoustic_process(timeout=timeout)
 
     @action(
         displayname="声共振下料",
@@ -815,6 +829,42 @@ class YBSynthesisAtomicStation:
             pickup_positions=pickup_positions,
             timeout=timeout,
         )
+
+    @action(
+        node_type=NodeType.MANUAL_CONFIRM,
+        displayname="确认后放入马弗炉",
+        description=(
+            "先由人工确认小坩埚已放入石英坩埚，并放在料架2对应槽位。"
+            "确认后机械臂送入同号马弗炉，放入后即返回并放开工站。"
+        ),
+    )
+    def run_muffle_load(
+        self,
+        quartz_slot: int = 1,
+        furnace_segments: str = "[]",
+        timeout: float = 14400.0,
+    ) -> PlcCommandResult:
+        return self.station.run_muffle_load(
+            quartz_slot=quartz_slot,
+            furnace_segments=furnace_segments,
+            timeout=timeout,
+        )
+
+    @action(always_free=True, displayname="等待马弗炉加热完成", description="烧结期间只轮询该炉状态，不写命令，也不占用机械臂。")
+    def wait_muffle_process(
+        self,
+        quartz_slot: int = 1,
+        timeout: float = 14400.0,
+    ) -> PlcCommandResult:
+        return self.station.wait_muffle_process(quartz_slot=quartz_slot, timeout=timeout)
+
+    @action(displayname="马弗炉下料回原槽位", description="机械臂把石英坩埚放回料架2原来的槽位。")
+    def run_muffle_unload(
+        self,
+        quartz_slot: int = 1,
+        timeout: float = 14400.0,
+    ) -> PlcCommandResult:
+        return self.station.run_muffle_unload(quartz_slot=quartz_slot, timeout=timeout)
 
     @action(description="取大坩埚（PLC命令7含取盖/放盖）并完成方舱关门握手")
     def load_big_crucible(

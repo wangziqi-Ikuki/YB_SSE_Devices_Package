@@ -28,7 +28,7 @@ YB_SSE_Devices_Package/
 ├── deployment/graphs/
 │   ├── real-plc.json                    # 现场真机
 │   └── local-sim.json                   # 本机 Modbus 仿真
-├── protocol/                            # PLC 寄存器说明
+├── protocol/                            # 上位机点表 upper_pc_modbus.csv 与协议说明
 ├── scripts/
 └── tests/
 ```

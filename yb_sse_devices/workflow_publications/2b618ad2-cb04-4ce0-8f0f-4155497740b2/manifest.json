@@ -10,9 +10,11 @@
     "925f2494-32f2-4442-b9f8-6435e0d4836f",
     "e6dc88fd-1ccb-41e5-b686-e914f65e905a",
     "e7a639eb-4809-4e22-89cf-624ab371119c",
-    "56a78a41-5146-40d4-b0f0-1523267306cc"
+    "56a78a41-5146-40d4-b0f0-1523267306cc",
+    "858ec28c-696c-42ba-9910-688a40e86217",
+    "da3e5bca-c727-4d23-abf3-e26ece14e616"
   ],
-  "latest_contract_uuid": "56a78a41-5146-40d4-b0f0-1523267306cc",
+  "latest_contract_uuid": "da3e5bca-c727-4d23-abf3-e26ece14e616",
   "version": 1,
   "workflow_uuid": "2b618ad2-cb04-4ce0-8f0f-4155497740b2"
 }

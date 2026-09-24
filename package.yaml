@@ -10,3 +10,5 @@ workflows:
     source: yb_sse_devices/workflows/synthesis_powder_bead_rack2.py
   - workflow_uuid: 8c4e1b70-6a2d-4f58-9c31-7d0a6e5b91f2
     source: yb_sse_devices/workflows/joule_heating.py
+  - workflow_uuid: c4a8e2d1-7f63-4b90-9c15-2e6d8a4b71f0
+    source: yb_sse_devices/workflows/muffle_furnace_heating.py

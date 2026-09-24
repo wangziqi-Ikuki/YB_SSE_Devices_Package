@@ -73,5 +73,8 @@ def test_graphite_plate_heats_without_a_robot_move() -> None:
         unloaded = station.unload_joule_heating(carrier_type='石墨板', timeout=5)
         assert len(writes) == before
         assert unloaded['success'] is True
+        assert unloaded['command'] == 'manual_remove'
+        assert unloaded['status_code'] == 0
+        assert unloaded['status_name'] == '人工完成'
     finally:
         station.close()

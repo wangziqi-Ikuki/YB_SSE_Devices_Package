@@ -1,0 +1,1368 @@
+{
+  "contract": {
+    "boundary_mapping": {
+      "source_mappings": {
+        "3aa9d5e6-b849-570d-bd5e-9f3732995a5d": {
+          "kind": "node_output",
+          "source_handle_uuid": "0e099260-491c-5955-b384-70d058c8aded",
+          "workflow_node_uuid": "b7e2a9c1-5d46-4f83-8b20-6a1c3e9d0f54"
+        },
+        "89eebe44-4177-52bc-99fe-7a608f8894ec": {
+          "kind": "node_output",
+          "source_handle_uuid": "8c6d059d-9c37-5b80-b255-102117ed783c",
+          "workflow_node_uuid": "a1f0c2d4-7b38-4e61-9a05-2c8d6f1e4b70"
+        },
+        "ab339068-03df-5310-8811-34148282373c": {
+          "kind": "node_output",
+          "source_handle_uuid": "33d433e8-1055-5000-ba77-3077ff1d6f2f",
+          "workflow_node_uuid": "b7e2a9c1-5d46-4f83-8b20-6a1c3e9d0f54"
+        }
+      },
+      "structural_mappings": {
+        "completion_sources": [],
+        "entry_targets": []
+      },
+      "target_mappings": {
+        "0230f5ee-df60-5712-9ccf-2609b8706eab": [
+          {
+            "target_handle_uuid": "f25cef20-ee58-58f9-a911-6a464c581388",
+            "workflow_node_uuid": "a1f0c2d4-7b38-4e61-9a05-2c8d6f1e4b70"
+          }
+        ],
+        "8c24e335-66e5-5495-866b-b9390b601fee": [
+          {
+            "target_handle_uuid": "f3c6f808-0ddb-5d00-ac08-47d89135777d",
+            "workflow_node_uuid": "a1f0c2d4-7b38-4e61-9a05-2c8d6f1e4b70"
+          }
+        ],
+        "a670e524-8b80-578e-b0ef-e4ffba638bd1": [
+          {
+            "target_handle_uuid": "3139103d-390c-511c-b403-1b0bd9177422",
+            "workflow_node_uuid": "a1f0c2d4-7b38-4e61-9a05-2c8d6f1e4b70"
+          }
+        ],
+        "a93498bc-3e97-59bb-8a74-3d80a08a8c16": [
+          {
+            "target_handle_uuid": "de4a440d-0503-5a86-987e-947802b2c435",
+            "workflow_node_uuid": "a1f0c2d4-7b38-4e61-9a05-2c8d6f1e4b70"
+          }
+        ],
+        "b7f78ae1-6613-5ac0-9755-298bfeca7c69": [
+          {
+            "target_handle_uuid": "dcd64ebc-6ac2-545b-9cca-e37b9120afec",
+            "workflow_node_uuid": "a1f0c2d4-7b38-4e61-9a05-2c8d6f1e4b70"
+          },
+          {
+            "target_handle_uuid": "bbb0019b-dd69-5636-a891-00bbaa05f54d",
+            "workflow_node_uuid": "b7e2a9c1-5d46-4f83-8b20-6a1c3e9d0f54"
+          }
+        ],
+        "f72f9d8e-3877-50b0-9241-3b76df289b46": [
+          {
+            "target_handle_uuid": "c45caf74-ae19-5e11-b321-298aba2c9e6d",
+            "workflow_node_uuid": "a1f0c2d4-7b38-4e61-9a05-2c8d6f1e4b70"
+          },
+          {
+            "target_handle_uuid": "aff4332a-119c-5cf6-85ab-bb14d0dbc993",
+            "workflow_node_uuid": "b7e2a9c1-5d46-4f83-8b20-6a1c3e9d0f54"
+          }
+        ]
+      }
+    },
+    "contract_digest": "sha256:e840acdc56c91bfa3853f29127fe35eb7df14d51b34f334410ff8d83d02a9bf0",
+    "create_time": "2026-09-23T12:35:13.890061Z",
+    "description": "确认声共振已下料且小坩埚已人工加料后，按勾选的待机位把小坩埚放入焦耳热并加热。石墨板由人工放入，只选择载体。加热完成后，操作员等待一分钟再确认，小坩埚放回原来的待机位。",
+    "edge_count": 1,
+    "executor_binding_mapping": {
+      "a1f0c2d4-7b38-4e61-9a05-2c8d6f1e4b70": "executor_1",
+      "b7e2a9c1-5d46-4f83-8b20-6a1c3e9d0f54": "executor_1"
+    },
+    "executor_requirements": [
+      {
+        "display_name": "执行设备 1",
+        "key": "executor_1",
+        "required": true,
+        "resource_template_uuid": "e4cf23b6-d482-5de4-8e04-f38d9c87a061"
+      }
+    ],
+    "graph_snapshot": {
+      "edges": [
+        {
+          "create_time": "2026-09-23T12:32:06.833071Z",
+          "meta_data": {},
+          "source_handle_uuid": "447ca8ee-6eb0-5df9-a056-735733c11eb3",
+          "source_node_uuid": "a1f0c2d4-7b38-4e61-9a05-2c8d6f1e4b70",
+          "target_handle_uuid": "93635a9d-66b5-5dbc-b83d-6e3957e69c90",
+          "target_node_uuid": "b7e2a9c1-5d46-4f83-8b20-6a1c3e9d0f54",
+          "update_time": "2026-09-23T12:32:06.833071Z",
+          "uuid": "ae1e7698-8942-55cd-8d9c-05f35d4d8f59"
+        }
+      ],
+      "handle_templates": [
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "status_code",
+          "data_source": "executor",
+          "display_name": "status_code",
+          "handle_key": "status_code",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 7,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "08b35569-db61-5144-8999-7582db0643f8",
+          "workflow_node_template_uuid": "a996d700-d874-5f91-a0be-e400cea604bb"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "message",
+          "data_source": "executor",
+          "display_name": "message",
+          "handle_key": "message",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 5,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "0e099260-491c-5955-b384-70d058c8aded",
+          "workflow_node_template_uuid": "a996d700-d874-5f91-a0be-e400cea604bb"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "status_code",
+          "data_source": "executor",
+          "display_name": "status_code",
+          "handle_key": "status_code",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 11,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "180a1683-fa64-5172-a681-461fb9c3c8bb",
+          "workflow_node_template_uuid": "81c69308-dd9d-56ca-8be6-81b6cb08e2bd"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "display_name": "ready",
+          "handle_key": "ready",
+          "io_type": "source",
+          "meta_data": {},
+          "required": false,
+          "type": "default",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "1b47b9b4-4414-5e9a-a74e-acaf6b104fa9",
+          "workflow_node_template_uuid": "a996d700-d874-5f91-a0be-e400cea604bb"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "command",
+          "data_source": "executor",
+          "display_name": "command",
+          "handle_key": "command",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 10,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "1cf6fcbb-1faa-5ab3-83ea-2713ab878e5c",
+          "workflow_node_template_uuid": "81c69308-dd9d-56ca-8be6-81b6cb08e2bd"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "slope_segments",
+          "data_source": "goal",
+          "display_name": "slope_segments",
+          "handle_key": "slope_segments",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 5,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": "[]",
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "3139103d-390c-511c-b403-1b0bd9177422",
+          "workflow_node_template_uuid": "81c69308-dd9d-56ca-8be6-81b6cb08e2bd"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "success",
+          "data_source": "executor",
+          "display_name": "success",
+          "handle_key": "success",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 4,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "boolean"
+              }
+            }
+          },
+          "required": false,
+          "type": "boolean",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "33d433e8-1055-5000-ba77-3077ff1d6f2f",
+          "workflow_node_template_uuid": "a996d700-d874-5f91-a0be-e400cea604bb"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "display_name": "ready",
+          "handle_key": "ready",
+          "io_type": "source",
+          "meta_data": {},
+          "required": false,
+          "type": "default",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "447ca8ee-6eb0-5df9-a056-735733c11eb3",
+          "workflow_node_template_uuid": "81c69308-dd9d-56ca-8be6-81b6cb08e2bd"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "timeout",
+          "data_source": "goal",
+          "display_name": "timeout",
+          "handle_key": "timeout",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 2,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": 600.0,
+                "type": "number"
+              }
+            }
+          },
+          "required": false,
+          "type": "number",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "65e88a90-3de6-512c-b08d-8b93e233e0e2",
+          "workflow_node_template_uuid": "a996d700-d874-5f91-a0be-e400cea604bb"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "message",
+          "data_source": "executor",
+          "display_name": "message",
+          "handle_key": "message",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 9,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "74906cc5-8342-50d6-b35d-70d1f4bd3639",
+          "workflow_node_template_uuid": "81c69308-dd9d-56ca-8be6-81b6cb08e2bd"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "accepted",
+          "data_source": "executor",
+          "display_name": "accepted",
+          "handle_key": "accepted",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 3,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "boolean"
+              }
+            }
+          },
+          "required": false,
+          "type": "boolean",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "7d5b8307-096c-5601-a2f5-e4ceba07bb42",
+          "workflow_node_template_uuid": "a996d700-d874-5f91-a0be-e400cea604bb"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "display_name": "ready",
+          "handle_key": "ready",
+          "io_type": "target",
+          "meta_data": {},
+          "required": false,
+          "type": "default",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "86301f34-2c7f-54ae-90f6-c896c3c425b3",
+          "workflow_node_template_uuid": "81c69308-dd9d-56ca-8be6-81b6cb08e2bd"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "success",
+          "data_source": "executor",
+          "display_name": "success",
+          "handle_key": "success",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 8,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "boolean"
+              }
+            }
+          },
+          "required": false,
+          "type": "boolean",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "8c6d059d-9c37-5b80-b255-102117ed783c",
+          "workflow_node_template_uuid": "81c69308-dd9d-56ca-8be6-81b6cb08e2bd"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "display_name": "ready",
+          "handle_key": "ready",
+          "io_type": "target",
+          "meta_data": {},
+          "required": false,
+          "type": "default",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "93635a9d-66b5-5dbc-b83d-6e3957e69c90",
+          "workflow_node_template_uuid": "a996d700-d874-5f91-a0be-e400cea604bb"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "carrier_type",
+          "data_source": "goal",
+          "display_name": "carrier_type",
+          "handle_key": "carrier_type",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 0,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": "椭圆石墨舟",
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "aff4332a-119c-5cf6-85ab-bb14d0dbc993",
+          "workflow_node_template_uuid": "a996d700-d874-5f91-a0be-e400cea604bb"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "accepted",
+          "data_source": "executor",
+          "display_name": "accepted",
+          "handle_key": "accepted",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 7,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "boolean"
+              }
+            }
+          },
+          "required": false,
+          "type": "boolean",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "b239f54f-9863-52d1-9669-d08f0bed5742",
+          "workflow_node_template_uuid": "81c69308-dd9d-56ca-8be6-81b6cb08e2bd"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "pickup_positions",
+          "data_source": "goal",
+          "display_name": "pickup_positions",
+          "handle_key": "pickup_positions",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 1,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": null,
+                "items": {
+                  "type": "integer"
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "array",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "bbb0019b-dd69-5636-a891-00bbaa05f54d",
+          "workflow_node_template_uuid": "a996d700-d874-5f91-a0be-e400cea604bb"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "status_name",
+          "data_source": "executor",
+          "display_name": "status_name",
+          "handle_key": "status_name",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 8,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "bcc89447-486f-5856-a959-d806d1e5ae8e",
+          "workflow_node_template_uuid": "a996d700-d874-5f91-a0be-e400cea604bb"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "status_name",
+          "data_source": "executor",
+          "display_name": "status_name",
+          "handle_key": "status_name",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 12,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "bdd1bbfe-188b-5daf-b730-ab93982e8d01",
+          "workflow_node_template_uuid": "81c69308-dd9d-56ca-8be6-81b6cb08e2bd"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "carrier_type",
+          "data_source": "goal",
+          "display_name": "carrier_type",
+          "handle_key": "carrier_type",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 0,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": "椭圆石墨舟",
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "c45caf74-ae19-5e11-b321-298aba2c9e6d",
+          "workflow_node_template_uuid": "81c69308-dd9d-56ca-8be6-81b6cb08e2bd"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "command",
+          "data_source": "executor",
+          "display_name": "command",
+          "handle_key": "command",
+          "io_type": "source",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 6,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "cea296a6-8cde-507c-bf77-aeb1e3a9f94e",
+          "workflow_node_template_uuid": "a996d700-d874-5f91-a0be-e400cea604bb"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "pickup_positions",
+          "data_source": "goal",
+          "display_name": "pickup_positions",
+          "handle_key": "pickup_positions",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 2,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": null,
+                "items": {
+                  "type": "integer"
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              }
+            }
+          },
+          "required": false,
+          "type": "array",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "dcd64ebc-6ac2-545b-9cca-e37b9120afec",
+          "workflow_node_template_uuid": "81c69308-dd9d-56ca-8be6-81b6cb08e2bd"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "constant_temperature",
+          "data_source": "goal",
+          "display_name": "constant_temperature",
+          "handle_key": "constant_temperature",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 3,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": 0,
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "de4a440d-0503-5a86-987e-947802b2c435",
+          "workflow_node_template_uuid": "81c69308-dd9d-56ca-8be6-81b6cb08e2bd"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "timeout",
+          "data_source": "goal",
+          "display_name": "timeout",
+          "handle_key": "timeout",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 6,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": 14400.0,
+                "type": "number"
+              }
+            }
+          },
+          "required": false,
+          "type": "number",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "e78041a2-4b8e-5902-85f1-07e6ef94b1f6",
+          "workflow_node_template_uuid": "81c69308-dd9d-56ca-8be6-81b6cb08e2bd"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "heating_mode",
+          "data_source": "goal",
+          "display_name": "heating_mode",
+          "handle_key": "heating_mode",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 1,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": "恒温",
+                "type": "string"
+              }
+            }
+          },
+          "required": false,
+          "type": "string",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "f25cef20-ee58-58f9-a911-6a464c581388",
+          "workflow_node_template_uuid": "81c69308-dd9d-56ca-8be6-81b6cb08e2bd"
+        },
+        {
+          "create_time": "1970-01-01T00:00:00Z",
+          "data_key": "constant_hold_minutes",
+          "data_source": "goal",
+          "display_name": "constant_hold_minutes",
+          "handle_key": "constant_hold_minutes",
+          "io_type": "target",
+          "meta_data": {
+            "unilab": {
+              "allowed_resource_template_uuids": null,
+              "contract_order": 4,
+              "editor_control": "variable_selector",
+              "implicit_passthrough": false,
+              "site_selector": null,
+              "structural_role": null,
+              "value_schema": {
+                "default": 0,
+                "type": "integer"
+              }
+            }
+          },
+          "required": false,
+          "type": "integer",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "f3c6f808-0ddb-5d00-ac08-47d89135777d",
+          "workflow_node_template_uuid": "81c69308-dd9d-56ca-8be6-81b6cb08e2bd"
+        }
+      ],
+      "node_templates": [
+        {
+          "class": "yb_sse_devices.devices.yb_synthesis_atomic_station.device:YBSynthesisAtomicStation",
+          "create_time": "1970-01-01T00:00:00Z",
+          "description": "操作员确认声共振已经下料，并且小坩埚已人工加料完成后，机械臂把小坩埚放入焦耳热，按所选载体和加热模式加热。",
+          "display_name": "确认后放入焦耳热并加热",
+          "feedback": {},
+          "goal": {
+            "carrier_type": "carrier_type",
+            "constant_hold_minutes": "constant_hold_minutes",
+            "constant_temperature": "constant_temperature",
+            "heating_mode": "heating_mode",
+            "pickup_positions": "pickup_positions",
+            "slope_segments": "slope_segments",
+            "timeout": "timeout"
+          },
+          "goal_default": {
+            "carrier_type": "椭圆石墨舟",
+            "constant_hold_minutes": 0,
+            "constant_temperature": 0,
+            "heating_mode": "恒温",
+            "pickup_positions": null,
+            "slope_segments": "[]",
+            "timeout": 14400.0
+          },
+          "meta_data": {
+            "unilab": {
+              "action_contract_schema": {
+                "description": "操作员确认声共振已经下料，并且小坩埚已人工加料完成后，机械臂把小坩埚放入焦耳热，按所选载体和加热模式加热。",
+                "properties": {
+                  "feedback": {},
+                  "goal": {
+                    "_unilabos_placeholder_info": {},
+                    "additionalProperties": false,
+                    "properties": {
+                      "carrier_type": {
+                        "default": "椭圆石墨舟",
+                        "type": "string"
+                      },
+                      "constant_hold_minutes": {
+                        "default": 0,
+                        "type": "integer"
+                      },
+                      "constant_temperature": {
+                        "default": 0,
+                        "type": "integer"
+                      },
+                      "heating_mode": {
+                        "default": "恒温",
+                        "type": "string"
+                      },
+                      "pickup_positions": {
+                        "default": null,
+                        "items": {
+                          "type": "integer"
+                        },
+                        "type": [
+                          "array",
+                          "null"
+                        ]
+                      },
+                      "slope_segments": {
+                        "default": "[]",
+                        "type": "string"
+                      },
+                      "timeout": {
+                        "default": 14400.0,
+                        "type": "number"
+                      }
+                    },
+                    "required": [],
+                    "type": "object"
+                  },
+                  "result": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "accepted": {
+                        "type": "boolean"
+                      },
+                      "command": {
+                        "type": "string"
+                      },
+                      "message": {
+                        "type": "string"
+                      },
+                      "status_code": {
+                        "type": "integer"
+                      },
+                      "status_name": {
+                        "type": "string"
+                      },
+                      "success": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "accepted",
+                      "success",
+                      "message",
+                      "command",
+                      "status_code",
+                      "status_name"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "goal"
+                ],
+                "title": "run_joule_heating参数",
+                "type": "object",
+                "x-unilabos-action-contract": {
+                  "input_order": [
+                    "carrier_type",
+                    "heating_mode",
+                    "pickup_positions",
+                    "constant_temperature",
+                    "constant_hold_minutes",
+                    "slope_segments",
+                    "timeout"
+                  ],
+                  "output_order": [
+                    "accepted",
+                    "success",
+                    "message",
+                    "command",
+                    "status_code",
+                    "status_name"
+                  ],
+                  "resource_template_symbols": {
+                    "goal": {},
+                    "result": {}
+                  },
+                  "version": 2
+                }
+              },
+              "contract_kind": "typed",
+              "resource_template": {
+                "display_name": "yb_synthesis_atomic_station",
+                "name": "community.yb_sse_devices.yb_synthesis_atomic_station",
+                "uuid": "e4cf23b6-d482-5de4-8e04-f38d9c87a061"
+              }
+            }
+          },
+          "name": "run_joule_heating",
+          "node_type": "manual_confirm",
+          "resource_template_uuid": "e4cf23b6-d482-5de4-8e04-f38d9c87a061",
+          "result": {},
+          "schema": "{\"_unilabos_placeholder_info\":{},\"additionalProperties\":false,\"properties\":{\"carrier_type\":{\"default\":\"椭圆石墨舟\",\"type\":\"string\"},\"constant_hold_minutes\":{\"default\":0,\"type\":\"integer\"},\"constant_temperature\":{\"default\":0,\"type\":\"integer\"},\"heating_mode\":{\"default\":\"恒温\",\"type\":\"string\"},\"pickup_positions\":{\"default\":null,\"items\":{\"type\":\"integer\"},\"type\":[\"array\",\"null\"]},\"slope_segments\":{\"default\":\"[]\",\"type\":\"string\"},\"timeout\":{\"default\":14400.0,\"type\":\"number\"}},\"required\":[],\"type\":\"object\"}",
+          "type": "UniLabJsonCommand",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "81c69308-dd9d-56ca-8be6-81b6cb08e2bd"
+        },
+        {
+          "class": "yb_sse_devices.devices.yb_synthesis_atomic_station.device:YBSynthesisAtomicStation",
+          "create_time": "1970-01-01T00:00:00Z",
+          "description": "加热完成后，操作员等待一分钟再确认，然后从焦耳热取出小坩埚。",
+          "display_name": "等待一分钟后焦耳热下料",
+          "feedback": {},
+          "goal": {
+            "carrier_type": "carrier_type",
+            "pickup_positions": "pickup_positions",
+            "timeout": "timeout"
+          },
+          "goal_default": {
+            "carrier_type": "椭圆石墨舟",
+            "pickup_positions": null,
+            "timeout": 600.0
+          },
+          "meta_data": {
+            "unilab": {
+              "action_contract_schema": {
+                "description": "加热完成后，操作员等待一分钟再确认，然后从焦耳热取出小坩埚。",
+                "properties": {
+                  "feedback": {},
+                  "goal": {
+                    "_unilabos_placeholder_info": {},
+                    "additionalProperties": false,
+                    "properties": {
+                      "carrier_type": {
+                        "default": "椭圆石墨舟",
+                        "type": "string"
+                      },
+                      "pickup_positions": {
+                        "default": null,
+                        "items": {
+                          "type": "integer"
+                        },
+                        "type": [
+                          "array",
+                          "null"
+                        ]
+                      },
+                      "timeout": {
+                        "default": 600.0,
+                        "type": "number"
+                      }
+                    },
+                    "required": [],
+                    "type": "object"
+                  },
+                  "result": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "accepted": {
+                        "type": "boolean"
+                      },
+                      "command": {
+                        "type": "string"
+                      },
+                      "message": {
+                        "type": "string"
+                      },
+                      "status_code": {
+                        "type": "integer"
+                      },
+                      "status_name": {
+                        "type": "string"
+                      },
+                      "success": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "accepted",
+                      "success",
+                      "message",
+                      "command",
+                      "status_code",
+                      "status_name"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "goal"
+                ],
+                "title": "unload_joule_heating参数",
+                "type": "object",
+                "x-unilabos-action-contract": {
+                  "input_order": [
+                    "carrier_type",
+                    "pickup_positions",
+                    "timeout"
+                  ],
+                  "output_order": [
+                    "accepted",
+                    "success",
+                    "message",
+                    "command",
+                    "status_code",
+                    "status_name"
+                  ],
+                  "resource_template_symbols": {
+                    "goal": {},
+                    "result": {}
+                  },
+                  "version": 2
+                }
+              },
+              "contract_kind": "typed",
+              "resource_template": {
+                "display_name": "yb_synthesis_atomic_station",
+                "name": "community.yb_sse_devices.yb_synthesis_atomic_station",
+                "uuid": "e4cf23b6-d482-5de4-8e04-f38d9c87a061"
+              }
+            }
+          },
+          "name": "unload_joule_heating",
+          "node_type": "manual_confirm",
+          "resource_template_uuid": "e4cf23b6-d482-5de4-8e04-f38d9c87a061",
+          "result": {},
+          "schema": "{\"_unilabos_placeholder_info\":{},\"additionalProperties\":false,\"properties\":{\"carrier_type\":{\"default\":\"椭圆石墨舟\",\"type\":\"string\"},\"pickup_positions\":{\"default\":null,\"items\":{\"type\":\"integer\"},\"type\":[\"array\",\"null\"]},\"timeout\":{\"default\":600.0,\"type\":\"number\"}},\"required\":[],\"type\":\"object\"}",
+          "type": "UniLabJsonCommand",
+          "update_time": "1970-01-01T00:00:00Z",
+          "uuid": "a996d700-d874-5f91-a0be-e400cea604bb"
+        }
+      ],
+      "nodes": [
+        {
+          "action_name": "run_joule_heating",
+          "action_type": "UniLabJsonCommand",
+          "create_time": "2026-09-23T12:32:06.833071Z",
+          "description": "操作员确认声共振已经下料，并且小坩埚已人工加料完成后，机械臂把小坩埚放入焦耳热，按所选载体和加热模式加热。",
+          "disabled": false,
+          "execution_policy": {},
+          "manual_confirmation": {
+            "timeout_seconds": 3600
+          },
+          "material_uuid": null,
+          "meta_data": {
+            "unilab": {
+              "authoring_device_symbol": "station",
+              "authoring_result_name": "heated",
+              "authoring_source_order": 0,
+              "executor_binding": {
+                "device_id": "yb_synthesis_atomic_station_01",
+                "mode": "fixed"
+              },
+              "input_bindings": {
+                "3139103d-390c-511c-b403-1b0bd9177422": {
+                  "parameter": "slope_segments"
+                },
+                "c45caf74-ae19-5e11-b321-298aba2c9e6d": {
+                  "parameter": "carrier_type"
+                },
+                "dcd64ebc-6ac2-545b-9cca-e37b9120afec": {
+                  "parameter": "pickup_positions"
+                },
+                "de4a440d-0503-5a86-987e-947802b2c435": {
+                  "parameter": "constant_temperature"
+                },
+                "f25cef20-ee58-58f9-a911-6a464c581388": {
+                  "parameter": "heating_mode"
+                },
+                "f3c6f808-0ddb-5d00-ac08-47d89135777d": {
+                  "parameter": "constant_hold_minutes"
+                }
+              }
+            }
+          },
+          "minimized": false,
+          "name": "确认后放入焦耳热并加热",
+          "param": {},
+          "pose": {},
+          "status": "idle",
+          "type": "manual_confirm",
+          "update_time": "2026-09-23T12:32:06.833071Z",
+          "uuid": "a1f0c2d4-7b38-4e61-9a05-2c8d6f1e4b70",
+          "workflow_node_template_uuid": "81c69308-dd9d-56ca-8be6-81b6cb08e2bd",
+          "workflow_uuid": "8c4e1b70-6a2d-4f58-9c31-7d0a6e5b91f2"
+        },
+        {
+          "action_name": "unload_joule_heating",
+          "action_type": "UniLabJsonCommand",
+          "create_time": "2026-09-23T12:32:06.833071Z",
+          "description": "加热完成后，操作员等待一分钟再确认，然后从焦耳热取出小坩埚。",
+          "disabled": false,
+          "execution_policy": {},
+          "manual_confirmation": {
+            "timeout_seconds": 3600
+          },
+          "material_uuid": null,
+          "meta_data": {
+            "unilab": {
+              "authoring_device_symbol": "station",
+              "authoring_result_name": "unloaded",
+              "authoring_source_order": 1,
+              "executor_binding": {
+                "device_id": "yb_synthesis_atomic_station_01",
+                "mode": "fixed"
+              },
+              "input_bindings": {
+                "aff4332a-119c-5cf6-85ab-bb14d0dbc993": {
+                  "parameter": "carrier_type"
+                },
+                "bbb0019b-dd69-5636-a891-00bbaa05f54d": {
+                  "parameter": "pickup_positions"
+                }
+              }
+            }
+          },
+          "minimized": false,
+          "name": "等待一分钟后焦耳热下料",
+          "param": {},
+          "pose": {},
+          "status": "idle",
+          "type": "manual_confirm",
+          "update_time": "2026-09-23T12:32:06.833071Z",
+          "uuid": "b7e2a9c1-5d46-4f83-8b20-6a1c3e9d0f54",
+          "workflow_node_template_uuid": "a996d700-d874-5f91-a0be-e400cea604bb",
+          "workflow_uuid": "8c4e1b70-6a2d-4f58-9c31-7d0a6e5b91f2"
+        }
+      ],
+      "workflow": {
+        "create_time": "2026-09-23T12:32:00.949557Z",
+        "description": "确认声共振已下料且小坩埚已人工加料后，按勾选的待机位把小坩埚放入焦耳热并加热。石墨板由人工放入，只选择载体。加热完成后，操作员等待一分钟再确认，小坩埚放回原来的待机位。",
+        "meta_data": {
+          "unilab": {
+            "authoring_function_name": "joule_heating",
+            "authoring_result_record_name": "JouleHeatingResult",
+            "input_contract": {
+              "parameters": [
+                {
+                  "default": "椭圆石墨舟",
+                  "name": "carrier_type",
+                  "required": false,
+                  "schema": {
+                    "enum": [
+                      "椭圆石墨舟",
+                      "圆形石墨舟",
+                      "石墨板"
+                    ],
+                    "type": "string"
+                  }
+                },
+                {
+                  "default": "恒温",
+                  "name": "heating_mode",
+                  "required": false,
+                  "schema": {
+                    "enum": [
+                      "恒温",
+                      "斜率多段"
+                    ],
+                    "type": "string"
+                  }
+                },
+                {
+                  "default": null,
+                  "name": "pickup_positions",
+                  "required": false,
+                  "schema": {
+                    "anyOf": [
+                      {
+                        "items": {
+                          "type": "integer"
+                        },
+                        "type": "array"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "default": 0,
+                  "name": "constant_temperature",
+                  "required": false,
+                  "schema": {
+                    "type": "integer"
+                  }
+                },
+                {
+                  "default": 0,
+                  "name": "constant_hold_minutes",
+                  "required": false,
+                  "schema": {
+                    "type": "integer"
+                  }
+                },
+                {
+                  "default": "[]",
+                  "name": "slope_segments",
+                  "required": false,
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "version": 1
+            },
+            "output_bindings": {
+              "heating_finished": {
+                "kind": "node_output",
+                "source_handle_uuid": "8c6d059d-9c37-5b80-b255-102117ed783c",
+                "workflow_node_uuid": "a1f0c2d4-7b38-4e61-9a05-2c8d6f1e4b70"
+              },
+              "message": {
+                "kind": "node_output",
+                "source_handle_uuid": "0e099260-491c-5955-b384-70d058c8aded",
+                "workflow_node_uuid": "b7e2a9c1-5d46-4f83-8b20-6a1c3e9d0f54"
+              },
+              "success": {
+                "kind": "node_output",
+                "source_handle_uuid": "33d433e8-1055-5000-ba77-3077ff1d6f2f",
+                "workflow_node_uuid": "b7e2a9c1-5d46-4f83-8b20-6a1c3e9d0f54"
+              }
+            },
+            "output_contract": {
+              "outputs": [
+                {
+                  "implicit": false,
+                  "name": "heating_finished",
+                  "schema": {
+                    "type": "boolean"
+                  }
+                },
+                {
+                  "implicit": false,
+                  "name": "success",
+                  "schema": {
+                    "type": "boolean"
+                  }
+                },
+                {
+                  "implicit": false,
+                  "name": "message",
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "version": 1
+            },
+            "source_bootstrap": {
+              "kind": "editable_package_manifest",
+              "package_id": "yb_sse_devices",
+              "relative_path": "workflows/joule_heating.py",
+              "source_uri": "package://yb_sse_devices/workflows/joule_heating.py"
+            }
+          }
+        },
+        "name": "焦耳热加热",
+        "revision": 2,
+        "tags": [],
+        "update_time": "2026-09-23T12:32:06.801063Z",
+        "uuid": "8c4e1b70-6a2d-4f58-9c31-7d0a6e5b91f2",
+        "workflow_type": "normal"
+      }
+    },
+    "input_contract": {
+      "parameters": [
+        {
+          "default": "椭圆石墨舟",
+          "name": "carrier_type",
+          "required": false,
+          "schema": {
+            "enum": [
+              "椭圆石墨舟",
+              "圆形石墨舟",
+              "石墨板"
+            ],
+            "type": "string"
+          }
+        },
+        {
+          "default": "恒温",
+          "name": "heating_mode",
+          "required": false,
+          "schema": {
+            "enum": [
+              "恒温",
+              "斜率多段"
+            ],
+            "type": "string"
+          }
+        },
+        {
+          "default": null,
+          "name": "pickup_positions",
+          "required": false,
+          "schema": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        {
+          "default": 0,
+          "name": "constant_temperature",
+          "required": false,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "default": 0,
+          "name": "constant_hold_minutes",
+          "required": false,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "default": "[]",
+          "name": "slope_segments",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "version": 1
+    },
+    "meta_data": {},
+    "name": "焦耳热加热",
+    "node_count": 2,
+    "node_template_uuid": "103d5043-0dde-40e9-9593-fd73efe752a9",
+    "output_contract": {
+      "outputs": [
+        {
+          "implicit": false,
+          "name": "heating_finished",
+          "schema": {
+            "type": "boolean"
+          }
+        },
+        {
+          "implicit": false,
+          "name": "success",
+          "schema": {
+            "type": "boolean"
+          }
+        },
+        {
+          "implicit": false,
+          "name": "message",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "version": 1
+    },
+    "source_hash": "sha256:7dc694e8440ba3ac7fbe35d499f9db9bba68a9aea838b2d14f527cab44cb2a13",
+    "tags": [],
+    "update_time": "2026-09-23T12:35:13.890061Z",
+    "uuid": "31189fff-ecc0-4ac3-a5f9-03c798eadc06",
+    "version": 1,
+    "workflow_revision": 2,
+    "workflow_uuid": "8c4e1b70-6a2d-4f58-9c31-7d0a6e5b91f2"
+  },
+  "source_draft_hash": "sha256:33f8b99b8fb29e308db98619e4fbf03e7bbdfa41f1df0fbe2994aa48ab5bc372"
+}

@@ -28,6 +28,7 @@ from yb_sse_devices.common.synthesis_catalog import (
     cubic_type_code,
     derive_pallet_slot_types,
     pallet_type_code,
+    slot_recipe_assignments,
     rack_material_positions,
     recipe_spec,
 )
@@ -183,7 +184,7 @@ class YBSynthesisModbusStation:
         self,
         device_id: str | None = None,
         config: dict[str, Any] | None = None,
-        ip: str = "192.168.1.10",
+        ip: str = "",
         port: int = 502,
         unit_id: int = 1,
         simulation: bool = True,
@@ -314,6 +315,8 @@ class YBSynthesisModbusStation:
                 ),
             )
         else:
+            if not self.ip.strip():
+                raise ValueError("真实 PLC 地址必须由启动图配置，设备类不提供现场默认地址")
             transport = ModbusTcpTransport(
                 self.ip,
                 self.port,
@@ -1225,6 +1228,32 @@ class YBSynthesisModbusStation:
                 time.sleep(step)
 
     @staticmethod
+    def _recipe_command_materials(
+        recipe_name: str,
+    ) -> tuple[list[int], list[str], list[float], list[float]]:
+        """Powder positions and masses for one command-3 write."""
+
+        materials = [
+            item for item in recipe_spec(recipe_name)["materials"] if not item["pre_add"]
+        ]
+        if not materials:
+            raise ValueError("配方没有需要由 PLC 命令3执行的非预加粉料")
+        inventory = rack_material_positions()
+        positions: list[int] = []
+        names: list[str] = []
+        masses: list[float] = []
+        tolerances: list[float] = []
+        for item in materials:
+            name = str(item["name"])
+            if name not in inventory:
+                raise ValueError(f"料架库存没有物料 {name} 的加样位置，不能下发命令3")
+            positions.append(int(inventory[name]))
+            names.append(name)
+            masses.append(float(item["weight"]))
+            tolerances.append(float(item["tolerance"]))
+        return positions, names, masses, tolerances
+
+    @staticmethod
     def _bead_count_for_command(has_bead_bottle: bool, bead_count: int) -> int:
         count = int(bead_count)
         if has_bead_bottle and count <= 0:
@@ -1246,6 +1275,7 @@ class YBSynthesisModbusStation:
         pallet_type: str = "6 槽位托盘",
         cubic_type: str = "Al2O3 30*30",
         task_slot_nums: list[int] | None = None,
+        slot_recipes: list[str] | None = None,
         has_bead_bottle: bool = False,
         bead_count: int = 0,
         timeout: float = 600.0,
@@ -1253,7 +1283,10 @@ class YBSynthesisModbusStation:
         """Write PLC command 7 after the operator confirms rack-2 loading."""
 
         self._ensure_connected()
-        slots = [int(value) for value in (task_slot_nums or [])]
+        if slot_recipes is not None:
+            slots = [slot for slot, _recipe in slot_recipe_assignments(pallet_type, slot_recipes)]
+        else:
+            slots = [int(value) for value in (task_slot_nums or [])]
         slot_types = derive_pallet_slot_types(pallet_type, cubic_type, slots)
         beads = self._bead_count_for_command(has_bead_bottle, bead_count)
         previous = int(self.controller.status().get("upper_pallet", 0) or 0)
@@ -1285,10 +1318,11 @@ class YBSynthesisModbusStation:
     )
     def dose_selected_slots(
         self,
-        recipe_name: str,
+        recipe_name: str = "",
         pallet_type: str = "6 槽位托盘",
         cubic_type: str = "Al2O3 30*30",
         task_slot_nums: list[int] | None = None,
+        slot_recipes: list[str] | None = None,
         has_bead_bottle: bool = False,
         bead_count: int = 0,
         timeout: float = 1800.0,
@@ -1296,31 +1330,19 @@ class YBSynthesisModbusStation:
         """Write one PLC command 3 for each selected tray slot."""
 
         self._ensure_connected()
-        slots = [int(value) for value in (task_slot_nums or [])]
-        derive_pallet_slot_types(pallet_type, cubic_type, slots)
-        materials = [
-            item for item in recipe_spec(recipe_name)["materials"] if not item["pre_add"]
-        ]
-        if not materials:
-            raise ValueError("配方没有需要由 PLC 命令3执行的非预加粉料")
-        inventory = rack_material_positions()
-        positions: list[int] = []
-        names: list[str] = []
-        masses: list[float] = []
-        tolerances: list[float] = []
-        for item in materials:
-            name = str(item["name"])
-            if name not in inventory:
-                raise ValueError(f"料架库存没有物料 {name} 的加样位置，不能下发命令3")
-            positions.append(int(inventory[name]))
-            names.append(name)
-            masses.append(float(item["weight"]))
-            tolerances.append(float(item["tolerance"]))
+        if slot_recipes is not None:
+            pairs = slot_recipe_assignments(pallet_type, slot_recipes)
+        else:
+            if not str(recipe_name).strip():
+                raise ValueError("recipe_name 不能为空")
+            pairs = [(int(value), str(recipe_name)) for value in (task_slot_nums or [])]
+        derive_pallet_slot_types(pallet_type, cubic_type, [slot for slot, _recipe in pairs])
         beads = self._bead_count_for_command(has_bead_bottle, bead_count)
         cubic_code = cubic_type_code(cubic_type)
         qr_codes: list[str] = []
         weights: list[float] = []
-        for slot in slots:
+        for slot, recipe in pairs:
+            positions, names, masses, tolerances = self._recipe_command_materials(recipe)
             sample = self.controller.run_sampling(
                 slot_num=slot,
                 destination_slot=slot,
@@ -1343,9 +1365,9 @@ class YBSynthesisModbusStation:
                 weights.extend(float(value) for value in raw_weights)
         return {
             "success": True,
-            "message": f"PLC 命令3已完成，共 {len(slots)} 个槽位",
+            "message": f"PLC 命令3已完成，共 {len(pairs)} 个槽位",
             "command": "sample_add_powder_and_beads",
-            "slot_nums": slots,
+            "slot_nums": [slot for slot, _recipe in pairs],
             "qr_codes": qr_codes,
             "weights": weights,
         }
@@ -1373,10 +1395,11 @@ class YBSynthesisModbusStation:
         return [accel], [freq], [seconds]
 
     @action(
-        displayname="声共振上料并等待振动完成",
+        node_type=NodeType.MANUAL_CONFIRM,
+        displayname="确认后放入声共振",
         description=(
-            "向 PLC 写入命令8。取托盘位置为料架1，放托盘位置按既有编码为声共振工位。"
-            "上料状态和声共振运行状态都完成后才返回，此时还没有下料。"
+            "操作员确认加粉已结束、托盘仍在料架1后，向 PLC 写入命令8。"
+            "托盘放入声共振后即返回，振动期间不再占着工站。"
         ),
     )
     def run_acoustic_load(
@@ -1386,31 +1409,55 @@ class YBSynthesisModbusStation:
         duration_minutes: int = 0,
         timeout: float = 14400.0,
     ) -> CommandResult:
-        """Write PLC command 8 and wait until the vibration itself finishes."""
+        """Write PLC command 8 and return once the tray is in the resonator."""
 
         self._ensure_connected()
         accelerations, frequencies, times = self._resonance_segment(
             acceleration, frequency, duration_minutes
         )
         previous_load = int(self.controller.status().get("acoustic_resonance", 0) or 0)
-        previous_process = int(self.controller.status().get("acoustic_process", 0) or 0)
+        self._acoustic_process_baseline = int(
+            self.controller.status().get("acoustic_process", 0) or 0
+        )
         self.controller.acoustic_resonance(
             fetch_position=1,
             accelerations=accelerations,
             frequencies=frequencies,
             times=times,
         )
-        self._poll_plc_status(
-            "acoustic_resonance", "命令8声共振上料", timeout, 0.2, previous_load
-        )
         code = self._poll_plc_status(
-            "acoustic_process", "声共振运行", timeout, 0.2, previous_process
+            "acoustic_resonance", "声共振上料", timeout, 0.2, previous_load
         )
         return {
             "accepted": True,
             "success": code == 2,
-            "message": "声共振已振完，等待下料",
+            "message": "托盘已放入声共振，振动期间工站可执行其他任务",
             "command": "acoustic_resonance",
+            "status_code": code,
+            "status_name": self._status_name(code),
+        }
+
+    @action(
+        always_free=True,
+        displayname="等待声共振振完",
+        description="只查看声共振是否振完，不占用工站。振完后才允许下料。",
+    )
+    def wait_acoustic_process(self, timeout: float = 14400.0) -> CommandResult:
+        """Poll the vibration status without taking the station lock."""
+
+        self._ensure_connected()
+        previous = getattr(self, "_acoustic_process_baseline", None)
+        if previous is None:
+            previous = int(self.controller.status().get("acoustic_process", 0) or 0)
+        code = self._poll_plc_status(
+            "acoustic_process", "声共振运行", timeout, 0.2, int(previous)
+        )
+        self._acoustic_process_baseline = None
+        return {
+            "accepted": True,
+            "success": code == 2,
+            "message": "声共振已振完，等待下料",
+            "command": "acoustic_process",
             "status_code": code,
             "status_name": self._status_name(code),
         }
@@ -1610,10 +1657,10 @@ class YBSynthesisModbusStation:
             return {
                 "accepted": True,
                 "success": True,
-                "message": "石墨板由人工取出，未写 PLC 下料",
-                "command": "fetch_firing",
-                "status_code": 2,
-                "status_name": self._status_name(2),
+                "message": "人工完成：石墨板由操作员取出，未向 PLC 写下料命令",
+                "command": "manual_remove",
+                "status_code": 0,
+                "status_name": "人工完成",
             }
         carrier = self._joule_carrier_code(carrier_type)
         positions = self._standby_positions(carrier_type, pickup_positions)
@@ -1632,6 +1679,146 @@ class YBSynthesisModbusStation:
             "accepted": True,
             "success": code == 2,
             "message": "焦耳热已下料，小坩埚已放回原待机位",
+            "command": "fetch_firing",
+            "status_code": code,
+            "status_name": self._status_name(code),
+        }
+
+    @staticmethod
+    def _quartz_slot(quartz_slot: int) -> int:
+        slot = int(quartz_slot)
+        if slot not in {1, 2, 3, 4}:
+            raise ValueError("石英坩埚槽位必须是 1 到 4，并且只能进入同号马弗炉")
+        return slot
+
+    @staticmethod
+    def _muffle_segments(furnace_segments: str) -> tuple[list[int], list[int]]:
+        """Map operator segments onto PLC 工艺温度 and 工艺时间.
+
+        The furnace block has six temperature words and six time words.  The
+        IO sheet does not label the time unit; the form is in minutes and the
+        same integer is written, without converting to seconds.
+        """
+
+        try:
+            payload = json.loads(furnace_segments or "[]")
+        except json.JSONDecodeError as exc:
+            raise ValueError("马弗炉分段必须是 JSON 数组") from exc
+        if not isinstance(payload, list) or not 1 <= len(payload) <= 6:
+            raise ValueError("马弗炉工艺必须填写 1–6 段，PLC 每个炉只有 6 组工艺温度和时间")
+        temperatures: list[int] = []
+        times: list[int] = []
+        for item in payload:
+            if not isinstance(item, dict):
+                raise ValueError("每一段都要包含烧结温度和升温时间")
+            temperature = int(item.get("temperature", 0))
+            minutes = int(item.get("minutes", 0))
+            if not 1 <= temperature <= 0xFFFF:
+                raise ValueError("烧结温度必须是 1–65535 ℃")
+            if not 1 <= minutes <= 0xFFFF:
+                raise ValueError("升温时间必须是 1–65535 分钟")
+            temperatures.append(temperature)
+            times.append(minutes)
+        return temperatures, times
+
+    def _furnace_code(self, slot: int) -> int:
+        furnaces = self.controller.status().get("furnace") or (-1, -1, -1, -1)
+        return int(furnaces[slot - 1] or 0)
+
+    def _poll_furnace(self, slot: int, timeout: float, step: float, previous: int) -> int:
+        if timeout <= 0 or step <= 0:
+            raise ValueError("timeout 和 step 必须为正数")
+        saw_running = False
+        deadline = time.monotonic() + float(timeout)
+        while True:
+            code = self._furnace_code(slot)
+            if code == 1:
+                saw_running = True
+            if code == 2 and (saw_running or previous != 2):
+                return code
+            if code == 3:
+                raise RuntimeError(f"PLC马弗炉{slot}报告故障状态")
+            if time.monotonic() >= deadline:
+                raise TimeoutError(f"等待马弗炉{slot}超时；最后状态={code}")
+            if callable(getattr(self.controller.transport, "advance", None)):
+                self.controller.advance(step)
+            else:
+                time.sleep(step)
+
+    @action(
+        node_type=NodeType.MANUAL_CONFIRM,
+        displayname="确认后放入马弗炉",
+        description=(
+            "操作员确认小坩埚已放入石英坩埚，并放在料架2对应槽位后，"
+            "机械臂把石英坩埚送入同号马弗炉并写入最多 6 段工艺。"
+        ),
+    )
+    def run_muffle_load(
+        self,
+        quartz_slot: int = 1,
+        furnace_segments: str = "[]",
+        timeout: float = 14400.0,
+    ) -> CommandResult:
+        """Write PLC command 4 for one furnace. Slot N is furnace N."""
+
+        self._ensure_connected()
+        slot = self._quartz_slot(quartz_slot)
+        temperatures, times = self._muffle_segments(furnace_segments)
+        self._muffle_slot = slot
+        self._muffle_baseline = self._furnace_code(slot)
+        previous = int(self.controller.status().get("send_firing", 0) or 0)
+        self.controller.send_firing(position=slot, temperatures=temperatures, times=times)
+        code = self._poll_plc_status("send_firing", "马弗炉上料", timeout, 0.2, previous)
+        return {
+            "accepted": True,
+            "success": code == 2,
+            "message": f"石英坩埚已送入马弗炉{slot}，烧结期间已放开工站",
+            "command": "send_firing",
+            "status_code": code,
+            "status_name": self._status_name(code),
+        }
+
+    @action(always_free=True, displayname="等待马弗炉加热完成", description="轮询对应马弗炉状态，不占用工站，也不写命令。")
+    def wait_muffle_process(
+        self,
+        quartz_slot: int = 1,
+        timeout: float = 14400.0,
+    ) -> CommandResult:
+        """Poll one furnace status word until sintering finishes."""
+
+        self._ensure_connected()
+        slot = self._quartz_slot(quartz_slot)
+        previous = self._muffle_baseline if getattr(self, "_muffle_slot", None) == slot else self._furnace_code(slot)
+        code = self._poll_furnace(slot, timeout, 0.2, int(previous))
+        return {
+            "accepted": True,
+            "success": code == 2,
+            "message": f"马弗炉{slot}加热完成",
+            "command": "furnace_status",
+            "status_code": code,
+            "status_name": self._status_name(code),
+        }
+
+    @action(
+        displayname="马弗炉下料回原槽位",
+        description="加热完成后，机械臂把石英坩埚从同号马弗炉放回料架2原来的槽位。",
+    )
+    def run_muffle_unload(
+        self,
+        quartz_slot: int = 1,
+        timeout: float = 14400.0,
+    ) -> CommandResult:
+        """Write PLC command 5. Pick and place positions are both the slot number."""
+
+        self._ensure_connected()
+        slot = self._quartz_slot(quartz_slot)
+        previous = int(self.controller.status().get("fetch_firing", 0) or 0)
+        self.controller.fetch_firing(position=slot)
+        code = self._poll_plc_status("fetch_firing", "马弗炉下料", timeout, 0.2, previous)
+        return {
+            "accepted": True,
+            "success": code == 2,
+            "message": f"石英坩埚已从马弗炉{slot}放回料架2槽位{slot}",
             "command": "fetch_firing",
             "status_code": code,
             "status_name": self._status_name(code),
