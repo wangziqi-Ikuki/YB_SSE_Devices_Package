@@ -68,14 +68,14 @@ def test_rack2_actions_write_command7_then_command3() -> None:
         assert len(dosed["weights"]) == 4
 
         resonated = station.run_acoustic_load(
-            acceleration=2, frequency=3, duration_minutes=4, timeout=5
+            acceleration=2, frequency=3, duration_minutes=4, timeout=30
         )
         command8 = writes[-1]
         assert command8[0] == 8
         assert command8[1:6] == (1, 2, 2, 3, 240)
         assert resonated["success"] is True
         written = len(writes)
-        finished = station.wait_acoustic_process(timeout=5)
+        finished = station.wait_acoustic_process(timeout=30)
         assert len(writes) == written
         assert finished["success"] is True
 
@@ -190,7 +190,7 @@ def test_muffle_slot_two_writes_furnace_two_and_returns_to_the_same_slot() -> No
     station.controller.client.write_command = capture
     segments = '[{"temperature": 800, "minutes": 30}, {"temperature": 900, "minutes": 60}]'
     try:
-        loaded = station.run_muffle_load(quartz_slot=2, furnace_segments=segments, timeout=5)
+        loaded = station.run_muffle_load(quartz_slot=2, furnace_segments=segments, timeout=120)
         command4 = writes[0]
         assert command4[0] == 4
         assert command4[16] == 1
@@ -198,7 +198,7 @@ def test_muffle_slot_two_writes_furnace_two_and_returns_to_the_same_slot() -> No
         assert command4[23:25] == (30, 60)
         assert loaded["success"] is True
         written = len(writes)
-        finished = station.wait_muffle_process(quartz_slot=2, timeout=5)
+        finished = station.wait_muffle_process(quartz_slot=2, timeout=120)
         assert len(writes) == written
         assert finished["success"] is True
         unloaded = station.run_muffle_unload(quartz_slot=2, timeout=5)

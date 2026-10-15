@@ -29,7 +29,7 @@ def test_constant_joule_heating_returns_to_the_same_standby_slot() -> None:
             pickup_positions=[2, 5],
             constant_temperature=500,
             constant_hold_minutes=2,
-            timeout=5,
+            timeout=30,
         )
         loads = [item for item in writes if item[0] == 4]
         assert [item[61] for item in loads] == [2, 5]
@@ -39,7 +39,7 @@ def test_constant_joule_heating_returns_to_the_same_standby_slot() -> None:
         unloaded = station.unload_joule_heating(
             carrier_type='椭圆石墨舟',
             pickup_positions=[2, 5],
-            timeout=5,
+            timeout=30,
         )
         unloads = [item for item in writes if item[0] == 5]
         assert [item[9:11] for item in unloads] == [(1, 2), (1, 5)]
@@ -64,7 +64,7 @@ def test_graphite_plate_heats_without_a_robot_move() -> None:
             heating_mode='恒温',
             constant_temperature=400,
             constant_hold_minutes=1,
-            timeout=5,
+            timeout=30,
         )
         assert writes[-1][0] == 4
         assert writes[-1][61:64] == (0, 1, 3)

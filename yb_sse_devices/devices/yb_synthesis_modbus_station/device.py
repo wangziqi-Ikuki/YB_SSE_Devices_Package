@@ -1584,10 +1584,8 @@ class YBSynthesisModbusStation:
         return positions
 
     @action(
-        node_type=NodeType.MANUAL_CONFIRM,
-        displayname="确认后放入焦耳热并加热",
+        displayname="放入焦耳热并加热",
         description=(
-            "操作员确认声共振已经下料，并且小坩埚已人工加料完成后，"
             "机械臂把小坩埚放入焦耳热，按所选载体和加热模式加热。"
             "上料和加热都完成后才返回。"
         ),

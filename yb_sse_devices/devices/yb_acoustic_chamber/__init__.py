@@ -1,0 +1,1 @@
+"""Acoustic chamber lock identity."""

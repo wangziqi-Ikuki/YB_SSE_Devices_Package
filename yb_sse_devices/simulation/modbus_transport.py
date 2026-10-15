@@ -45,6 +45,7 @@ class SynthesisSimulationTransport:
         material_names: Sequence[str] | None = None,
         base_address: int = 40001,
         handshake_delay: float = 0.1,
+        acoustic_process_duration: float = 1.0,
         failure_plan: Mapping[str, str] | None = None,
         handshake_history_limit: int = 100,
     ) -> None:
@@ -72,9 +73,12 @@ class SynthesisSimulationTransport:
         self.base_address = int(base_address)
         if float(handshake_delay) < 0:
             raise ValueError("handshake_delay must be non-negative")
+        if float(acoustic_process_duration) <= 0:
+            raise ValueError("acoustic_process_duration must be positive")
         if int(handshake_history_limit) < 1:
             raise ValueError("handshake_history_limit must be positive")
         self.handshake_delay = float(handshake_delay)
+        self.acoustic_process_duration = float(acoustic_process_duration)
         self.failure_plan = {
             str(command): str(message)
             for command, message in (failure_plan or {}).items()
@@ -97,6 +101,9 @@ class SynthesisSimulationTransport:
         # without pretending to model robot motion or furnace physics.
         self._status_registers: dict[int, int] = {}
         self._active_operation: dict[str, object] | None = None
+        # Long device holds (vibration, furnace heat) do not keep the robot.
+        # They continue on this list so another command can use the arm.
+        self._passive_operations: list[dict[str, object]] = []
         # These are the PLC-side gates confirmed by SBR_105/SBR_106 and the
         # station flow blocks.  They default to the ready state so a dry-run
         # can start immediately, but tests and the desktop simulator can turn
@@ -252,7 +259,7 @@ class SynthesisSimulationTransport:
                 elif payload[0] == int(SynthesisCommand.SEND_FIRING):
                     self._start_firing_operation(payload)
                 else:
-                    self._start_operation(payload[0])
+                    self._start_operation(payload[0], payload=payload)
         elif address == 40098 and len(payload) >= 2 and payload[0] == 100:
             # 40098/40099 handshake: 1 pause, 2 resume.
             self._status_registers[40116] = 1 if payload[1] == 1 else 0
@@ -307,6 +314,7 @@ class SynthesisSimulationTransport:
                 message=fault.message if fault else "仿真工艺失败",
             )
         self._advance_active_operation(value)
+        self._advance_passive_operations(value)
 
     def _advance_active_operation(self, seconds: float) -> None:
         """Advance the staged PLC flow used by non-sampling commands."""
@@ -332,6 +340,39 @@ class SynthesisSimulationTransport:
                 stage=phase_name,
             )
             next_index = phase_index + 1
+            split_after = operation.get("split_after_index")
+            if split_after is not None and next_index == int(split_after):
+                # Two PLC facts must not flip to COMPLETE in the same tick.
+                # The host anti-stale check requires seeing RUNNING on the
+                # second register after the first one has already completed;
+                # leftover time from a large advance() would hide that edge.
+                load_register = int(operation["status_registers"][0])
+                self._status_registers[load_register] = 2
+                self._record_handshake(
+                    str(operation["command"]),
+                    "load_completed",
+                    status_register=load_register,
+                )
+                operation["phase_index"] = next_index
+                operation["phase_remaining"] = float(
+                    operation["phase_durations"][next_index]
+                )
+                self._record_handshake(
+                    str(operation["command"]),
+                    "phase_started",
+                    stage=str(phases[next_index]),
+                )
+                if str(phases[next_index]) in {
+                    "resonance_process",
+                    "joule_process",
+                    "furnace_process",
+                }:
+                    # The robot finished the load. Keep the process timer,
+                    # but stop blocking the next arm command.
+                    operation["just_parked"] = True
+                    self._passive_operations.append(operation)
+                    self._active_operation = None
+                return
             if next_index >= len(phases):
                 for register in operation["status_registers"]:
                     self._status_registers[int(register)] = 2
@@ -351,6 +392,38 @@ class SynthesisSimulationTransport:
             )
             if remaining <= 0 and operation["phase_remaining"] > 0:
                 return
+
+    def _advance_passive_operations(self, seconds: float) -> None:
+        """Finish chamber or furnace holds that no longer occupy the robot."""
+
+        if not self._passive_operations:
+            return
+        remaining_ops: list[dict[str, object]] = []
+        for operation in self._passive_operations:
+            if operation.pop("just_parked", False):
+                remaining_ops.append(operation)
+                continue
+            left = float(operation["phase_remaining"]) - float(seconds)
+            if left > 0:
+                operation["phase_remaining"] = left
+                remaining_ops.append(operation)
+                continue
+            phases = operation["phases"]
+            phase_index = int(operation["phase_index"])
+            stage = str(phases[phase_index]) if isinstance(phases, list) else "process"
+            self._record_handshake(
+                str(operation["command"]),
+                "phase_completed",
+                stage=stage,
+            )
+            for register in operation["status_registers"]:
+                self._status_registers[int(register)] = 2
+            self._record_handshake(
+                str(operation["command"]),
+                "completed",
+                status_registers=list(operation["status_registers"]),
+            )
+        self._passive_operations = remaining_ops
 
     def operation_snapshot(self) -> dict[str, object]:
         """Return the current staged PLC operation for the local simulator."""
@@ -373,6 +446,7 @@ class SynthesisSimulationTransport:
         *,
         status_index: int | None = None,
         command_name_override: str | None = None,
+        payload: tuple[int, ...] = (),
     ) -> None:
         if self._active_operation is not None or self.model.phase in {
             SamplingPhase.SCANNING,
@@ -388,6 +462,7 @@ class SynthesisSimulationTransport:
             command_name,
             index,
             status_index=status_index,
+            payload=payload,
         )
 
     def _start_staged_operation(
@@ -397,6 +472,7 @@ class SynthesisSimulationTransport:
         *,
         status_index: int | None = None,
         phase_names: Sequence[str] | None = None,
+        payload: tuple[int, ...] = (),
     ) -> None:
         """Start a PLC flow with explicit robot/device phases."""
 
@@ -426,14 +502,25 @@ class SynthesisSimulationTransport:
         phases = list(phase_names or self._default_phases(command_name))
         if not phases:
             phases = ["device_action"]
-        duration = self.handshake_delay / len(phases)
+        if command_name == SynthesisCommand.ACOUSTIC_RESONANCE.name.lower():
+            phases = ["resonance_load", "resonance_process"]
+            phase_durations = [
+                self.handshake_delay,
+                self._acoustic_process_seconds(payload),
+            ]
+        else:
+            duration = self.handshake_delay / len(phases)
+            phase_durations = [duration] * len(phases)
         self._active_operation = {
             "command": command_name,
             "status_registers": status_registers,
             "phases": phases,
-            "phase_durations": [duration] * len(phases),
+            "phase_durations": phase_durations,
             "phase_index": 0,
-            "phase_remaining": duration,
+            "phase_remaining": phase_durations[0],
+            "split_after_index": (
+                1 if command_name == SynthesisCommand.ACOUSTIC_RESONANCE.name.lower() else None
+            ),
         }
         self._record_handshake(command_name, "phase_started", stage=phases[0])
 
@@ -453,6 +540,37 @@ class SynthesisSimulationTransport:
             "fetch_acoustic_resonance": ["resonance_reset", "robot_unload"],
             "send_firing": ["recipe_written", "load_permission", "furnace_process"],
         }.get(command_name, ["device_action"])
+
+    def _acoustic_process_seconds(self, payload: tuple[int, ...]) -> float:
+        """Sum command-8 segment times. The OS writes minutes converted to seconds."""
+
+        times = [
+            int(payload[index])
+            for index in range(5, min(len(payload), 21), 3)
+            if int(payload[index]) > 0
+        ]
+        if times:
+            return float(sum(times))
+        return float(self.acoustic_process_duration)
+
+    def _firing_process_seconds(self, payload: tuple[int, ...], position: int) -> float:
+        """Use the written hold time so furnace/Joule workflows last as filled."""
+
+        if position == 0:
+            mode = int(payload[62]) if len(payload) > 62 else 0
+            if mode == 2:
+                holds = [int(value) for value in payload[76:81] if int(value) > 0]
+                if holds:
+                    return float(sum(holds))
+            hold = int(payload[65]) if len(payload) > 65 else 0
+            if hold > 0:
+                return float(hold)
+            return float(self.acoustic_process_duration)
+        start = 1 + (position - 1) * 15
+        holds = [int(value) for value in payload[start + 7 : start + 13] if int(value) > 0]
+        if holds:
+            return float(sum(holds) * 60)
+        return float(self.acoustic_process_duration)
 
     def _start_firing_operation(self, payload: tuple[int, ...]) -> None:
         """Reflect furnace/Joule heating handshake in the status block."""
@@ -488,14 +606,17 @@ class SynthesisSimulationTransport:
             if position == 0
             else ["recipe_written", "furnace_load_permission", "furnace_process"]
         )
-        duration = self.handshake_delay / len(phases)
+        load_slice = self.handshake_delay / max(len(phases) - 1, 1)
+        process_seconds = self._firing_process_seconds(payload, position)
+        phase_durations = [load_slice] * (len(phases) - 1) + [process_seconds]
         self._active_operation = {
             "command": command_name,
             "status_registers": [command_register, register],
             "phases": phases,
-            "phase_durations": [duration] * len(phases),
+            "phase_durations": phase_durations,
             "phase_index": 0,
-            "phase_remaining": duration,
+            "phase_remaining": phase_durations[0],
+            "split_after_index": 2,
         }
         self._record_handshake(command_name, "phase_started", stage=phases[0])
 

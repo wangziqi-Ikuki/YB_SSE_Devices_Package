@@ -782,12 +782,8 @@ class YBSynthesisAtomicStation:
         return self.station.run_acoustic_unload(timeout=timeout)
 
     @action(
-        node_type=NodeType.MANUAL_CONFIRM,
-        displayname="确认后放入焦耳热并加热",
-        description=(
-            "操作员确认声共振已经下料，并且小坩埚已人工加料完成后，"
-            "机械臂把小坩埚放入焦耳热，按所选载体和加热模式加热。"
-        ),
+        displayname="放入焦耳热并加热",
+        description="机械臂把小坩埚放入焦耳热，按所选载体和加热模式加热。",
     )
     def run_joule_heating(
         self,
@@ -799,7 +795,7 @@ class YBSynthesisAtomicStation:
         slope_segments: str = "[]",
         timeout: float = 14400.0,
     ) -> PlcCommandResult:
-        """Confirm, then run PLC command 4 until Joule heating finishes."""
+        """Run PLC command 4 until Joule heating finishes."""
 
         return self.station.run_joule_heating(
             carrier_type=carrier_type,

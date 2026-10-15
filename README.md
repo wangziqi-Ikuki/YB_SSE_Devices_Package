@@ -104,7 +104,7 @@ $env:PYTHONPATH = "C:\Users\DP\Desktop\New_YB_package\YB_SSE_Devices_Package"
   --log-file "$PWD\.unilabos\logs\yb-modbus-sim.jsonl" --verbose
 ```
 
-仿真和真机返回同一组字段。仿真二维码是 `CRU-SIM-001` 这类固定号，重量按配方目标值回写，声共振会很快报完成。真机返回现场扫码和天平实称。
+仿真和真机返回同一组字段。仿真二维码是 `CRU-SIM-001` 这类固定号，重量按配方目标值回写。声共振、马弗炉和焦耳热的工艺时间按命令里填写的值走：页面填 3 分钟，仿真就振 3 分钟。上料完成和工艺完成仍然错开，避免两个状态同时变完成触发防误判。真机返回现场扫码和天平实称。
 
 ## 新增配方、坩埚或托盘
 

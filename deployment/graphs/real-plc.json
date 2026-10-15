@@ -56,6 +56,30 @@
       }
     },
     {
+      "id": "yb_acoustic_chamber_01",
+      "name": "YB 声共振腔",
+      "type": "device",
+      "class": "community.yb_sse_devices.yb_acoustic_chamber",
+      "parent": null,
+      "position": {
+        "x": 180.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "config": {
+        "simulation": false,
+        "business_simulation": false,
+        "ip": "192.168.1.10",
+        "port": 502,
+        "unit_id": 1,
+        "action_timeout": 30.0,
+        "simulation_step": 0.1
+      },
+      "data": {
+        "status": "offline"
+      }
+    },
+    {
       "id": "synthesis_powder_rack_01",
       "name": "合成粉料架",
       "type": "warehouse",

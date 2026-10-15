@@ -126,7 +126,8 @@ class ModbusTcpSimulator:
         crucible_id: str = "CRU-SIM-001",
         material_names: Sequence[str] | None = None,
         dosing_duration: float = 1.0,
-        handshake_delay: float = 0.1,
+        handshake_delay: float = 0.5,
+        acoustic_process_duration: float = 5.0,
         failure_plan: Mapping[str, str] | None = None,
         tick_interval: float = 0.05,
         request_timeout: float = 3600.0,
@@ -171,6 +172,7 @@ class ModbusTcpSimulator:
             crucible_id=crucible_id,
             material_names=material_names,
             handshake_delay=handshake_delay,
+            acoustic_process_duration=acoustic_process_duration,
             failure_plan=failure_plan,
         )
         self.transport.connect()
@@ -473,7 +475,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--unit-id", type=int, default=1)
     parser.add_argument("--crucible-id", default="CRU-SIM-001")
     parser.add_argument("--dosing-duration", type=float, default=1.0)
-    parser.add_argument("--handshake-delay", type=float, default=0.1)
+    parser.add_argument("--handshake-delay", type=float, default=0.5)
+    parser.add_argument("--acoustic-process-duration", type=float, default=5.0)
     parser.add_argument("--tick-interval", type=float, default=0.05)
     parser.add_argument(
         "--log-file",
@@ -504,6 +507,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         crucible_id=args.crucible_id,
         dosing_duration=args.dosing_duration,
         handshake_delay=args.handshake_delay,
+        acoustic_process_duration=args.acoustic_process_duration,
         tick_interval=args.tick_interval,
         communication_history_limit=args.log_history,
         trace_file=args.log_file,

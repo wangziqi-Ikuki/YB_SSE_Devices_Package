@@ -183,7 +183,10 @@ class MemoryClientTests(unittest.TestCase):
         self.assertEqual(transport.read_holding_registers(40106, 1), (3,))
 
     def test_acoustic_load_updates_task_and_process_registers(self) -> None:
-        transport = SynthesisSimulationTransport(handshake_delay=0.1)
+        transport = SynthesisSimulationTransport(
+            handshake_delay=0.1,
+            acoustic_process_duration=1.0,
+        )
         transport.connect()
         transport.write_holding_registers(
             40001,
@@ -194,6 +197,72 @@ class MemoryClientTests(unittest.TestCase):
         status = transport.read_holding_registers(40100, 17)
         self.assertEqual(status[7], 1)  # 40107 loading task
         self.assertEqual(status[9], 1)  # 40109 acoustic process
+        transport.advance(0.11)
+        status = transport.read_holding_registers(40100, 17)
+        self.assertEqual(status[7], 2)  # tray loading is complete
+        self.assertEqual(status[9], 1)  # vibration is still running
+        transport.advance(3.9)
+        status = transport.read_holding_registers(40100, 17)
+        self.assertEqual(status[7], 2)
+        self.assertEqual(status[9], 1)  # command time is 4 s, not the 1 s fallback
+        transport.advance(0.2)
+        status = transport.read_holding_registers(40100, 17)
+        self.assertEqual(status[7], 2)
+        self.assertEqual(status[9], 2)  # vibration completes independently
+
+    def test_acoustic_process_stays_running_across_a_large_advance_tick(self) -> None:
+        """A leftover clock tick must not complete 40107 and 40109 together."""
+
+        transport = SynthesisSimulationTransport(
+            handshake_delay=0.1,
+            acoustic_process_duration=1.0,
+        )
+        transport.connect()
+        transport.write_holding_registers(
+            40001,
+            encode_acoustic_resonance_command(
+                fetch_position=1, accelerations=[2], frequencies=[3], times=[4]
+            ),
+        )
+        transport.advance(10.0)
+        status = transport.read_holding_registers(40100, 17)
+        self.assertEqual(status[7], 2)
+        self.assertEqual(status[9], 1)
+        transport.advance(4.0)
+        status = transport.read_holding_registers(40100, 17)
+        self.assertEqual(status[7], 2)
+        self.assertEqual(status[9], 2)
+
+    def test_muffle_and_joule_process_use_written_hold_time(self) -> None:
+        transport = SynthesisSimulationTransport(handshake_delay=0.1)
+        transport.connect()
+        transport.write_holding_registers(
+            40001,
+            encode_send_firing_command(position=2, temperatures=[800], times=[1, 2]),
+        )
+        transport.advance(0.2)
+        self.assertEqual(transport.read_holding_registers(40103, 1), (2,))
+        self.assertEqual(transport.read_holding_registers(40111, 1), (1,))
+        transport.advance(179)
+        self.assertEqual(transport.read_holding_registers(40111, 1), (1,))
+        transport.advance(2)
+        self.assertEqual(transport.read_holding_registers(40111, 1), (2,))
+
+        transport.write_holding_registers(
+            40001,
+            encode_send_firing_command(
+                position=5,
+                joule_mode=1,
+                joule_constant_temperature=500,
+                joule_constant_hold_time=8,
+            ),
+        )
+        transport.advance(0.2)
+        self.assertEqual(transport.read_holding_registers(40114, 1), (1,))
+        transport.advance(7.9)
+        self.assertEqual(transport.read_holding_registers(40114, 1), (1,))
+        transport.advance(0.2)
+        self.assertEqual(transport.read_holding_registers(40114, 1), (2,))
 
     def test_sampling_exposes_scan_handshake_before_dosing(self) -> None:
         transport = SynthesisSimulationTransport(
